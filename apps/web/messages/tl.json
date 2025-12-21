@@ -1,0 +1,48 @@
+{
+  "common": {
+    "loading": "Naglo-load...",
+    "error": "May nangyaring mali",
+    "retry": "Subukan muli",
+    "save": "I-save",
+    "cancel": "Kanselahin",
+    "close": "Isara",
+    "back": "Bumalik",
+    "next": "Susunod",
+    "submit": "Isumite"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "chat": "Magtanong sa TRIBE",
+    "audio": "Audio Briefings",
+    "settings": "Mga Setting",
+    "home": "Home"
+  },
+  "landing": {
+    "title": "TRIBE",
+    "subtitle": "Ang Network ng Diaspora Intelligence",
+    "getStarted": "Magsimula",
+    "learnMore": "Alamin Pa"
+  },
+  "auth": {
+    "signIn": "Mag-sign In",
+    "signUp": "Mag-sign Up",
+    "signOut": "Mag-sign Out",
+    "continueWithGoogle": "Magpatuloy gamit ang Google",
+    "emailPlaceholder": "Ilagay ang iyong email",
+    "passwordPlaceholder": "Ilagay ang iyong password"
+  },
+  "dashboard": {
+    "welcome": "Maligayang pagdating sa TRIBE",
+    "description": "Ang iyong diaspora intelligence dashboard ay handa na."
+  },
+  "language": {
+    "select": "Pumili ng Wika",
+    "current": "Kasalukuyang wika"
+  },
+  "errors": {
+    "NETWORK_ERROR": "Error sa koneksyon. Pakisuri ang iyong internet.",
+    "UNAUTHORIZED": "Mangyaring mag-sign in upang magpatuloy",
+    "NOT_FOUND": "Hindi nahanap ang pahina",
+    "GENERIC": "May naganap na error. Pakisubukan muli."
+  }
+}

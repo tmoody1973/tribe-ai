@@ -1,0 +1,48 @@
+{
+  "common": {
+    "loading": "Carregando...",
+    "error": "Algo deu errado",
+    "retry": "Tentar novamente",
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "close": "Fechar",
+    "back": "Voltar",
+    "next": "Próximo",
+    "submit": "Enviar"
+  },
+  "navigation": {
+    "dashboard": "Painel",
+    "chat": "Pergunte ao TRIBE",
+    "audio": "Briefings de Áudio",
+    "settings": "Configurações",
+    "home": "Início"
+  },
+  "landing": {
+    "title": "TRIBE",
+    "subtitle": "A Rede de Inteligência da Diáspora",
+    "getStarted": "Começar",
+    "learnMore": "Saiba Mais"
+  },
+  "auth": {
+    "signIn": "Entrar",
+    "signUp": "Cadastrar",
+    "signOut": "Sair",
+    "continueWithGoogle": "Continuar com Google",
+    "emailPlaceholder": "Digite seu email",
+    "passwordPlaceholder": "Digite sua senha"
+  },
+  "dashboard": {
+    "welcome": "Bem-vindo ao TRIBE",
+    "description": "Seu painel de inteligência da diáspora está pronto."
+  },
+  "language": {
+    "select": "Selecionar Idioma",
+    "current": "Idioma atual"
+  },
+  "errors": {
+    "NETWORK_ERROR": "Erro de conexão. Por favor, verifique sua internet.",
+    "UNAUTHORIZED": "Por favor, entre para continuar",
+    "NOT_FOUND": "Página não encontrada",
+    "GENERIC": "Ocorreu um erro. Por favor, tente novamente."
+  }
+}

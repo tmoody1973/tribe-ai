@@ -69,7 +69,11 @@ export const updateLanguage = mutation({
       v.literal("yo"),
       v.literal("hi"),
       v.literal("pt"),
-      v.literal("tl")
+      v.literal("tl"),
+      v.literal("ko"),
+      v.literal("de"),
+      v.literal("fr"),
+      v.literal("es")
     ),
   },
   handler: async (ctx, { language }) => {

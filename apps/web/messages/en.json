@@ -1,0 +1,48 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "retry": "Try again",
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "chat": "Ask TRIBE",
+    "audio": "Audio Briefings",
+    "settings": "Settings",
+    "home": "Home"
+  },
+  "landing": {
+    "title": "TRIBE",
+    "subtitle": "The Diaspora Intelligence Network",
+    "getStarted": "Get Started",
+    "learnMore": "Learn More"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "signOut": "Sign Out",
+    "continueWithGoogle": "Continue with Google",
+    "emailPlaceholder": "Enter your email",
+    "passwordPlaceholder": "Enter your password"
+  },
+  "dashboard": {
+    "welcome": "Welcome to TRIBE",
+    "description": "Your diaspora intelligence dashboard is ready."
+  },
+  "language": {
+    "select": "Select Language",
+    "current": "Current language"
+  },
+  "errors": {
+    "NETWORK_ERROR": "Connection error. Please check your internet.",
+    "UNAUTHORIZED": "Please sign in to continue",
+    "NOT_FOUND": "Page not found",
+    "GENERIC": "An error occurred. Please try again."
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "common": {
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite",
+    "retry": "Réessayer",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "close": "Fermer",
+    "back": "Retour",
+    "next": "Suivant",
+    "submit": "Soumettre"
+  },
+  "navigation": {
+    "dashboard": "Tableau de bord",
+    "chat": "Demander à TRIBE",
+    "audio": "Briefings Audio",
+    "settings": "Paramètres",
+    "home": "Accueil"
+  },
+  "landing": {
+    "title": "TRIBE",
+    "subtitle": "Le Réseau d'Intelligence de la Diaspora",
+    "getStarted": "Commencer",
+    "learnMore": "En savoir plus"
+  },
+  "auth": {
+    "signIn": "Se connecter",
+    "signUp": "S'inscrire",
+    "signOut": "Se déconnecter",
+    "continueWithGoogle": "Continuer avec Google",
+    "emailPlaceholder": "Entrez votre email",
+    "passwordPlaceholder": "Entrez votre mot de passe"
+  },
+  "dashboard": {
+    "welcome": "Bienvenue sur TRIBE",
+    "description": "Votre tableau de bord d'intelligence de la diaspora est prêt."
+  },
+  "language": {
+    "select": "Sélectionner la langue",
+    "current": "Langue actuelle"
+  },
+  "errors": {
+    "NETWORK_ERROR": "Erreur de connexion. Veuillez vérifier votre internet.",
+    "UNAUTHORIZED": "Veuillez vous connecter pour continuer",
+    "NOT_FOUND": "Page non trouvée",
+    "GENERIC": "Une erreur s'est produite. Veuillez réessayer."
+  }
+}

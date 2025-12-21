@@ -1,0 +1,48 @@
+{
+  "common": {
+    "loading": "Wird geladen...",
+    "error": "Etwas ist schief gelaufen",
+    "retry": "Erneut versuchen",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "close": "Schließen",
+    "back": "Zurück",
+    "next": "Weiter",
+    "submit": "Absenden"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "chat": "TRIBE fragen",
+    "audio": "Audio-Briefings",
+    "settings": "Einstellungen",
+    "home": "Startseite"
+  },
+  "landing": {
+    "title": "TRIBE",
+    "subtitle": "Das Diaspora-Intelligenznetzwerk",
+    "getStarted": "Loslegen",
+    "learnMore": "Mehr erfahren"
+  },
+  "auth": {
+    "signIn": "Anmelden",
+    "signUp": "Registrieren",
+    "signOut": "Abmelden",
+    "continueWithGoogle": "Mit Google fortfahren",
+    "emailPlaceholder": "E-Mail eingeben",
+    "passwordPlaceholder": "Passwort eingeben"
+  },
+  "dashboard": {
+    "welcome": "Willkommen bei TRIBE",
+    "description": "Ihr Diaspora-Intelligenz-Dashboard ist bereit."
+  },
+  "language": {
+    "select": "Sprache auswählen",
+    "current": "Aktuelle Sprache"
+  },
+  "errors": {
+    "NETWORK_ERROR": "Verbindungsfehler. Bitte überprüfen Sie Ihre Internetverbindung.",
+    "UNAUTHORIZED": "Bitte melden Sie sich an, um fortzufahren",
+    "NOT_FOUND": "Seite nicht gefunden",
+    "GENERIC": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
+  }
+}

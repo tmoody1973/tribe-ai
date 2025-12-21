@@ -1,0 +1,48 @@
+{
+  "common": {
+    "loading": "Ń gbéwọlé...",
+    "error": "Nǹkan kan ṣàṣìṣe",
+    "retry": "Gbìyànjú lẹ́ẹ̀kansi",
+    "save": "Tọ́jú",
+    "cancel": "Fagilé",
+    "close": "Tì",
+    "back": "Padà",
+    "next": "Tó kàn",
+    "submit": "Fi ránṣẹ́"
+  },
+  "navigation": {
+    "dashboard": "Pánẹ́ẹ̀lì",
+    "chat": "Béèrè TRIBE",
+    "audio": "Ìròyìn Ohùn",
+    "settings": "Ètò",
+    "home": "Ilé"
+  },
+  "landing": {
+    "title": "TRIBE",
+    "subtitle": "Nẹ́tíwọ̀ọ̀kì Ìmọ̀ Àwọn Ará Ilẹ̀",
+    "getStarted": "Bẹ̀rẹ̀",
+    "learnMore": "Kẹ́kọ̀ọ́ Síi"
+  },
+  "auth": {
+    "signIn": "Wọlé",
+    "signUp": "Forúkọ sílẹ̀",
+    "signOut": "Jáde",
+    "continueWithGoogle": "Tẹ̀síwájú pẹ̀lú Google",
+    "emailPlaceholder": "Tẹ ìmeèlì rẹ",
+    "passwordPlaceholder": "Tẹ ọ̀rọ̀ aṣínà rẹ"
+  },
+  "dashboard": {
+    "welcome": "Ẹ kú àbọ̀ sí TRIBE",
+    "description": "Pánẹ́ẹ̀lì ìmọ̀ àwọn ará ilẹ̀ rẹ ti ṣetán."
+  },
+  "language": {
+    "select": "Yan Èdè",
+    "current": "Èdè lọ́wọ́lọ́wọ́"
+  },
+  "errors": {
+    "NETWORK_ERROR": "Àṣìṣe ìsopọ̀. Jọ̀wọ́ ṣàyẹ̀wò íntánẹ́ẹ̀tì rẹ.",
+    "UNAUTHORIZED": "Jọ̀wọ́ wọlé láti tẹ̀síwájú",
+    "NOT_FOUND": "A kò rí ojú-ìwé",
+    "GENERIC": "Àṣìṣe kan ṣẹlẹ̀. Jọ̀wọ́ gbìyànjú lẹ́ẹ̀kansi."
+  }
+}

@@ -1,0 +1,644 @@
+{
+  "metadata": {
+    "title": "API-Accessible Immigrant & Migrant Resources",
+    "description": "Immigration resources optimized for API access and Firecrawl scraping for USA, Canada, Europe, Japan, and South Korea",
+    "version": "2.0",
+    "last_updated": "2025-12-21",
+    "note": "All sources are either API-accessible or can be scraped with Firecrawl for use in applications"
+  },
+  "usa": {
+    "government_apis": [
+      {
+        "name": "USCIS Case Status API",
+        "url": "https://developer.uscis.gov/api/case-status",
+        "api_type": "REST",
+        "auth_required": true,
+        "description": "Check immigration case status programmatically",
+        "documentation": "https://developer.uscis.gov/apis",
+        "data_format": "JSON",
+        "use_case": "Real-time case tracking for users",
+        "rate_limit": "Contact USCIS for details"
+      },
+      {
+        "name": "USCIS FOIA Request API",
+        "url": "https://developer.uscis.gov/apis",
+        "api_type": "REST",
+        "auth_required": true,
+        "description": "Create and check FOIA/Privacy Act requests",
+        "documentation": "https://developer.uscis.gov/apis",
+        "data_format": "JSON",
+        "use_case": "Submit and track FOIA requests"
+      }
+    ],
+    "open_data_portals": [
+      {
+        "name": "Data.gov Immigration Datasets",
+        "url": "https://catalog.data.gov/dataset?q=immigration",
+        "api_endpoint": "https://catalog.data.gov/api/3/action/package_search?q=immigration",
+        "description": "123+ immigration datasets from US government",
+        "data_format": "JSON, CSV, XML",
+        "firecrawl_compatible": true,
+        "use_case": "Immigration statistics, detention data, policy analysis"
+      },
+      {
+        "name": "DHS Data Portal",
+        "url": "https://www.dhs.gov/data",
+        "description": "Immigration, law enforcement, emergency management datasets",
+        "data_format": "Various",
+        "firecrawl_compatible": true,
+        "use_case": "Comprehensive immigration data"
+      },
+      {
+        "name": "USCIS Immigration Statistics",
+        "url": "https://www.uscis.gov/tools/reports-and-studies/immigration-and-citizenship-data",
+        "description": "Performance data on all USCIS form types",
+        "data_format": "PDF, Excel",
+        "firecrawl_compatible": true,
+        "use_case": "Application processing times, approval rates"
+      }
+    ],
+    "scrapable_resources": [
+      {
+        "name": "USCIS Official Website",
+        "url": "https://www.uscis.gov/",
+        "firecrawl_compatible": true,
+        "content_type": "Forms, guides, news, policy updates",
+        "update_frequency": "Daily",
+        "use_case": "Latest immigration forms, requirements, news"
+      },
+      {
+        "name": "USCIS Case Processing Times",
+        "url": "https://egov.uscis.gov/processing-times/",
+        "firecrawl_compatible": true,
+        "content_type": "Processing time estimates by form and office",
+        "update_frequency": "Monthly",
+        "use_case": "Estimate wait times for applications"
+      },
+      {
+        "name": "State Department Visa Bulletin",
+        "url": "https://travel.state.gov/content/travel/en/legal/visa-law0/visa-bulletin.html",
+        "firecrawl_compatible": true,
+        "content_type": "Monthly visa availability",
+        "update_frequency": "Monthly",
+        "use_case": "Track priority dates and visa availability"
+      },
+      {
+        "name": "USCIS News",
+        "url": "https://www.uscis.gov/news",
+        "firecrawl_compatible": true,
+        "content_type": "Policy updates, announcements",
+        "update_frequency": "Daily",
+        "use_case": "Stay updated on immigration policy changes"
+      }
+    ],
+    "research_data": [
+      {
+        "name": "Migration Policy Institute Data Hub",
+        "url": "https://www.migrationpolicy.org/programs/migration-data-hub",
+        "description": "Immigration statistics, demographics, policy analysis",
+        "data_format": "Interactive charts, downloadable data",
+        "firecrawl_compatible": true,
+        "use_case": "Research and analysis"
+      },
+      {
+        "name": "TRAC Immigration",
+        "url": "https://trac.syr.edu/immigration/",
+        "description": "Immigration court data, enforcement statistics",
+        "data_format": "HTML tables, reports",
+        "firecrawl_compatible": true,
+        "use_case": "Court statistics, enforcement trends"
+      },
+      {
+        "name": "Pew Research Immigration Data",
+        "url": "https://www.pewresearch.org/topic/immigration-migration/",
+        "description": "Immigration trends, demographics, public opinion",
+        "data_format": "Reports, charts",
+        "firecrawl_compatible": true,
+        "use_case": "Demographic analysis, trend research"
+      }
+    ],
+    "community_platforms": [
+      {
+        "name": "Reddit r/immigration",
+        "url": "https://www.reddit.com/r/immigration/",
+        "api_endpoint": "https://www.reddit.com/r/immigration.json",
+        "description": "Immigration discussions, experiences, advice",
+        "data_format": "JSON (Reddit API)",
+        "use_case": "Community insights, common questions"
+      },
+      {
+        "name": "Reddit r/USCIS",
+        "url": "https://www.reddit.com/r/USCIS/",
+        "api_endpoint": "https://www.reddit.com/r/USCIS.json",
+        "description": "USCIS case discussions, timelines",
+        "data_format": "JSON (Reddit API)",
+        "use_case": "Case timeline tracking, community support"
+      },
+      {
+        "name": "Immigration.com Forums",
+        "url": "https://forums.immigration.com/",
+        "firecrawl_compatible": true,
+        "description": "Immigration forum with attorney advice",
+        "use_case": "Legal questions, community discussions"
+      }
+    ],
+    "helper_apis": [
+      {
+        "name": "Google Places API",
+        "url": "https://developers.google.com/maps/documentation/places/web-service",
+        "api_type": "REST",
+        "auth_required": true,
+        "description": "Find USCIS offices, immigration lawyers, settlement services",
+        "use_case": "Location-based service discovery"
+      },
+      {
+        "name": "Google Translate API",
+        "url": "https://cloud.google.com/translate/docs",
+        "api_type": "REST",
+        "auth_required": true,
+        "description": "Translate immigration documents and resources",
+        "use_case": "Multi-language support"
+      }
+    ]
+  },
+  "canada": {
+    "government_apis": [
+      {
+        "name": "IRCC Open Data Portal",
+        "url": "https://search.open.canada.ca/opendata/?owner_org=cic",
+        "api_endpoint": "https://open.canada.ca/data/api/3/action/package_search?q=organization:cic",
+        "description": "Immigration, refugees, citizenship data",
+        "data_format": "JSON, CSV, XML",
+        "firecrawl_compatible": true,
+        "use_case": "Permanent residents, temporary residents, citizenship stats"
+      },
+      {
+        "name": "Permanent Residents Monthly Updates",
+        "url": "https://open.canada.ca/data/en/dataset/f7e5498e-0ad8-4417-85c9-9b8aff9b9eda",
+        "description": "Monthly permanent resident statistics",
+        "data_format": "CSV, JSON",
+        "firecrawl_compatible": true,
+        "use_case": "Track PR trends and statistics"
+      },
+      {
+        "name": "Canada Open Data API",
+        "url": "https://open.canada.ca/en/access-our-application-programming-interface-api",
+        "api_endpoint": "https://open.canada.ca/data/api/3/",
+        "description": "Access to all Canadian government open data",
+        "data_format": "JSON",
+        "use_case": "Programmatic access to immigration data"
+      }
+    ],
+    "scrapable_resources": [
+      {
+        "name": "IRCC Official Website",
+        "url": "https://www.canada.ca/en/services/immigration-citizenship.html",
+        "firecrawl_compatible": true,
+        "content_type": "Immigration guides, forms, requirements",
+        "update_frequency": "Daily",
+        "use_case": "Latest immigration information and guides"
+      },
+      {
+        "name": "Express Entry Rounds",
+        "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/mandate/policies-operational-instructions-agreements/ministerial-instructions/express-entry-rounds.html",
+        "firecrawl_compatible": true,
+        "content_type": "Express Entry draw results",
+        "update_frequency": "Bi-weekly",
+        "use_case": "Track CRS scores and invitation rounds"
+      },
+      {
+        "name": "IRCC Processing Times",
+        "url": "https://www.canada.ca/en/immigration-refugees-citizenship/services/application/check-processing-times.html",
+        "firecrawl_compatible": true,
+        "content_type": "Application processing times",
+        "update_frequency": "Monthly",
+        "use_case": "Estimate wait times for applications"
+      },
+      {
+        "name": "CIC News",
+        "url": "https://www.cicnews.com/",
+        "firecrawl_compatible": true,
+        "content_type": "Canadian immigration news and updates",
+        "update_frequency": "Daily",
+        "use_case": "Stay updated on policy changes"
+      }
+    ],
+    "settlement_resources": [
+      {
+        "name": "Settlement.org",
+        "url": "https://settlement.org/",
+        "firecrawl_compatible": true,
+        "description": "Newcomer settlement information for Ontario",
+        "use_case": "Settlement services, housing, employment"
+      }
+    ],
+    "community_platforms": [
+      {
+        "name": "Reddit r/ImmigrationCanada",
+        "url": "https://www.reddit.com/r/ImmigrationCanada/",
+        "api_endpoint": "https://www.reddit.com/r/ImmigrationCanada.json",
+        "description": "Canadian immigration discussions",
+        "data_format": "JSON (Reddit API)",
+        "use_case": "Community insights, Express Entry discussions"
+      }
+    ]
+  },
+  "japan": {
+    "government_data": [
+      {
+        "name": "e-Stat Portal",
+        "url": "https://www.e-stat.go.jp/en",
+        "api_available": true,
+        "description": "Official statistics including migration data",
+        "data_format": "Various",
+        "use_case": "Internal migration reports, statistics"
+      },
+      {
+        "name": "Japan Tourism Statistics (JNTO)",
+        "url": "https://statistics.jnto.go.jp/en/",
+        "description": "Visitor arrivals and tourism data",
+        "data_format": "Excel, PDF",
+        "firecrawl_compatible": true,
+        "use_case": "Foreign visitor statistics"
+      }
+    ],
+    "scrapable_resources": [
+      {
+        "name": "Immigration Services Agency of Japan",
+        "url": "https://www.isa.go.jp/en/index.html",
+        "firecrawl_compatible": true,
+        "content_type": "Visa information, procedures",
+        "update_frequency": "Regular",
+        "use_case": "Official immigration information"
+      },
+      {
+        "name": "Ministry of Foreign Affairs - Visa",
+        "url": "https://www.mofa.go.jp/j_info/visit/visa/index.html",
+        "firecrawl_compatible": true,
+        "content_type": "Visa requirements and procedures",
+        "use_case": "Visa application information"
+      },
+      {
+        "name": "GaijinPot",
+        "url": "https://gaijinpot.com/",
+        "firecrawl_compatible": true,
+        "content_type": "Jobs, housing, guides for foreigners",
+        "use_case": "Practical living information"
+      },
+      {
+        "name": "Japan Guide",
+        "url": "https://www.japan-guide.com/",
+        "firecrawl_compatible": true,
+        "content_type": "Travel and living guides",
+        "use_case": "Cultural information, travel tips"
+      }
+    ],
+    "job_portals": [
+      {
+        "name": "GaijinPot Jobs",
+        "url": "https://jobs.gaijinpot.com/",
+        "firecrawl_compatible": true,
+        "description": "Job listings for foreigners in Japan",
+        "use_case": "Job search for immigrants"
+      },
+      {
+        "name": "Japan Dev",
+        "url": "https://japan-dev.com/",
+        "firecrawl_compatible": true,
+        "description": "Tech jobs for English speakers",
+        "use_case": "Developer job search"
+      }
+    ],
+    "community_platforms": [
+      {
+        "name": "Reddit r/movingtojapan",
+        "url": "https://www.reddit.com/r/movingtojapan/",
+        "api_endpoint": "https://www.reddit.com/r/movingtojapan.json",
+        "description": "Moving to Japan advice and discussions",
+        "data_format": "JSON (Reddit API)",
+        "use_case": "Visa advice, relocation tips"
+      },
+      {
+        "name": "Reddit r/japanlife",
+        "url": "https://www.reddit.com/r/japanlife/",
+        "api_endpoint": "https://www.reddit.com/r/japanlife.json",
+        "description": "Daily life in Japan for residents",
+        "data_format": "JSON (Reddit API)",
+        "use_case": "Living in Japan experiences"
+      }
+    ]
+  },
+  "south_korea": {
+    "government_data": [
+      {
+        "name": "Korea Open Data Portal",
+        "url": "https://www.data.go.kr/en",
+        "description": "Immigration statistics and data",
+        "data_format": "Various",
+        "firecrawl_compatible": true,
+        "use_case": "Immigration statistics"
+      },
+      {
+        "name": "Ministry of Data and Statistics - Immigrants",
+        "url": "https://mods.go.kr/menu.es?mid=a20108030000",
+        "description": "Vital statistics of immigrants",
+        "data_format": "Reports",
+        "firecrawl_compatible": true,
+        "use_case": "Annual immigration statistics"
+      }
+    ],
+    "scrapable_resources": [
+      {
+        "name": "Korea Immigration Service",
+        "url": "https://www.immigration.go.kr/immigration_eng/index.do",
+        "firecrawl_compatible": true,
+        "content_type": "Visa information, K-ETA, procedures",
+        "update_frequency": "Regular",
+        "use_case": "Official immigration information"
+      },
+      {
+        "name": "HiKorea",
+        "url": "https://www.hikorea.go.kr/",
+        "firecrawl_compatible": true,
+        "content_type": "Online immigration services",
+        "use_case": "Visa applications, residence cards"
+      },
+      {
+        "name": "WorknPlay",
+        "url": "https://worknplay.co.kr/",
+        "firecrawl_compatible": true,
+        "description": "Job listings for foreigners",
+        "use_case": "Job search in Korea"
+      }
+    ],
+    "community_platforms": [
+      {
+        "name": "Reddit r/korea",
+        "url": "https://www.reddit.com/r/korea/",
+        "api_endpoint": "https://www.reddit.com/r/korea.json",
+        "description": "General Korea discussions including immigration",
+        "data_format": "JSON (Reddit API)",
+        "use_case": "Community insights, expat life"
+      },
+      {
+        "name": "Reddit r/Living_in_Korea",
+        "url": "https://www.reddit.com/r/Living_in_Korea/",
+        "api_endpoint": "https://www.reddit.com/r/Living_in_Korea.json",
+        "description": "Practical advice for living in Korea",
+        "data_format": "JSON (Reddit API)",
+        "use_case": "Daily life, settlement advice"
+      }
+    ]
+  },
+  "europe": {
+    "eu_wide_resources": [
+      {
+        "name": "EU Immigration Portal",
+        "url": "https://ec.europa.eu/immigration/",
+        "firecrawl_compatible": true,
+        "description": "Official EU immigration information",
+        "use_case": "EU-wide immigration policies"
+      },
+      {
+        "name": "Your Europe",
+        "url": "https://europa.eu/youreurope/",
+        "firecrawl_compatible": true,
+        "description": "EU citizens' rights, living and working in EU",
+        "use_case": "Rights and procedures for EU residents"
+      },
+      {
+        "name": "EURES Job Portal",
+        "url": "https://eures.europa.eu/",
+        "firecrawl_compatible": true,
+        "description": "European job mobility portal",
+        "use_case": "Job search across Europe"
+      }
+    ],
+    "country_specific": {
+      "germany": [
+        {
+          "name": "Make it in Germany",
+          "url": "https://www.make-it-in-germany.com/",
+          "firecrawl_compatible": true,
+          "description": "Official portal for skilled workers",
+          "use_case": "Visa information, job search, settlement"
+        },
+        {
+          "name": "BAMF",
+          "url": "https://www.bamf.de/EN/",
+          "firecrawl_compatible": true,
+          "description": "Federal Office for Migration and Refugees",
+          "use_case": "Immigration and asylum services"
+        }
+      ],
+      "france": [
+        {
+          "name": "France-Visas",
+          "url": "https://france-visas.gouv.fr/",
+          "firecrawl_compatible": true,
+          "description": "Official French visa portal",
+          "use_case": "Visa applications and requirements"
+        }
+      ],
+      "netherlands": [
+        {
+          "name": "IND - Immigration Service",
+          "url": "https://ind.nl/en",
+          "firecrawl_compatible": true,
+          "description": "Dutch immigration services",
+          "use_case": "Residence permits, visas"
+        }
+      ],
+      "spain": [
+        {
+          "name": "Spanish Ministry of Foreign Affairs",
+          "url": "http://www.exteriores.gob.es/",
+          "firecrawl_compatible": true,
+          "description": "Visa and immigration information",
+          "use_case": "Spanish visa procedures"
+        }
+      ],
+      "portugal": [
+        {
+          "name": "SEF - Portuguese Immigration",
+          "url": "https://www.sef.pt/",
+          "firecrawl_compatible": true,
+          "description": "Portuguese immigration services",
+          "use_case": "Residence permits, visas"
+        }
+      ],
+      "uk": [
+        {
+          "name": "UK Visas and Immigration",
+          "url": "https://www.gov.uk/browse/visas-immigration",
+          "firecrawl_compatible": true,
+          "description": "Official UK visa services",
+          "use_case": "UK visa applications"
+        }
+      ]
+    },
+    "community_platforms": [
+      {
+        "name": "Reddit r/IWantOut",
+        "url": "https://www.reddit.com/r/IWantOut/",
+        "api_endpoint": "https://www.reddit.com/r/IWantOut.json",
+        "description": "Moving to Europe and worldwide",
+        "data_format": "JSON (Reddit API)",
+        "use_case": "Relocation advice, visa discussions"
+      }
+    ],
+    "expat_resources": [
+      {
+        "name": "Expatica",
+        "url": "https://www.expatica.com/",
+        "firecrawl_compatible": true,
+        "description": "Comprehensive expat guides for European countries",
+        "use_case": "Country guides, practical information"
+      }
+    ]
+  },
+  "cross_regional": {
+    "migration_data": [
+      {
+        "name": "Migration Data Portal",
+        "url": "https://www.migrationdataportal.org/",
+        "description": "International migration data from various sources",
+        "data_format": "Interactive visualizations, downloadable data",
+        "firecrawl_compatible": true,
+        "use_case": "Global migration statistics and trends"
+      },
+      {
+        "name": "World Bank Migration Data",
+        "url": "https://data.worldbank.org/topic/migration",
+        "api_endpoint": "https://api.worldbank.org/v2/",
+        "description": "Migration indicators and statistics",
+        "data_format": "JSON, XML, CSV",
+        "use_case": "Country-specific migration data"
+      },
+      {
+        "name": "UN Migration Data",
+        "url": "https://www.un.org/development/desa/pd/content/international-migration",
+        "description": "International migration statistics",
+        "firecrawl_compatible": true,
+        "use_case": "Global migration trends"
+      }
+    ],
+    "helper_apis": [
+      {
+        "name": "Google Places API",
+        "url": "https://developers.google.com/maps/documentation/places/web-service",
+        "api_type": "REST",
+        "auth_required": true,
+        "description": "Find immigration offices, lawyers, settlement services worldwide",
+        "use_case": "Location-based service discovery",
+        "pricing": "Pay-per-use"
+      },
+      {
+        "name": "Google Translate API",
+        "url": "https://cloud.google.com/translate/docs",
+        "api_type": "REST",
+        "auth_required": true,
+        "description": "Translate content to 100+ languages",
+        "use_case": "Multi-language support for immigrants",
+        "pricing": "Pay-per-character"
+      },
+      {
+        "name": "OpenCage Geocoding API",
+        "url": "https://opencagedata.com/api",
+        "api_type": "REST",
+        "auth_required": true,
+        "description": "Convert addresses to coordinates and vice versa",
+        "use_case": "Location services for immigration offices",
+        "pricing": "Free tier available"
+      },
+      {
+        "name": "REST Countries API",
+        "url": "https://restcountries.com/",
+        "api_type": "REST",
+        "auth_required": false,
+        "description": "Country information including languages, currencies",
+        "use_case": "Display country information for immigrants",
+        "pricing": "Free"
+      },
+      {
+        "name": "Exchange Rates API",
+        "url": "https://exchangeratesapi.io/",
+        "api_type": "REST",
+        "auth_required": true,
+        "description": "Currency conversion rates",
+        "use_case": "Help immigrants understand costs in different currencies",
+        "pricing": "Free tier available"
+      }
+    ],
+    "job_search_apis": [
+      {
+        "name": "Adzuna API",
+        "url": "https://developer.adzuna.com/",
+        "api_type": "REST",
+        "auth_required": true,
+        "description": "Job search across multiple countries",
+        "use_case": "International job search for immigrants",
+        "coverage": "USA, UK, Canada, Australia, and more"
+      },
+      {
+        "name": "Indeed API",
+        "url": "https://opensource.indeedeng.io/api-documentation/",
+        "api_type": "REST",
+        "auth_required": true,
+        "description": "Job search worldwide",
+        "use_case": "Find jobs in destination countries"
+      }
+    ],
+    "cost_of_living": [
+      {
+        "name": "Numbeo API",
+        "url": "https://www.numbeo.com/api/doc.jsp",
+        "api_type": "REST",
+        "auth_required": true,
+        "description": "Cost of living data for cities worldwide",
+        "use_case": "Help immigrants compare living costs",
+        "pricing": "Paid"
+      }
+    ],
+    "community_aggregators": [
+      {
+        "name": "Reddit API",
+        "url": "https://www.reddit.com/dev/api/",
+        "api_type": "REST",
+        "auth_required": true,
+        "description": "Access Reddit posts and comments",
+        "use_case": "Aggregate immigration discussions from multiple subreddits",
+        "data_format": "JSON"
+      }
+    ]
+  },
+  "implementation_notes": {
+    "firecrawl_usage": {
+      "description": "Firecrawl can be used to scrape any URL marked as 'firecrawl_compatible: true'",
+      "recommended_frequency": {
+        "government_sites": "Weekly for policy updates",
+        "news_sites": "Daily for latest news",
+        "processing_times": "Monthly",
+        "community_forums": "As needed"
+      },
+      "best_practices": [
+        "Respect robots.txt",
+        "Cache results to minimize requests",
+        "Set appropriate user agents",
+        "Handle rate limiting gracefully"
+      ]
+    },
+    "api_integration": {
+      "authentication": "Most government APIs require registration and API keys",
+      "rate_limits": "Check individual API documentation for limits",
+      "data_freshness": "Government data typically updated monthly or quarterly",
+      "error_handling": "Implement retry logic and fallback mechanisms"
+    },
+    "reddit_api": {
+      "note": "Reddit API requires OAuth authentication",
+      "rate_limit": "60 requests per minute for authenticated users",
+      "json_endpoint": "Add .json to any Reddit URL for API access",
+      "use_case": "Monitor immigration discussions, common questions, sentiment"
+    }
+  }
+}

@@ -166,4 +166,14 @@ export default defineSchema({
     .index("by_event", ["event"])
     .index("by_corridor", ["corridorId"])
     .index("by_time", ["createdAt"]),
+
+  // User progress tracking for protocol completion
+  userProgress: defineTable({
+    userId: v.id("users"),
+    corridorId: v.id("corridors"),
+    protocolId: v.id("protocols"),
+    completedAt: v.number(),
+  })
+    .index("by_user_corridor", ["userId", "corridorId"])
+    .index("by_protocol", ["protocolId"]),
 });

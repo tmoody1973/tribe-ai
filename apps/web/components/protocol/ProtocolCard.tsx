@@ -6,6 +6,7 @@ import { Id } from "@/convex/_generated/dataModel";
 import { ChevronDown, ChevronUp, AlertTriangle, Lightbulb } from "lucide-react";
 import { Attribution, detectSourceType } from "./Attribution";
 import { CommunityVerifiedBadge } from "./CommunityVerifiedBadge";
+import { Confetti } from "./Confetti";
 
 type Category = "visa" | "finance" | "housing" | "employment" | "legal" | "health" | "social";
 type Priority = "critical" | "high" | "medium" | "low";
@@ -34,6 +35,9 @@ interface Protocol {
 interface ProtocolCardProps {
   protocol: Protocol;
   isCurrent: boolean;
+  isCompleted?: boolean;
+  onComplete?: (protocolId: Id<"protocols">) => void;
+  onUncomplete?: (protocolId: Id<"protocols">) => void;
   onStatusChange?: (status: Status) => void;
 }
 
@@ -64,17 +68,37 @@ const priorityColors: Record<Priority, string> = {
   low: "bg-gray-300 text-black",
 };
 
-export function ProtocolCard({ protocol, isCurrent }: ProtocolCardProps) {
+export function ProtocolCard({
+  protocol,
+  isCurrent,
+  isCompleted: isCompletedProp,
+  onComplete,
+  onUncomplete,
+}: ProtocolCardProps) {
   const [expanded, setExpanded] = useState(isCurrent);
+  const [showConfetti, setShowConfetti] = useState(false);
   const t = useTranslations("protocols");
 
-  const isCompleted = protocol.status === "completed";
+  // Use prop if provided, otherwise fall back to status field
+  const isCompleted = isCompletedProp ?? protocol.status === "completed";
   const hasWarnings = protocol.warnings && protocol.warnings.length > 0;
   const hasHacks = protocol.hacks && protocol.hacks.length > 0;
+
+  const handleCheckboxClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isCompleted) {
+      onUncomplete?.(protocol._id);
+    } else {
+      onComplete?.(protocol._id);
+      setShowConfetti(true);
+      setTimeout(() => setShowConfetti(false), 2000);
+    }
+  };
 
   return (
     <div
       className={`
+        relative
         border-4 border-black border-l-8 shadow-[4px_4px_0_0_#000]
         transition-all duration-200
         ${categoryColors[protocol.category] ?? "bg-white"}
@@ -82,21 +106,27 @@ export function ProtocolCard({ protocol, isCurrent }: ProtocolCardProps) {
         ${isCompleted ? "opacity-60" : ""}
       `}
     >
+      {/* Confetti Animation */}
+      {showConfetti && <Confetti />}
+
       {/* Header */}
       <div
         className="p-4 cursor-pointer flex items-start gap-4"
         onClick={() => setExpanded(!expanded)}
       >
-        {/* Step Number */}
-        <div
+        {/* Completion Checkbox / Step Number */}
+        <button
+          onClick={handleCheckboxClick}
           className={`
             w-10 h-10 flex items-center justify-center flex-shrink-0
             border-2 border-black font-bold text-lg
-            ${isCompleted ? "bg-green-500 text-white" : "bg-white"}
+            transition-colors hover:scale-105
+            ${isCompleted ? "bg-green-500 text-white" : "bg-white hover:bg-gray-100"}
           `}
+          aria-label={isCompleted ? "Mark incomplete" : "Mark complete"}
         >
           {isCompleted ? "✓" : protocol.order}
-        </div>
+        </button>
 
         {/* Content */}
         <div className="flex-1 min-w-0">

@@ -26,6 +26,7 @@ import type * as integrations_visa from "../integrations/visa.js";
 import type * as maintenance from "../maintenance.js";
 import type * as metrics from "../metrics.js";
 import type * as passportIndex from "../passportIndex.js";
+import type * as progress from "../progress.js";
 import type * as protocols from "../protocols.js";
 import type * as users from "../users.js";
 
@@ -54,6 +55,7 @@ declare const fullApi: ApiFromModules<{
   maintenance: typeof maintenance;
   metrics: typeof metrics;
   passportIndex: typeof passportIndex;
+  progress: typeof progress;
   protocols: typeof protocols;
   users: typeof users;
 }>;

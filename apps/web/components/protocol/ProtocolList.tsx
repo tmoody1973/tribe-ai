@@ -1,12 +1,22 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { useMutation, useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { ProtocolCard } from "./ProtocolCard";
+import { ProgressBar } from "./ProgressBar";
 
 type Category = "visa" | "finance" | "housing" | "employment" | "legal" | "health" | "social";
 type Priority = "critical" | "high" | "medium" | "low";
 type Status = "not_started" | "in_progress" | "completed" | "blocked";
+
+interface AttributionData {
+  authorName?: string;
+  sourceUrl: string;
+  sourceDate?: number;
+  engagement?: number;
+}
 
 interface Protocol {
   _id: Id<"protocols">;
@@ -17,6 +27,7 @@ interface Protocol {
   priority: Priority;
   warnings?: string[];
   hacks?: string[];
+  attribution?: AttributionData;
   order: number;
 }
 
@@ -25,17 +36,36 @@ interface ProtocolListProps {
   corridorId: Id<"corridors">;
 }
 
-export function ProtocolList({ protocols }: ProtocolListProps) {
+export function ProtocolList({ protocols, corridorId }: ProtocolListProps) {
   const t = useTranslations("protocols");
 
-  // Sort by order
-  const sorted = [...protocols].sort((a, b) => a.order - b.order);
+  // Fetch user progress
+  const progress = useQuery(api.progress.getProgress, { corridorId });
+  const markComplete = useMutation(api.progress.markComplete);
+  const markIncomplete = useMutation(api.progress.markIncomplete);
 
-  // Find current step (first non-completed)
-  const currentIndex = sorted.findIndex((p) => p.status !== "completed");
+  // Create set of completed protocol IDs
+  const completedIds = new Set(progress?.map((p) => p.protocolId) ?? []);
+  const completedCount = completedIds.size;
 
-  // Count completed
-  const completedCount = sorted.filter((p) => p.status === "completed").length;
+  // Sort: incomplete first (by order), then completed (by order)
+  const sorted = [...protocols].sort((a, b) => {
+    const aComplete = completedIds.has(a._id);
+    const bComplete = completedIds.has(b._id);
+    if (aComplete !== bComplete) return aComplete ? 1 : -1;
+    return a.order - b.order;
+  });
+
+  // Find current step (first incomplete)
+  const currentProtocol = sorted.find((p) => !completedIds.has(p._id));
+
+  const handleComplete = async (protocolId: Id<"protocols">) => {
+    await markComplete({ protocolId, corridorId });
+  };
+
+  const handleUncomplete = async (protocolId: Id<"protocols">) => {
+    await markIncomplete({ protocolId });
+  };
 
   if (sorted.length === 0) {
     return (
@@ -46,12 +76,15 @@ export function ProtocolList({ protocols }: ProtocolListProps) {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
+      {/* Progress Bar */}
+      <ProgressBar completed={completedCount} total={protocols.length} />
+
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between">
         <h2 className="text-xl font-bold">{t("yourProtocol")}</h2>
-        <span className="text-sm text-gray-600 border-2 border-black px-3 py-1 bg-white">
-          {completedCount} / {sorted.length} {t("completed")}
+        <span className="text-sm text-gray-600">
+          Click the step number to mark complete
         </span>
       </div>
 
@@ -62,11 +95,14 @@ export function ProtocolList({ protocols }: ProtocolListProps) {
 
         {/* Cards */}
         <div className="space-y-4 relative">
-          {sorted.map((protocol, index) => (
+          {sorted.map((protocol) => (
             <ProtocolCard
               key={protocol._id}
               protocol={protocol}
-              isCurrent={index === currentIndex}
+              isCurrent={protocol._id === currentProtocol?._id}
+              isCompleted={completedIds.has(protocol._id)}
+              onComplete={handleComplete}
+              onUncomplete={handleUncomplete}
             />
           ))}
         </div>

@@ -36,7 +36,7 @@ The technical architecture reflects this mission. The platform uses AI agents (b
 
 Every piece of advice includes attribution. If someone on r/ImmigrationCanada explained how to navigate the Express Entry system, their insight gets credited. If an Expatica article outlined the German Blue Card process, that source is linked. The goal is to build trust through transparency—you're not getting AI hallucinations, you're getting community knowledge with receipts.
 
-The platform supports five languages at MVP: English, Yoruba, Hindi, Portuguese, and Tagalog. This matters because migrants shouldn't have to struggle through critical bureaucratic information in a second language. Google Cloud Translation handles dynamic content, with intelligent caching to keep costs manageable.
+The platform supports five languages at MVP: English, Yoruba, Hindi, Portuguese, and Tagalog. This matters because migrants shouldn't have to struggle through critical bureaucratic information in a second language. Google Cloud Translation handles dynamic content—AI-generated protocols, chat responses, audio briefings—all translated on the fly with intelligent content-hash caching to keep costs manageable. The goal is that a user in Lagos gets the same quality guidance as someone in London, in their preferred language.
 
 For those who prefer audio, ElevenLabs powers text-to-speech briefings—think NPR-style updates you can listen to while commuting. There's also a voice agent for hands-free Q&A.
 
@@ -76,6 +76,7 @@ Let's see what's possible.
 - Claude (Anthropic) + Mastra for AI agent orchestration
 - Convex for real-time database and serverless functions
 - Firecrawl + Tavily + Perplexity for data ingestion
+- Google Cloud Translation for dynamic multilingual content
 - ElevenLabs for voice synthesis
 - Next.js 14 + Vercel for frontend
 - Mapbox GL for interactive globe visualization

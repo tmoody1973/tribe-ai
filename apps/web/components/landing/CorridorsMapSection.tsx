@@ -1,60 +1,113 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { ArrowRight, TrendingUp } from "lucide-react";
+import dynamic from "next/dynamic";
 
-interface Corridor {
-  from: { code: string; name: string; flag: string; x: number; y: number };
-  to: { code: string; name: string; flag: string; x: number; y: number };
-  migrants: string;
-  trend: "up" | "stable";
-  color: string;
-}
-
-const corridors: Corridor[] = [
+// Dynamically import the map to avoid SSR issues with Mapbox
+const InteractiveGlobeMap = dynamic(
+  () => import("./InteractiveGlobeMap").then((mod) => mod.InteractiveGlobeMap),
   {
-    from: { code: "MX", name: "Mexico", flag: "🇲🇽", x: 80, y: 100 },
-    to: { code: "US", name: "United States", flag: "🇺🇸", x: 100, y: 70 },
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-[500px] rounded-lg border-4 border-black shadow-[8px_8px_0_0_#000] bg-gray-900 flex items-center justify-center">
+        <div className="text-white text-center">
+          <div className="animate-spin w-12 h-12 border-4 border-white border-t-transparent rounded-full mx-auto mb-4" />
+          <p className="text-lg font-bold">Loading Globe...</p>
+        </div>
+      </div>
+    ),
+  }
+);
+
+// Import CORRIDORS from the map component for consistency
+const CORRIDORS = [
+  {
+    id: "mx-us",
+    from: { code: "MX", name: "Mexico", flag: "🇲🇽" },
+    to: { code: "US", name: "United States", flag: "🇺🇸" },
     migrants: "11M+",
-    trend: "stable",
+    trend: "stable" as const,
     color: "#ef4444",
   },
   {
-    from: { code: "IN", name: "India", flag: "🇮🇳", x: 290, y: 110 },
-    to: { code: "US", name: "United States", flag: "🇺🇸", x: 100, y: 70 },
+    id: "in-us",
+    from: { code: "IN", name: "India", flag: "🇮🇳" },
+    to: { code: "US", name: "United States", flag: "🇺🇸" },
     migrants: "2.7M+",
-    trend: "up",
+    trend: "up" as const,
     color: "#f97316",
   },
   {
-    from: { code: "NG", name: "Nigeria", flag: "🇳🇬", x: 195, y: 140 },
-    to: { code: "UK", name: "United Kingdom", flag: "🇬🇧", x: 185, y: 65 },
+    id: "ng-uk",
+    from: { code: "NG", name: "Nigeria", flag: "🇳🇬" },
+    to: { code: "UK", name: "United Kingdom", flag: "🇬🇧" },
     migrants: "250K+",
-    trend: "up",
+    trend: "up" as const,
     color: "#22c55e",
   },
   {
-    from: { code: "PH", name: "Philippines", flag: "🇵🇭", x: 340, y: 130 },
-    to: { code: "CA", name: "Canada", flag: "🇨🇦", x: 90, y: 50 },
+    id: "ph-ca",
+    from: { code: "PH", name: "Philippines", flag: "🇵🇭" },
+    to: { code: "CA", name: "Canada", flag: "🇨🇦" },
     migrants: "900K+",
-    trend: "up",
+    trend: "up" as const,
     color: "#3b82f6",
   },
   {
-    from: { code: "BR", name: "Brazil", flag: "🇧🇷", x: 130, y: 170 },
-    to: { code: "PT", name: "Portugal", flag: "🇵🇹", x: 175, y: 80 },
+    id: "br-pt",
+    from: { code: "BR", name: "Brazil", flag: "🇧🇷" },
+    to: { code: "PT", name: "Portugal", flag: "🇵🇹" },
     migrants: "200K+",
-    trend: "up",
+    trend: "up" as const,
     color: "#eab308",
   },
   {
-    from: { code: "CN", name: "China", flag: "🇨🇳", x: 320, y: 90 },
-    to: { code: "AU", name: "Australia", flag: "🇦🇺", x: 360, y: 180 },
+    id: "cn-au",
+    from: { code: "CN", name: "China", flag: "🇨🇳" },
+    to: { code: "AU", name: "Australia", flag: "🇦🇺" },
     migrants: "650K+",
-    trend: "stable",
+    trend: "stable" as const,
     color: "#8b5cf6",
   },
 ];
+
+// Animation variants
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.3,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: "easeOut" as const,
+    },
+  },
+};
+
+const mapVariants = {
+  hidden: { opacity: 0, scale: 0.95 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      duration: 0.8,
+      ease: "easeOut" as const,
+    },
+  },
+};
 
 interface CorridorsMapSectionProps {
   title: string;
@@ -62,122 +115,55 @@ interface CorridorsMapSectionProps {
 }
 
 export function CorridorsMapSection({ title, subtitle }: CorridorsMapSectionProps) {
-  const [hoveredCorridor, setHoveredCorridor] = useState<number | null>(null);
+  const [hoveredCorridor, setHoveredCorridor] = useState<string | null>(null);
 
   return (
-    <section className="py-24 bg-gradient-to-b from-amber-50 to-white overflow-hidden">
+    <section className="py-24 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 overflow-hidden">
       <div className="container mx-auto px-4">
         {/* Section header */}
-        <div className="text-center mb-12">
-          <h2 className="font-head text-4xl md:text-5xl mb-4">{title}</h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">{subtitle}</p>
-        </div>
+        <motion.div
+          className="text-center mb-12"
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6 }}
+        >
+          <h2 className="font-head text-4xl md:text-5xl mb-4 text-white">{title}</h2>
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto">{subtitle}</p>
+        </motion.div>
 
-        {/* Interactive map */}
-        <div className="relative max-w-5xl mx-auto">
-          <div className="border-4 border-black shadow-[8px_8px_0_0_#000] bg-cyan-100 rounded-lg overflow-hidden">
-            <svg viewBox="0 0 420 240" className="w-full h-auto">
-              {/* Ocean background */}
-              <rect width="420" height="240" fill="#bae6fd" />
-
-              {/* Grid pattern */}
-              <defs>
-                <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
-                  <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#7dd3fc" strokeWidth="0.5" />
-                </pattern>
-              </defs>
-              <rect width="420" height="240" fill="url(#grid)" />
-
-              {/* Simplified continents */}
-              <g fill="#4ade80" stroke="#166534" strokeWidth="1.5">
-                {/* North America */}
-                <path d="M 50,40 Q 80,25 120,35 L 130,80 Q 100,110 60,95 Q 45,70 50,40 Z" />
-                {/* South America */}
-                <path d="M 100,130 Q 120,120 135,135 L 130,195 Q 105,210 95,180 Q 90,150 100,130 Z" />
-                {/* Europe */}
-                <path d="M 170,50 Q 200,35 220,50 L 220,85 Q 195,95 170,80 Z" />
-                {/* Africa */}
-                <path d="M 175,100 Q 210,90 230,110 L 225,175 Q 195,190 175,160 Z" />
-                {/* Asia */}
-                <path d="M 230,30 Q 300,20 370,50 L 360,120 Q 300,140 240,100 Z" />
-                {/* Australia */}
-                <path d="M 340,160 Q 375,150 395,170 L 390,200 Q 355,215 340,195 Z" />
-              </g>
-
-              {/* Migration corridors */}
-              {corridors.map((corridor, i) => {
-                const isHovered = hoveredCorridor === i;
-                const midX = (corridor.from.x + corridor.to.x) / 2;
-                const midY = Math.min(corridor.from.y, corridor.to.y) - 30;
-
-                return (
-                  <g
-                    key={i}
-                    className="cursor-pointer"
-                    onMouseEnter={() => setHoveredCorridor(i)}
-                    onMouseLeave={() => setHoveredCorridor(null)}
-                  >
-                    {/* Path */}
-                    <path
-                      d={`M ${corridor.from.x} ${corridor.from.y} Q ${midX} ${midY} ${corridor.to.x} ${corridor.to.y}`}
-                      fill="none"
-                      stroke={corridor.color}
-                      strokeWidth={isHovered ? 4 : 2}
-                      strokeDasharray={isHovered ? "0" : "6,4"}
-                      opacity={isHovered ? 1 : 0.7}
-                      className="transition-all duration-200"
-                    />
-
-                    {/* Origin marker */}
-                    <circle
-                      cx={corridor.from.x}
-                      cy={corridor.from.y}
-                      r={isHovered ? 8 : 5}
-                      fill={corridor.color}
-                      stroke="#000"
-                      strokeWidth="2"
-                      className="transition-all duration-200"
-                    />
-
-                    {/* Destination marker */}
-                    <circle
-                      cx={corridor.to.x}
-                      cy={corridor.to.y}
-                      r={isHovered ? 10 : 7}
-                      fill={corridor.color}
-                      stroke="#000"
-                      strokeWidth="2"
-                      className="transition-all duration-200"
-                    />
-
-                    {/* Animated dot on path */}
-                    {isHovered && (
-                      <circle r="4" fill="white" stroke={corridor.color} strokeWidth="2">
-                        <animateMotion
-                          dur="2s"
-                          repeatCount="indefinite"
-                          path={`M ${corridor.from.x} ${corridor.from.y} Q ${midX} ${midY} ${corridor.to.x} ${corridor.to.y}`}
-                        />
-                      </circle>
-                    )}
-                  </g>
-                );
-              })}
-            </svg>
-          </div>
+        {/* Interactive globe map */}
+        <motion.div
+          className="relative max-w-5xl mx-auto"
+          variants={mapVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+        >
+          <InteractiveGlobeMap
+            hoveredCorridor={hoveredCorridor}
+            onCorridorHover={setHoveredCorridor}
+          />
 
           {/* Corridor cards */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mt-6">
-            {corridors.map((corridor, i) => (
-              <div
-                key={i}
+          <motion.div
+            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mt-6"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
+            {CORRIDORS.map((corridor) => (
+              <motion.div
+                key={corridor.id}
+                variants={itemVariants}
                 className={`
                   bg-white border-3 border-black p-3
                   shadow-[3px_3px_0_0_#000]
                   hover:shadow-[1px_1px_0_0_#000]
                   hover:translate-x-[2px] hover:translate-y-[2px]
                   transition-all duration-200 cursor-pointer
-                  ${hoveredCorridor === i ? "ring-2 ring-offset-2" : ""}
+                  ${hoveredCorridor === corridor.id ? "ring-2 ring-offset-2 scale-105" : ""}
                 `}
                 style={{
                   borderLeftColor: corridor.color,
@@ -185,8 +171,10 @@ export function CorridorsMapSection({ title, subtitle }: CorridorsMapSectionProp
                   // @ts-expect-error CSS custom property
                   "--tw-ring-color": corridor.color,
                 }}
-                onMouseEnter={() => setHoveredCorridor(i)}
+                onMouseEnter={() => setHoveredCorridor(corridor.id)}
                 onMouseLeave={() => setHoveredCorridor(null)}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
               >
                 <div className="flex items-center justify-center gap-1 mb-1">
                   <span className="text-xl">{corridor.from.flag}</span>
@@ -204,10 +192,23 @@ export function CorridorsMapSection({ title, subtitle }: CorridorsMapSectionProp
                     )}
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
+
+        {/* Call to action */}
+        <motion.div
+          className="text-center mt-12"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.5 }}
+        >
+          <p className="text-gray-400 text-sm">
+            Hover over corridors to explore • Globe rotates automatically
+          </p>
+        </motion.div>
       </div>
     </section>
   );

@@ -20,8 +20,37 @@
   "landing": {
     "title": "TRIBE",
     "subtitle": "Ang Network ng Diaspora Intelligence",
-    "getStarted": "Magsimula",
-    "learnMore": "Alamin Pa"
+    "heroSubtitle": "Ang iyong personal na gabay sa paglipat sa ibang bansa. Totoong payo mula sa totoong migrante, organisado sa mga hakbang-hakbang na protocol.",
+    "tagline": "AI-Powered Migration Intelligence",
+    "getStarted": "Simulan Ang Iyong Paglalakbay",
+    "learnMore": "Tingnan Kung Paano Gumagana",
+    "signIn": "Mag-sign In",
+    "howItWorks": {
+      "title": "Paano Gumagana Ang TRIBE",
+      "subtitle": "Mula nalilito hanggang kumpiyansa sa apat na simpleng hakbang"
+    },
+    "features": {
+      "title": "Lahat Ng Kailangan Mo",
+      "subtitle": "Naisip na namin ang mga tanong na hindi mo pa naitanong"
+    },
+    "whoIsItFor": {
+      "title": "Para Kanino Ang TRIBE?",
+      "subtitle": "Kung nangangarap ka man, nagpaplano, naglilipat, o nagse-settle — nandito kami"
+    },
+    "corridors": {
+      "title": "Mga Sikat Na Migration Corridor",
+      "subtitle": "Milyun-milyong tao ang gumagawa ng mga paglalakbay na ito. Nandito kami para tumulong."
+    },
+    "cta": {
+      "title": "Handa Ka Na Bang Kumilos?",
+      "subtitle": "Sumali sa libu-libong migrante na gumagamit ng TRIBE para i-navigate ang kanilang paglalakbay nang may kumpiyansa.",
+      "button": "Magsimula Nang Libre",
+      "badge": "Libre ang pagsisimula"
+    },
+    "footer": {
+      "tagline": "Ang Network ng Diaspora Intelligence",
+      "copyright": "2024 TRIBE. Ginawa nang may pagmamahal para sa mga migrante sa buong mundo."
+    }
   },
   "auth": {
     "signIn": "Mag-sign In",

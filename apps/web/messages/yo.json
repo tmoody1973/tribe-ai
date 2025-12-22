@@ -20,8 +20,37 @@
   "landing": {
     "title": "TRIBE",
     "subtitle": "Nẹ́tíwọ̀ọ̀kì Ìmọ̀ Àwọn Ará Ilẹ̀",
-    "getStarted": "Bẹ̀rẹ̀",
-    "learnMore": "Kẹ́kọ̀ọ́ Síi"
+    "heroSubtitle": "Ìtọ́sọ́nà àdáni rẹ láti kó lọ sí orílẹ̀-èdè mìíràn. Ìmọ̀ràn gidi láti ọ̀dọ̀ àwọn tó ti ṣe é, tí a tò sínú ìlànà ìgbésẹ̀.",
+    "tagline": "Ìmọ̀ Ìṣíkiri pẹ̀lú AI",
+    "getStarted": "Bẹ̀rẹ̀ Ìrìnàjò Rẹ",
+    "learnMore": "Wo Bí Ó Ṣe Ń Ṣiṣẹ́",
+    "signIn": "Wọlé",
+    "howItWorks": {
+      "title": "Bí TRIBE Ṣe Ń Ṣiṣẹ́",
+      "subtitle": "Láti ìdàrúdàpọ̀ sí ìgbẹ́kẹ̀lé ní ìgbésẹ̀ mẹ́rin"
+    },
+    "features": {
+      "title": "Gbogbo Ohun Tí O Nílò",
+      "subtitle": "A ti rò àwọn ìbéèrè tí o kò tíì béèrè"
+    },
+    "whoIsItFor": {
+      "title": "Ta Ni TRIBE Wà Fún?",
+      "subtitle": "Bóyá o ń là álá, o ń gbèrò, o ń kó padà, tàbí o ń forílẹ̀ múlẹ̀ — a wà pẹ̀lú rẹ"
+    },
+    "corridors": {
+      "title": "Àwọn Kọ́rídọ̀ Ìṣíkiri Olókìkí",
+      "subtitle": "Àwọn mílíọ̀nù ènìyàn ń ṣe àwọn ìrìnàjò wọ̀nyí. A wà níbí láti ràn wọ́n lọ́wọ́."
+    },
+    "cta": {
+      "title": "Ṣe O Ṣetán Láti Kó?",
+      "subtitle": "Darapọ̀ mọ́ ẹgbẹẹgbẹ̀rún àwọn tí wọ́n ń lo TRIBE láti darí ìrìnàjò wọn pẹ̀lú ìgbẹ́kẹ̀lé.",
+      "button": "Bẹ̀rẹ̀ Lọ́fẹ̀ẹ́",
+      "badge": "Ó lọ́fẹ̀ẹ́ pátápátá láti bẹ̀rẹ̀"
+    },
+    "footer": {
+      "tagline": "Nẹ́tíwọ̀ọ̀kì Ìmọ̀ Àwọn Ará Ilẹ̀",
+      "copyright": "2024 TRIBE. A ṣe pẹ̀lú ìfẹ́ fún àwọn aṣíkiri níbi gbogbo."
+    }
   },
   "auth": {
     "signIn": "Wọlé",

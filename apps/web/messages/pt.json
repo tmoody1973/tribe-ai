@@ -20,8 +20,37 @@
   "landing": {
     "title": "TRIBE",
     "subtitle": "A Rede de Inteligência da Diáspora",
-    "getStarted": "Começar",
-    "learnMore": "Saiba Mais"
+    "heroSubtitle": "Seu guia pessoal para se mudar para o exterior. Conselhos reais de migrantes reais, organizados em protocolos passo a passo.",
+    "tagline": "Inteligência de Migração com IA",
+    "getStarted": "Comece Sua Jornada",
+    "learnMore": "Veja Como Funciona",
+    "signIn": "Entrar",
+    "howItWorks": {
+      "title": "Como o TRIBE Funciona",
+      "subtitle": "De confuso a confiante em quatro passos simples"
+    },
+    "features": {
+      "title": "Tudo o Que Você Precisa",
+      "subtitle": "Pensamos nas perguntas que você ainda nem fez"
+    },
+    "whoIsItFor": {
+      "title": "Para Quem é o TRIBE?",
+      "subtitle": "Esteja você sonhando, planejando, se mudando ou se estabelecendo — estamos aqui"
+    },
+    "corridors": {
+      "title": "Corredores de Migração Populares",
+      "subtitle": "Milhões de pessoas estão fazendo essas jornadas. Estamos aqui para ajudar."
+    },
+    "cta": {
+      "title": "Pronto Para Dar o Próximo Passo?",
+      "subtitle": "Junte-se a milhares de migrantes que estão usando o TRIBE para navegar sua jornada com confiança.",
+      "button": "Começar Grátis",
+      "badge": "É totalmente grátis para começar"
+    },
+    "footer": {
+      "tagline": "A Rede de Inteligência da Diáspora",
+      "copyright": "2024 TRIBE. Feito com amor para migrantes em todo o mundo."
+    }
   },
   "auth": {
     "signIn": "Entrar",

@@ -20,8 +20,37 @@
   "landing": {
     "title": "TRIBE",
     "subtitle": "The Diaspora Intelligence Network",
-    "getStarted": "Get Started",
-    "learnMore": "Learn More"
+    "heroSubtitle": "Your personal guide to moving abroad. Real advice from real migrants, organized into step-by-step protocols you can actually follow.",
+    "tagline": "AI-Powered Migration Intelligence",
+    "getStarted": "Start Your Journey",
+    "learnMore": "See How It Works",
+    "signIn": "Sign In",
+    "howItWorks": {
+      "title": "How TRIBE Works",
+      "subtitle": "From confused to confident in four simple steps"
+    },
+    "features": {
+      "title": "Everything You Need",
+      "subtitle": "We've thought of the questions you haven't even asked yet"
+    },
+    "whoIsItFor": {
+      "title": "Who Is TRIBE For?",
+      "subtitle": "Whether you're dreaming, planning, moving, or settling — we've got your back"
+    },
+    "corridors": {
+      "title": "Popular Migration Corridors",
+      "subtitle": "Millions of people are making these journeys. We're here to help."
+    },
+    "cta": {
+      "title": "Ready to Make Your Move?",
+      "subtitle": "Join thousands of migrants who are using TRIBE to navigate their journey with confidence.",
+      "button": "Get Started Free",
+      "badge": "It's completely free to start"
+    },
+    "footer": {
+      "tagline": "The Diaspora Intelligence Network",
+      "copyright": "2024 TRIBE. Built with love for migrants everywhere."
+    }
   },
   "auth": {
     "signIn": "Sign In",

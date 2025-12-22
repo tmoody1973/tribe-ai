@@ -20,8 +20,37 @@
   "landing": {
     "title": "TRIBE",
     "subtitle": "Le Réseau d'Intelligence de la Diaspora",
-    "getStarted": "Commencer",
-    "learnMore": "En savoir plus"
+    "heroSubtitle": "Votre guide personnel pour déménager à l'étranger. Des conseils réels de vrais migrants, organisés en protocoles étape par étape.",
+    "tagline": "Intelligence Migratoire par IA",
+    "getStarted": "Commencez Votre Voyage",
+    "learnMore": "Découvrez Comment Ça Marche",
+    "signIn": "Se Connecter",
+    "howItWorks": {
+      "title": "Comment Fonctionne TRIBE",
+      "subtitle": "De confus à confiant en quatre étapes simples"
+    },
+    "features": {
+      "title": "Tout Ce Dont Vous Avez Besoin",
+      "subtitle": "Nous avons pensé aux questions que vous n'avez pas encore posées"
+    },
+    "whoIsItFor": {
+      "title": "Pour Qui Est TRIBE?",
+      "subtitle": "Que vous rêviez, planifiez, déménagiez ou vous installiez — nous sommes là"
+    },
+    "corridors": {
+      "title": "Corridors de Migration Populaires",
+      "subtitle": "Des millions de personnes font ces voyages. Nous sommes là pour aider."
+    },
+    "cta": {
+      "title": "Prêt à Faire le Pas?",
+      "subtitle": "Rejoignez des milliers de migrants qui utilisent TRIBE pour naviguer leur voyage en toute confiance.",
+      "button": "Commencer Gratuitement",
+      "badge": "C'est entièrement gratuit pour commencer"
+    },
+    "footer": {
+      "tagline": "Le Réseau d'Intelligence de la Diaspora",
+      "copyright": "2024 TRIBE. Fait avec amour pour les migrants du monde entier."
+    }
   },
   "auth": {
     "signIn": "Se connecter",

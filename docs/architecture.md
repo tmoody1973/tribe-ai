@@ -46,6 +46,7 @@ TRIBE is built from scratch using a modern Convex + Next.js stack optimized for 
 | Date | Version | Description | Author |
 |------|---------|-------------|--------|
 | 2025-12-21 | 1.0 | Initial architecture document | Winston |
+| 2025-12-22 | 1.1 | Added Google Cloud Translation integration for dynamic content | Claude |
 
 ---
 
@@ -160,6 +161,7 @@ tribe-ai/
 | Service | Purpose |
 |---------|---------|
 | Anthropic Claude | LLM for agent reasoning (claude-sonnet-4) |
+| Google Cloud Translation | Dynamic content translation (130+ languages) |
 | ElevenLabs | Text-to-speech, speech-to-text |
 | Firecrawl | Web scraping |
 | Tavily | Web search |
@@ -442,6 +444,7 @@ export function CorridorCard({ corridorId }: CorridorCardProps) {
 | Travel Buddy API | Visa requirements | 120/month (free) | 24h in Convex |
 | REST Countries | Country metadata | Unlimited | 7 days |
 | Voyage AI | Embeddings | 10k/month | N/A (stored) |
+| Google Cloud Translation | Dynamic content | 500k chars/month | Convex (content-hash) |
 | Firecrawl | Web scraping | 500/month | Content stored |
 | Tavily | Web search | 1000/month | 1h in Upstash |
 | Perplexity | Policy queries | 100/day | 1h in Upstash |
@@ -476,6 +479,52 @@ export async function getVisaRequirements(origin: string, destination: string) {
   await redis.setex(`visa:${origin}:${destination}`, 86400, JSON.stringify(data));
 
   return data;
+}
+
+// lib/api/translation.ts
+import { TranslationServiceClient } from "@google-cloud/translate";
+import { createHash } from "crypto";
+
+const translationClient = new TranslationServiceClient();
+const projectId = process.env.GOOGLE_CLOUD_PROJECT_ID;
+const location = "global";
+
+// Content-hash based caching for translation deduplication
+function getContentHash(text: string, targetLang: string): string {
+  return createHash("sha256").update(`${text}:${targetLang}`).digest("hex").slice(0, 16);
+}
+
+export async function translateDynamicContent(
+  text: string,
+  targetLang: string,
+  sourceLocale: string = "en"
+): Promise<{ text: string; cached: boolean }> {
+  // Check Convex cache first
+  const contentHash = getContentHash(text, targetLang);
+  const cached = await ctx.runQuery(api.translations.getCached, { hash: contentHash });
+  if (cached) return { text: cached.translatedText, cached: true };
+
+  // Call Google Cloud Translation API
+  const [response] = await translationClient.translateText({
+    parent: `projects/${projectId}/locations/${location}`,
+    contents: [text],
+    mimeType: "text/plain",
+    sourceLanguageCode: sourceLocale,
+    targetLanguageCode: targetLang,
+  });
+
+  const translatedText = response.translations?.[0]?.translatedText ?? text;
+
+  // Store in Convex for future requests
+  await ctx.runMutation(api.translations.cache, {
+    hash: contentHash,
+    originalText: text,
+    translatedText,
+    sourceLocale,
+    targetLocale: targetLang,
+  });
+
+  return { text: translatedText, cached: false };
 }
 ```
 
@@ -732,6 +781,21 @@ export default defineSchema({
   })
     .index("by_corridor", ["origin", "destination"])
     .index("by_expiry", ["expiresAt"]),
+
+  // Translation cache (content-hash based deduplication)
+  translations: defineTable({
+    hash: v.string(),              // SHA256 hash of content + target locale
+    originalText: v.string(),
+    translatedText: v.string(),
+    sourceLocale: v.string(),
+    targetLocale: v.string(),
+    charCount: v.number(),         // For usage tracking
+    createdAt: v.number(),
+    expiresAt: v.number(),         // TTL for cache invalidation
+  })
+    .index("by_hash", ["hash"])
+    .index("by_expiry", ["expiresAt"])
+    .index("by_locale_pair", ["sourceLocale", "targetLocale"]),
 });
 ```
 
@@ -1767,6 +1831,8 @@ ELEVENLABS_API_KEY=
 FIRECRAWL_API_KEY=
 TAVILY_API_KEY=
 TRAVEL_BUDDY_API_KEY=
+GOOGLE_CLOUD_PROJECT_ID=
+GOOGLE_CLOUD_API_KEY=
 
 # Caching (set in Convex)
 UPSTASH_REDIS_REST_URL=

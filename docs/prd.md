@@ -56,7 +56,7 @@ The 2-week hackathon constraint requires ruthless prioritization. The MVP focuse
 - **FR14:** System shall provide voice agent for conversational Q&A using ElevenLabs STT + Claude + TTS pipeline
 - **FR15:** System shall implement dynamic corridor research agent using Mastra framework
 - **FR16:** System shall cache corridor protocols in Convex and refresh when data is >30 days stale
-- **FR17:** System shall translate dynamic content (protocols, Q&A responses, audio scripts) at runtime via Claude
+- **FR17:** System shall translate dynamic content (protocols, Q&A responses, audio scripts) at runtime via Google Cloud Translation API with intelligent caching
 - **FR18:** System shall authenticate users via Clerk with email/social login options
 - **FR19:** System shall persist user profile (language, corridor, stage, checklist progress) in Convex
 - **FR20:** System shall support any corridor dynamically (not limited to pre-defined list)

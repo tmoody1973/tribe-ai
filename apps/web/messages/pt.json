@@ -145,6 +145,11 @@
       "low": "Baixa Prioridade"
     }
   },
+  "attribution": {
+    "anonymous": "Anônimo",
+    "viewSource": "Ver Fonte",
+    "communityVerified": "Verificado pela Comunidade"
+  },
   "errors": {
     "NETWORK_ERROR": "Erro de conexão. Por favor, verifique sua internet.",
     "UNAUTHORIZED": "Por favor, entre para continuar",

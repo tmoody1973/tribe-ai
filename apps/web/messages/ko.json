@@ -145,6 +145,11 @@
       "low": "낮은 우선순위"
     }
   },
+  "attribution": {
+    "anonymous": "익명",
+    "viewSource": "출처 보기",
+    "communityVerified": "커뮤니티 인증됨"
+  },
   "errors": {
     "NETWORK_ERROR": "연결 오류. 인터넷을 확인해 주세요.",
     "UNAUTHORIZED": "계속하려면 로그인해 주세요",

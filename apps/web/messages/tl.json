@@ -145,6 +145,11 @@
       "low": "Mababang Priyoridad"
     }
   },
+  "attribution": {
+    "anonymous": "Hindi Kilala",
+    "viewSource": "Tingnan ang Pinagmulan",
+    "communityVerified": "Na-verify ng Komunidad"
+  },
   "errors": {
     "NETWORK_ERROR": "Error sa koneksyon. Pakisuri ang iyong internet.",
     "UNAUTHORIZED": "Mangyaring mag-sign in upang magpatuloy",

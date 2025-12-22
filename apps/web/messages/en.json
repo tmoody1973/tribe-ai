@@ -145,6 +145,11 @@
       "low": "Low Priority"
     }
   },
+  "attribution": {
+    "anonymous": "Anonymous",
+    "viewSource": "View Source",
+    "communityVerified": "Community Verified"
+  },
   "errors": {
     "NETWORK_ERROR": "Connection error. Please check your internet.",
     "UNAUTHORIZED": "Please sign in to continue",

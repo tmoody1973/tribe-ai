@@ -145,6 +145,11 @@
       "low": "निम्न प्राथमिकता"
     }
   },
+  "attribution": {
+    "anonymous": "अनाम",
+    "viewSource": "स्रोत देखें",
+    "communityVerified": "समुदाय द्वारा सत्यापित"
+  },
   "errors": {
     "NETWORK_ERROR": "कनेक्शन त्रुटि। कृपया अपना इंटरनेट जांचें।",
     "UNAUTHORIZED": "कृपया जारी रखने के लिए साइन इन करें",

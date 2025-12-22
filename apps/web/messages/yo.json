@@ -145,6 +145,11 @@
       "low": "Àkóso Kékeré"
     }
   },
+  "attribution": {
+    "anonymous": "Aláìlórúkọ",
+    "viewSource": "Wo Orísun",
+    "communityVerified": "Àwùjọ Ti Fìdí Múlẹ̀"
+  },
   "errors": {
     "NETWORK_ERROR": "Àṣìṣe ìsopọ̀. Jọ̀wọ́ ṣàyẹ̀wò íntánẹ́ẹ̀tì rẹ.",
     "UNAUTHORIZED": "Jọ̀wọ́ wọlé láti tẹ̀síwájú",

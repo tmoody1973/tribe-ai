@@ -4,10 +4,19 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Id } from "@/convex/_generated/dataModel";
 import { ChevronDown, ChevronUp, AlertTriangle, Lightbulb } from "lucide-react";
+import { Attribution, detectSourceType } from "./Attribution";
+import { CommunityVerifiedBadge } from "./CommunityVerifiedBadge";
 
 type Category = "visa" | "finance" | "housing" | "employment" | "legal" | "health" | "social";
 type Priority = "critical" | "high" | "medium" | "low";
 type Status = "not_started" | "in_progress" | "completed" | "blocked";
+
+interface AttributionData {
+  authorName?: string;
+  sourceUrl: string;
+  sourceDate?: number;
+  engagement?: number;
+}
 
 interface Protocol {
   _id: Id<"protocols">;
@@ -18,6 +27,7 @@ interface Protocol {
   priority: Priority;
   warnings?: string[];
   hacks?: string[];
+  attribution?: AttributionData;
   order: number;
 }
 
@@ -153,14 +163,27 @@ export function ProtocolCard({ protocol, isCurrent }: ProtocolCardProps) {
             </div>
           )}
 
-          {/* Priority Badge */}
-          <div className="flex items-center justify-between mt-4">
+          {/* Priority Badge & Attribution */}
+          <div className="flex items-center justify-between mt-4 flex-wrap gap-2">
             <span
               className={`px-2 py-1 text-xs font-bold ${priorityColors[protocol.priority]}`}
             >
               {t(`priorities.${protocol.priority}`)}
             </span>
+            {protocol.attribution && (
+              <CommunityVerifiedBadge engagement={protocol.attribution.engagement} />
+            )}
           </div>
+
+          {/* Attribution Section */}
+          {protocol.attribution && (
+            <div className="mt-4 pt-4 border-t-2 border-gray-300">
+              <Attribution
+                attribution={protocol.attribution}
+                source={detectSourceType(protocol.attribution.sourceUrl)}
+              />
+            </div>
+          )}
         </div>
       )}
     </div>

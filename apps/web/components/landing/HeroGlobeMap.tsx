@@ -157,7 +157,7 @@ export function HeroGlobeMap() {
   if (!mapboxToken) {
     // Fallback if no token - show a stylized placeholder
     return (
-      <div className="relative w-80 h-80 md:w-96 md:h-96 rounded-full overflow-hidden border-4 border-black shadow-[8px_8px_0_0_#000] bg-gradient-to-br from-cyan-100 via-blue-200 to-indigo-200">
+      <div className="relative w-[320px] h-[320px] md:w-[420px] md:h-[420px] lg:w-[480px] lg:h-[480px] rounded-full overflow-hidden border-4 border-black shadow-[8px_8px_0_0_#000] bg-gradient-to-br from-cyan-100 via-blue-200 to-indigo-200">
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center">
             <span className="text-6xl">🌍</span>
@@ -169,7 +169,7 @@ export function HeroGlobeMap() {
   }
 
   return (
-    <div className="relative w-80 h-80 md:w-96 md:h-96">
+    <div className="relative w-[320px] h-[320px] md:w-[420px] md:h-[420px] lg:w-[480px] lg:h-[480px]">
       {/* Outer glow effect */}
       <div className="absolute inset-0 rounded-full bg-gradient-to-br from-cyan-200 via-blue-200 to-indigo-200 blur-2xl opacity-60 animate-pulse" />
 

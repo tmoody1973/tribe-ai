@@ -11,7 +11,7 @@ const HeroGlobeMap = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="relative w-80 h-80 md:w-96 md:h-96">
+      <div className="relative w-[320px] h-[320px] md:w-[420px] md:h-[420px] lg:w-[480px] lg:h-[480px]">
         {/* Loading placeholder with glow effect */}
         <div className="absolute inset-0 rounded-full bg-gradient-to-br from-cyan-200 via-blue-200 to-indigo-200 blur-2xl opacity-60 animate-pulse" />
         <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-black shadow-[8px_8px_0_0_#000] bg-gradient-to-br from-cyan-100 via-blue-200 to-indigo-200 flex items-center justify-center">
@@ -25,37 +25,6 @@ const HeroGlobeMap = dynamic(
   }
 );
 
-// Floating flag badges - positioned to frame the content without overlapping
-function FloatingFlags() {
-  const flags = [
-    { flag: "🇺🇸", label: "USA", top: "15%", left: "5%", delay: "0s" },
-    { flag: "🇬🇧", label: "UK", top: "25%", right: "6%", delay: "0.3s" },
-    { flag: "🇨🇦", label: "Canada", top: "8%", right: "15%", delay: "0.6s" },
-    { flag: "🇩🇪", label: "Germany", bottom: "20%", right: "8%", delay: "0.9s" },
-    { flag: "🇦🇺", label: "Australia", bottom: "30%", left: "4%", delay: "1.2s" },
-  ];
-
-  return (
-    <>
-      {flags.map((item, i) => (
-        <div
-          key={i}
-          className="absolute hidden lg:flex items-center gap-2 bg-white border-2 border-black px-3 py-1.5 shadow-[3px_3px_0_0_#000] animate-float"
-          style={{
-            top: item.top,
-            bottom: item.bottom,
-            left: item.left,
-            right: item.right,
-            animationDelay: item.delay,
-          }}
-        >
-          <span className="text-xl">{item.flag}</span>
-          <span className="font-bold text-sm">{item.label}</span>
-        </div>
-      ))}
-    </>
-  );
-}
 
 interface HeroSectionProps {
   title: string;
@@ -76,9 +45,7 @@ export function HeroSection({ title, subtitle, tagline, ctaText, secondaryCtaTex
         }} />
       </div>
 
-      {/* Floating flags */}
-      <FloatingFlags />
-
+      
       <div className="container mx-auto px-4 py-20 relative z-10">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
           {/* Left: Text content */}
@@ -149,17 +116,6 @@ export function HeroSection({ title, subtitle, tagline, ctaText, secondaryCtaTex
           <div className="w-1.5 h-3 bg-black rounded-full animate-pulse" />
         </div>
       </div>
-
-      {/* Custom animation */}
-      <style jsx>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-10px); }
-        }
-        .animate-float {
-          animation: float 3s ease-in-out infinite;
-        }
-      `}</style>
     </section>
   );
 }

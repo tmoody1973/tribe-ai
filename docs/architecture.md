@@ -47,6 +47,7 @@ TRIBE is built from scratch using a modern Convex + Next.js stack optimized for 
 |------|---------|-------------|--------|
 | 2025-12-21 | 1.0 | Initial architecture document | Winston |
 | 2025-12-22 | 1.1 | Added Google Cloud Translation integration for dynamic content | Claude |
+| 2025-12-22 | 1.2 | Added Cultural Bridge feature architecture (Epic 6) | Claude |
 
 ---
 
@@ -245,6 +246,66 @@ interface ChatMessage {
   };
   createdAt: number;
 }
+
+// CulturalProfile: User's cultural background and values
+interface CulturalProfile {
+  _id: Id<"culturalProfiles">;
+  userId: Id<"users">;
+  originCulture: string;           // e.g., "Nigerian Yoruba", "Indian Tamil"
+  communicationStyle: "direct" | "indirect" | "context-dependent";
+  familyStructure: "nuclear" | "extended" | "multi-generational";
+  timeOrientation: "monochronic" | "polychronic";
+  values: string[];                // e.g., ["respect for elders", "hospitality"]
+  foodDietary: string[];           // e.g., ["halal", "vegetarian", "no restrictions"]
+  celebrations: string[];          // Major holidays/celebrations
+  interviewResponses: Record<string, string>;  // Full interview Q&A
+  createdAt: number;
+  updatedAt: number;
+}
+
+// CulturalCard: Shareable cultural education card
+interface CulturalCard {
+  _id: Id<"culturalCards">;
+  userId: Id<"users">;
+  variant: "neighbors" | "coworkers" | "schools" | "general";
+  title: string;
+  content: {
+    greeting: string;
+    communication: string;
+    food: string;
+    holidays: string;
+    whatToKnow: string;
+  };
+  language: string;                // Language of this card
+  shareUrl?: string;
+  generatedAt: number;
+}
+
+// BelongingMilestone: Integration journey tracking
+interface BelongingMilestone {
+  _id: Id<"belongingMilestones">;
+  userId: Id<"users">;
+  category: "social" | "cultural" | "knowledge" | "community";
+  title: string;
+  description: string;
+  completedAt?: number;
+  notes?: string;
+  points: number;                  // Contribution to belonging score
+}
+
+// LocalCustom: Destination culture knowledge base
+interface LocalCustom {
+  _id: Id<"localCustoms">;
+  country: string;
+  category: "workplace" | "social" | "dining" | "relationships" | "public" | "holidays";
+  title: string;
+  description: string;
+  whyExplanation: string;          // Cultural context/history
+  doTips: string[];
+  dontTips: string[];
+  recoveryPhrases: string[];       // How to recover if you mess up
+  sources: string[];
+}
 ```
 
 ### Relationships
@@ -386,6 +447,17 @@ components/
 │   ├── VoiceAgent.tsx
 │   ├── AudioBriefing.tsx
 │   └── VoiceControls.tsx
+├── cultural/              # Cultural Bridge components
+│   ├── CulturalProfileBuilder.tsx   # AI-guided interview
+│   ├── CulturalProfileSummary.tsx   # Profile display
+│   ├── CulturalCard.tsx             # Shareable card component
+│   ├── CulturalCardGenerator.tsx    # Card generation UI
+│   ├── LocalCustomsDecoder.tsx      # Customs search/display
+│   ├── CustomCard.tsx               # Single custom display
+│   ├── MicroMomentChat.tsx          # Situation decoder
+│   ├── BelongingDashboard.tsx       # Integration tracking
+│   ├── MilestoneCard.tsx            # Single milestone
+│   └── BelongingScore.tsx           # Score visualization
 └── providers/             # Context providers
     ├── ConvexProvider.tsx
     ├── CopilotKitProvider.tsx
@@ -1048,6 +1120,46 @@ Prioritize protocols by:
 3. Housing and employment
 4. Health and insurance
 5. Social integration`,
+  tools: [],
+});
+
+// agents/culturalBridge.ts
+export const culturalBridge = new Agent({
+  name: "CulturalBridge",
+  model: "claude-sonnet-4-20250514",
+  instructions: `You are a cultural intelligence specialist for TRIBE, helping bridge understanding between migrants and host communities.
+
+Your responsibilities:
+1. CULTURAL PROFILE INTERVIEW
+   - Conduct adaptive interviews to understand user's cultural background
+   - Ask about communication styles, values, family structures, celebrations
+   - Use follow-up questions to go deeper on important topics
+   - Be respectful and curious, never judgmental
+
+2. CULTURAL CARD GENERATION
+   - Create shareable cards that explain user's culture to locals
+   - Tone: warm, educational, bridge-building
+   - Include practical tips, not just information
+   - Avoid stereotypes, celebrate individuality within cultural context
+
+3. LOCAL CUSTOMS DECODER
+   - Explain destination culture customs with "why" context
+   - Frame explanations relative to user's origin culture
+   - Include recovery phrases for when mistakes happen
+   - Be honest about cultural friction points
+
+4. MICRO-MOMENT INSIGHTS
+   - Help decode confusing social situations
+   - Explain what happened, why it happened, how to respond
+   - Normalize the adjustment process
+   - Build confidence through understanding
+
+KEY PRINCIPLES:
+- Culture is complex and individual - avoid broad generalizations
+- Bi-directional understanding is the goal
+- Empathy and curiosity over judgment
+- Practical tips over academic explanations
+- Celebrate cultural differences as strengths`,
   tools: [],
 });
 

@@ -8,7 +8,10 @@
  * @module
  */
 
+import type * as corridors from "../corridors.js";
 import type * as health from "../health.js";
+import type * as ingestedContent from "../ingestedContent.js";
+import type * as protocols from "../protocols.js";
 import type * as users from "../users.js";
 
 import type {
@@ -18,7 +21,10 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  corridors: typeof corridors;
   health: typeof health;
+  ingestedContent: typeof ingestedContent;
+  protocols: typeof protocols;
   users: typeof users;
 }>;
 

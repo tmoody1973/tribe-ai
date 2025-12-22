@@ -35,4 +35,95 @@ export default defineSchema({
   })
     .index("by_clerk_id", ["clerkId"])
     .index("by_email", ["email"]),
+
+  corridors: defineTable({
+    userId: v.id("users"),
+    origin: v.string(),
+    destination: v.string(),
+    stage: v.union(
+      v.literal("dreaming"),
+      v.literal("planning"),
+      v.literal("preparing"),
+      v.literal("relocating"),
+      v.literal("settling")
+    ),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_corridor", ["origin", "destination"]),
+
+  protocols: defineTable({
+    corridorId: v.id("corridors"),
+    category: v.union(
+      v.literal("visa"),
+      v.literal("finance"),
+      v.literal("housing"),
+      v.literal("employment"),
+      v.literal("legal"),
+      v.literal("health"),
+      v.literal("social")
+    ),
+    title: v.string(),
+    description: v.string(),
+    status: v.union(
+      v.literal("not_started"),
+      v.literal("in_progress"),
+      v.literal("completed"),
+      v.literal("blocked")
+    ),
+    priority: v.union(
+      v.literal("critical"),
+      v.literal("high"),
+      v.literal("medium"),
+      v.literal("low")
+    ),
+    warnings: v.optional(v.array(v.string())),
+    hacks: v.optional(v.array(v.string())),
+    attribution: v.optional(
+      v.object({
+        authorName: v.optional(v.string()),
+        sourceUrl: v.string(),
+        sourceDate: v.optional(v.number()),
+        engagement: v.optional(v.number()),
+      })
+    ),
+    dueDate: v.optional(v.number()),
+    completedAt: v.optional(v.number()),
+    aiGenerated: v.boolean(),
+    order: v.number(),
+  })
+    .index("by_corridor", ["corridorId"])
+    .index("by_status", ["corridorId", "status"])
+    .index("by_category", ["corridorId", "category"]),
+
+  ingestedContent: defineTable({
+    corridorId: v.id("corridors"),
+    url: v.string(),
+    title: v.string(),
+    content: v.string(),
+    embedding: v.optional(v.array(v.float64())),
+    source: v.union(
+      v.literal("reddit"),
+      v.literal("forum"),
+      v.literal("blog"),
+      v.literal("government"),
+      v.literal("news")
+    ),
+    metadata: v.object({
+      author: v.optional(v.string()),
+      publishedAt: v.optional(v.number()),
+      subreddit: v.optional(v.string()),
+    }),
+    scrapedAt: v.number(),
+    expiresAt: v.number(),
+  })
+    .index("by_corridor", ["corridorId"])
+    .index("by_url", ["url"])
+    .index("by_expiry", ["expiresAt"])
+    .vectorIndex("by_embedding", {
+      vectorField: "embedding",
+      dimensions: 1024,
+      filterFields: ["corridorId"],
+    }),
 });

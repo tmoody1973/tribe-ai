@@ -47,11 +47,24 @@ export default defineSchema({
       v.literal("relocating"),
       v.literal("settling")
     ),
+    // Freshness tracking
+    lastResearchedAt: v.optional(v.number()),
+    researchStatus: v.optional(
+      v.union(
+        v.literal("fresh"),
+        v.literal("stale"),
+        v.literal("refreshing"),
+        v.literal("error")
+      )
+    ),
+    protocolCount: v.optional(v.number()),
+    errorMessage: v.optional(v.string()),
     createdAt: v.number(),
     updatedAt: v.number(),
   })
     .index("by_user", ["userId"])
-    .index("by_corridor", ["origin", "destination"]),
+    .index("by_corridor", ["origin", "destination"])
+    .index("by_status", ["researchStatus"]),
 
   protocols: defineTable({
     corridorId: v.id("corridors"),
@@ -143,4 +156,14 @@ export default defineSchema({
   })
     .index("by_origin", ["origin"])
     .index("by_corridor", ["origin", "destination"]),
+
+  metrics: defineTable({
+    event: v.string(),
+    corridorId: v.optional(v.id("corridors")),
+    metadata: v.optional(v.any()),
+    createdAt: v.number(),
+  })
+    .index("by_event", ["event"])
+    .index("by_corridor", ["corridorId"])
+    .index("by_time", ["createdAt"]),
 });

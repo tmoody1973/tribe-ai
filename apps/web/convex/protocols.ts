@@ -1,5 +1,8 @@
-import { mutation, query } from "./_generated/server";
+import { mutation, query, action } from "./_generated/server";
 import { v } from "convex/values";
+import { api } from "./_generated/api";
+
+const FRESHNESS_THRESHOLD_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
 
 export const createProtocol = mutation({
   args: {
@@ -196,5 +199,116 @@ export const deleteProtocol = mutation({
   args: { id: v.id("protocols") },
   handler: async (ctx, { id }) => {
     await ctx.db.delete(id);
+  },
+});
+
+// Delete all protocols for a corridor (used before refresh)
+export const deleteByCorridorId = mutation({
+  args: { corridorId: v.id("corridors") },
+  handler: async (ctx, { corridorId }) => {
+    const protocols = await ctx.db
+      .query("protocols")
+      .withIndex("by_corridor", (q) => q.eq("corridorId", corridorId))
+      .collect();
+
+    for (const protocol of protocols) {
+      await ctx.db.delete(protocol._id);
+    }
+
+    return { deleted: protocols.length };
+  },
+});
+
+// Cache-first protocol retrieval with freshness metadata
+export const getProtocolsWithFreshness = query({
+  args: { corridorId: v.id("corridors") },
+  handler: async (ctx, { corridorId }) => {
+    const corridor = await ctx.db.get(corridorId);
+    if (!corridor) return null;
+
+    const protocols = await ctx.db
+      .query("protocols")
+      .withIndex("by_corridor", (q) => q.eq("corridorId", corridorId))
+      .collect();
+
+    const lastResearchedAt = corridor.lastResearchedAt;
+    const isStale = !lastResearchedAt || Date.now() - lastResearchedAt >= FRESHNESS_THRESHOLD_MS;
+
+    return {
+      protocols: protocols.sort((a, b) => a.order - b.order),
+      freshness: {
+        isStale,
+        isFresh: !isStale,
+        lastResearchedAt,
+        status: corridor.researchStatus ?? "unknown",
+        refreshing: corridor.researchStatus === "refreshing",
+        protocolCount: protocols.length,
+      },
+    };
+  },
+});
+
+// Action that returns cached protocols and triggers background refresh if stale
+export const getProtocolsAndRefreshIfStale = action({
+  args: { corridorId: v.id("corridors") },
+  handler: async (ctx, { corridorId }): Promise<{
+    protocols: Array<{
+      _id: string;
+      category: string;
+      title: string;
+      description: string;
+      status: string;
+      priority: string;
+      order: number;
+    }>;
+    freshness: {
+      isStale: boolean;
+      isFresh: boolean;
+      lastResearchedAt: number | undefined;
+      status: string;
+      refreshing: boolean;
+      protocolCount: number;
+    };
+    refreshTriggered: boolean;
+  }> => {
+    // Get current protocols and freshness
+    const result = await ctx.runQuery(api.protocols.getProtocolsWithFreshness, {
+      corridorId,
+    });
+
+    if (!result) {
+      throw new Error("Corridor not found");
+    }
+
+    let refreshTriggered = false;
+
+    // If stale and not already refreshing, schedule background refresh
+    if (result.freshness.isStale && !result.freshness.refreshing) {
+      // Log cache miss
+      await ctx.runMutation(api.metrics.logEvent, {
+        event: "cache_miss",
+        corridorId,
+        metadata: { isStale: true },
+      });
+
+      // Schedule background refresh (non-blocking)
+      await ctx.scheduler.runAfter(0, api.ai.refresh.refreshCorridorInBackground, {
+        corridorId,
+      });
+      refreshTriggered = true;
+    } else {
+      // Log cache hit
+      await ctx.runMutation(api.metrics.logEvent, {
+        event: "cache_hit",
+        corridorId,
+        metadata: { isFresh: !result.freshness.isStale },
+      });
+    }
+
+    // Return cached data immediately
+    return {
+      ...result,
+      refreshTriggered,
+    };
   },
 });

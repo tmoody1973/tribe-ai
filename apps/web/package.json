@@ -11,6 +11,7 @@
   "dependencies": {
     "@ai-sdk/anthropic": "^2.0.56",
     "@clerk/nextjs": "^6.36.5",
+    "@google/genai": "^1.34.0",
     "@mastra/core": "^0.24.9",
     "@mendable/firecrawl-js": "^4.9.3",
     "@radix-ui/react-slot": "^1.2.4",
@@ -19,6 +20,7 @@
     "clsx": "^2.1.1",
     "convex": "^1.31.2",
     "lucide-react": "^0.562.0",
+    "mime": "^4.1.0",
     "next": "14.2.35",
     "next-intl": "^4.6.1",
     "react": "^18",
@@ -29,7 +31,7 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@types/node": "^20",
+    "@types/node": "^20.19.27",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "csv-parse": "^6.1.0",

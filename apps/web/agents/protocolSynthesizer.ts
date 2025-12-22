@@ -81,7 +81,7 @@ IMPORTANT GUIDELINES:
 export const protocolSynthesizer = new Agent({
   name: "ProtocolSynthesizer",
   instructions: PROTOCOL_SYNTHESIS_INSTRUCTIONS,
-  model: "anthropic/claude-sonnet-4",
+  model: "google/gemini-3-flash-preview",
   tools: {},
 });
 

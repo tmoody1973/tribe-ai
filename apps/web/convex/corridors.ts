@@ -1,5 +1,7 @@
-import { mutation, query } from "./_generated/server";
+import { mutation, query, internalMutation, internalQuery } from "./_generated/server";
 import { v } from "convex/values";
+
+const FRESHNESS_THRESHOLD_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
 
 export const createCorridor = mutation({
   args: {
@@ -124,5 +126,87 @@ export const updateCorridor = mutation({
     if (args.stage !== undefined) updates.stage = args.stage;
 
     await ctx.db.patch(args.id, updates);
+  },
+});
+
+// Freshness check query
+export const checkFreshness = query({
+  args: { corridorId: v.id("corridors") },
+  handler: async (ctx, { corridorId }) => {
+    const corridor = await ctx.db.get(corridorId);
+    if (!corridor) return null;
+
+    const lastResearchedAt = corridor.lastResearchedAt;
+    const isFresh = lastResearchedAt
+      ? Date.now() - lastResearchedAt < FRESHNESS_THRESHOLD_MS
+      : false;
+
+    return {
+      corridorId,
+      isFresh,
+      isStale: !isFresh,
+      lastResearchedAt,
+      status: corridor.researchStatus ?? (isFresh ? "fresh" : "stale"),
+      protocolCount: corridor.protocolCount ?? 0,
+      errorMessage: corridor.errorMessage,
+    };
+  },
+});
+
+// Internal mutation for updating research status
+export const updateResearchStatus = internalMutation({
+  args: {
+    corridorId: v.id("corridors"),
+    status: v.union(
+      v.literal("fresh"),
+      v.literal("stale"),
+      v.literal("refreshing"),
+      v.literal("error")
+    ),
+    protocolCount: v.optional(v.number()),
+    errorMessage: v.optional(v.string()),
+  },
+  handler: async (ctx, { corridorId, status, protocolCount, errorMessage }) => {
+    const updates: Record<string, unknown> = {
+      researchStatus: status,
+      updatedAt: Date.now(),
+    };
+
+    if (status === "fresh") {
+      updates.lastResearchedAt = Date.now();
+    }
+    if (protocolCount !== undefined) {
+      updates.protocolCount = protocolCount;
+    }
+    if (errorMessage !== undefined) {
+      updates.errorMessage = errorMessage;
+    }
+
+    await ctx.db.patch(corridorId, updates);
+  },
+});
+
+// Internal query to get stale corridors for scheduled refresh
+export const getStaleCorridors = internalQuery({
+  args: { limit: v.optional(v.number()) },
+  handler: async (ctx, { limit = 5 }) => {
+    const now = Date.now();
+    const cutoff = now - FRESHNESS_THRESHOLD_MS;
+
+    // Get all corridors and filter for stale ones
+    const allCorridors = await ctx.db.query("corridors").collect();
+
+    const staleCorridors = allCorridors.filter((c) => {
+      // Skip if already refreshing
+      if (c.researchStatus === "refreshing") return false;
+      // Include if never researched or stale
+      if (!c.lastResearchedAt) return true;
+      return c.lastResearchedAt < cutoff;
+    });
+
+    // Sort by oldest first and limit
+    return staleCorridors
+      .sort((a, b) => (a.lastResearchedAt ?? 0) - (b.lastResearchedAt ?? 0))
+      .slice(0, limit);
   },
 });

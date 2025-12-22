@@ -40,6 +40,64 @@
     "quickTip": "Dica Rápida",
     "quickTipText": "Use o recurso Pergunte ao TRIBE para obter orientação personalizada em sua jornada migratória."
   },
+  "onboarding": {
+    "title": "Bem-vindo ao TRIBE",
+    "subtitle": "Vamos configurar sua jornada migratória",
+    "steps": {
+      "origin": "De onde você é?",
+      "destination": "Para onde você está indo?",
+      "stage": "Em qual fase você está?",
+      "visa": "Qual tipo de visto? (opcional)"
+    },
+    "stages": {
+      "dreaming": {
+        "title": "Sonhando",
+        "description": "Explorando possibilidades, pesquisando destinos"
+      },
+      "planning": {
+        "title": "Planejando",
+        "description": "Preparando documentos ativamente, economizando dinheiro"
+      },
+      "preparing": {
+        "title": "Preparando",
+        "description": "Visto aprovado, reservando voos, fazendo malas"
+      },
+      "relocating": {
+        "title": "Relocando",
+        "description": "Em trânsito ou recém-chegado"
+      },
+      "settling": {
+        "title": "Estabelecendo-se",
+        "description": "Construindo vida no novo país"
+      }
+    },
+    "placeholders": {
+      "selectCountry": "Selecione um país",
+      "visaType": "ex., H-1B, Visto de Estudante, Permissão de Trabalho"
+    },
+    "visaHint": "Isso nos ajuda a fornecer informações mais relevantes",
+    "buttons": {
+      "next": "Próximo",
+      "back": "Voltar",
+      "skip": "Pular",
+      "complete": "Concluir Configuração",
+      "completing": "Concluindo..."
+    }
+  },
+  "settings": {
+    "title": "Configurações",
+    "originCountry": "País de Origem",
+    "destinationCountry": "País de Destino",
+    "stage": "Fase Migratória",
+    "visaType": "Tipo de Visto",
+    "language": "Idioma",
+    "languageHint": "Use o seletor de idioma no cabeçalho para alterar sua preferência de idioma.",
+    "edit": "Editar",
+    "save": "Salvar",
+    "saving": "Salvando...",
+    "cancel": "Cancelar",
+    "notSet": "Não definido"
+  },
   "language": {
     "select": "Selecionar Idioma",
     "current": "Idioma atual"

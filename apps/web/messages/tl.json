@@ -40,6 +40,64 @@
     "quickTip": "Mabilis na Tip",
     "quickTipText": "Gamitin ang Magtanong sa TRIBE feature para makakuha ng personalized na gabay sa iyong paglalakbay sa migrasyon."
   },
+  "onboarding": {
+    "title": "Maligayang pagdating sa TRIBE",
+    "subtitle": "I-set up natin ang iyong paglalakbay sa migrasyon",
+    "steps": {
+      "origin": "Saan ka galing?",
+      "destination": "Saan ka pupunta?",
+      "stage": "Anong yugto ka na?",
+      "visa": "Anong uri ng visa? (opsyonal)"
+    },
+    "stages": {
+      "dreaming": {
+        "title": "Nangangarap",
+        "description": "Nag-eexplore ng mga posibilidad, nagreresearch ng mga destinasyon"
+      },
+      "planning": {
+        "title": "Nagpaplano",
+        "description": "Aktibong naghahanda ng mga dokumento, nagtitipid ng pera"
+      },
+      "preparing": {
+        "title": "Naghahanda",
+        "description": "Na-approve na ang visa, nagbu-book ng flights, nag-iimpake"
+      },
+      "relocating": {
+        "title": "Naglilipat",
+        "description": "Nasa biyahe o bagong dating"
+      },
+      "settling": {
+        "title": "Nagse-settle",
+        "description": "Nagtatatag ng buhay sa bagong bansa"
+      }
+    },
+    "placeholders": {
+      "selectCountry": "Pumili ng bansa",
+      "visaType": "hal., H-1B, Student Visa, Work Permit"
+    },
+    "visaHint": "Nakakatulong ito sa amin na magbigay ng mas relevant na impormasyon",
+    "buttons": {
+      "next": "Susunod",
+      "back": "Bumalik",
+      "skip": "Laktawan",
+      "complete": "Kumpletuhin ang Setup",
+      "completing": "Kinukumpleto..."
+    }
+  },
+  "settings": {
+    "title": "Mga Setting",
+    "originCountry": "Bansang Pinagmulan",
+    "destinationCountry": "Bansang Pupuntahan",
+    "stage": "Yugto ng Migrasyon",
+    "visaType": "Uri ng Visa",
+    "language": "Wika",
+    "languageHint": "Gamitin ang language switcher sa header para baguhin ang iyong kagustuhan sa wika.",
+    "edit": "I-edit",
+    "save": "I-save",
+    "saving": "Sini-save...",
+    "cancel": "Kanselahin",
+    "notSet": "Hindi nakatakda"
+  },
   "language": {
     "select": "Pumili ng Wika",
     "current": "Kasalukuyang wika"

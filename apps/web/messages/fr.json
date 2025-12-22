@@ -40,6 +40,64 @@
     "quickTip": "Conseil Rapide",
     "quickTipText": "Utilisez la fonction Demander à TRIBE pour obtenir des conseils personnalisés pour votre parcours migratoire."
   },
+  "onboarding": {
+    "title": "Bienvenue sur TRIBE",
+    "subtitle": "Configurons votre parcours migratoire",
+    "steps": {
+      "origin": "D'où venez-vous ?",
+      "destination": "Où allez-vous ?",
+      "stage": "À quelle étape êtes-vous ?",
+      "visa": "Quel type de visa ? (optionnel)"
+    },
+    "stages": {
+      "dreaming": {
+        "title": "Rêver",
+        "description": "Explorer les possibilités, rechercher des destinations"
+      },
+      "planning": {
+        "title": "Planifier",
+        "description": "Préparer activement les documents, économiser de l'argent"
+      },
+      "preparing": {
+        "title": "Préparer",
+        "description": "Visa approuvé, réserver des vols, faire les valises"
+      },
+      "relocating": {
+        "title": "Déménager",
+        "description": "En transit ou vient d'arriver"
+      },
+      "settling": {
+        "title": "S'installer",
+        "description": "Établir sa vie dans le nouveau pays"
+      }
+    },
+    "placeholders": {
+      "selectCountry": "Sélectionner un pays",
+      "visaType": "ex., H-1B, Visa étudiant, Permis de travail"
+    },
+    "visaHint": "Cela nous aide à fournir des informations plus pertinentes",
+    "buttons": {
+      "next": "Suivant",
+      "back": "Retour",
+      "skip": "Passer",
+      "complete": "Terminer la configuration",
+      "completing": "En cours..."
+    }
+  },
+  "settings": {
+    "title": "Paramètres",
+    "originCountry": "Pays d'origine",
+    "destinationCountry": "Pays de destination",
+    "stage": "Étape migratoire",
+    "visaType": "Type de visa",
+    "language": "Langue",
+    "languageHint": "Utilisez le sélecteur de langue dans l'en-tête pour changer votre préférence de langue.",
+    "edit": "Modifier",
+    "save": "Enregistrer",
+    "saving": "Enregistrement...",
+    "cancel": "Annuler",
+    "notSet": "Non défini"
+  },
   "language": {
     "select": "Sélectionner la langue",
     "current": "Langue actuelle"

@@ -40,6 +40,64 @@
     "quickTip": "Ìmọ̀ràn Kíákíá",
     "quickTipText": "Lo ẹ̀ka Béèrè TRIBE láti gba ìtọ́sọ́nà pàtó lórí ìrìnàjò ìṣíkiri rẹ."
   },
+  "onboarding": {
+    "title": "Ẹ kú àbọ̀ sí TRIBE",
+    "subtitle": "Jẹ́ ká tò ìrìnàjò ìṣíkiri rẹ",
+    "steps": {
+      "origin": "Níbo ni o ti wá?",
+      "destination": "Níbo ni o ń lọ?",
+      "stage": "Ìpele wo ni o wà?",
+      "visa": "Irú físà wo? (kò pọn dandan)"
+    },
+    "stages": {
+      "dreaming": {
+        "title": "Ń là álá",
+        "description": "Ṣàwárí àwọn àǹfààní, ṣèwádìí àwọn ibi tí o lè lọ"
+      },
+      "planning": {
+        "title": "Ń gbèrò",
+        "description": "Ń múra àwọn ìwé àṣẹ, ń tọ́jú owó"
+      },
+      "preparing": {
+        "title": "Ń múra sílẹ̀",
+        "description": "Físà ti fọwọ́ sí, ń ṣètò ọkọ̀ òfurufú, ń kó ẹrù"
+      },
+      "relocating": {
+        "title": "Ń yí padà",
+        "description": "Ń rìnrìn àjò tàbí ṣẹ̀ṣẹ̀ dé"
+      },
+      "settling": {
+        "title": "Ń forílẹ̀ múlẹ̀",
+        "description": "Ń tẹ̀dó ní orílẹ̀-èdè tuntun"
+      }
+    },
+    "placeholders": {
+      "selectCountry": "Yan orílẹ̀-èdè",
+      "visaType": "àp., H-1B, Físà akẹ́kọ̀ọ́, Ìwé àṣẹ iṣẹ́"
+    },
+    "visaHint": "Èyí yóò ràn wá lọ́wọ́ láti pèsè àlàyé tó yẹ",
+    "buttons": {
+      "next": "Tó kàn",
+      "back": "Padà",
+      "skip": "Fò kọjá",
+      "complete": "Parí Ètò",
+      "completing": "Ń parí..."
+    }
+  },
+  "settings": {
+    "title": "Ètò",
+    "originCountry": "Orílẹ̀-èdè Ìbí",
+    "destinationCountry": "Orílẹ̀-èdè Tí o Ń Lọ",
+    "stage": "Ìpele Ìṣíkiri",
+    "visaType": "Irú Físà",
+    "language": "Èdè",
+    "languageHint": "Lo àṣàyàn èdè ní orí ojú-ìwé láti yí àṣàyàn èdè rẹ padà.",
+    "edit": "Ṣàtúnṣe",
+    "save": "Tọ́jú",
+    "saving": "Ń tọ́jú...",
+    "cancel": "Fagilé",
+    "notSet": "Kò tíì tò"
+  },
   "language": {
     "select": "Yan Èdè",
     "current": "Èdè lọ́wọ́lọ́wọ́"

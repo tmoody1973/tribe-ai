@@ -40,6 +40,64 @@
     "quickTip": "Quick Tip",
     "quickTipText": "Use the Ask TRIBE feature to get personalized guidance on your migration journey."
   },
+  "onboarding": {
+    "title": "Welcome to TRIBE",
+    "subtitle": "Let's set up your migration journey",
+    "steps": {
+      "origin": "Where are you from?",
+      "destination": "Where are you going?",
+      "stage": "What stage are you at?",
+      "visa": "What visa type? (optional)"
+    },
+    "stages": {
+      "dreaming": {
+        "title": "Dreaming",
+        "description": "Exploring possibilities, researching destinations"
+      },
+      "planning": {
+        "title": "Planning",
+        "description": "Actively preparing documents, saving money"
+      },
+      "preparing": {
+        "title": "Preparing",
+        "description": "Visa approved, booking flights, packing"
+      },
+      "relocating": {
+        "title": "Relocating",
+        "description": "In transit or just arrived"
+      },
+      "settling": {
+        "title": "Settling",
+        "description": "Establishing life in new country"
+      }
+    },
+    "placeholders": {
+      "selectCountry": "Select a country",
+      "visaType": "e.g., H-1B, Student Visa, Work Permit"
+    },
+    "visaHint": "This helps us provide more relevant information",
+    "buttons": {
+      "next": "Next",
+      "back": "Back",
+      "skip": "Skip",
+      "complete": "Complete Setup",
+      "completing": "Completing..."
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "originCountry": "Origin Country",
+    "destinationCountry": "Destination Country",
+    "stage": "Migration Stage",
+    "visaType": "Visa Type",
+    "language": "Language",
+    "languageHint": "Use the language switcher in the header to change your language preference.",
+    "edit": "Edit",
+    "save": "Save",
+    "saving": "Saving...",
+    "cancel": "Cancel",
+    "notSet": "Not set"
+  },
   "language": {
     "select": "Select Language",
     "current": "Current language"

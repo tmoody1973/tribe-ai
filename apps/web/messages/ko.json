@@ -40,6 +40,64 @@
     "quickTip": "빠른 팁",
     "quickTipText": "TRIBE에 질문하기 기능을 사용하여 이민 여정에 대한 맞춤형 안내를 받으세요."
   },
+  "onboarding": {
+    "title": "TRIBE에 오신 것을 환영합니다",
+    "subtitle": "이민 여정을 설정해 보세요",
+    "steps": {
+      "origin": "어디에서 오셨나요?",
+      "destination": "어디로 가시나요?",
+      "stage": "어떤 단계에 계신가요?",
+      "visa": "비자 유형은? (선택사항)"
+    },
+    "stages": {
+      "dreaming": {
+        "title": "꿈꾸는 중",
+        "description": "가능성 탐색, 목적지 조사"
+      },
+      "planning": {
+        "title": "계획 중",
+        "description": "적극적으로 서류 준비, 돈 저축"
+      },
+      "preparing": {
+        "title": "준비 중",
+        "description": "비자 승인됨, 항공편 예약, 짐 싸기"
+      },
+      "relocating": {
+        "title": "이주 중",
+        "description": "이동 중이거나 막 도착"
+      },
+      "settling": {
+        "title": "정착 중",
+        "description": "새 나라에서 생활 구축"
+      }
+    },
+    "placeholders": {
+      "selectCountry": "국가 선택",
+      "visaType": "예: H-1B, 학생 비자, 취업 허가"
+    },
+    "visaHint": "이를 통해 더 관련성 높은 정보를 제공해 드릴 수 있습니다",
+    "buttons": {
+      "next": "다음",
+      "back": "뒤로",
+      "skip": "건너뛰기",
+      "complete": "설정 완료",
+      "completing": "완료 중..."
+    }
+  },
+  "settings": {
+    "title": "설정",
+    "originCountry": "출신 국가",
+    "destinationCountry": "목적지 국가",
+    "stage": "이민 단계",
+    "visaType": "비자 유형",
+    "language": "언어",
+    "languageHint": "헤더의 언어 스위처를 사용하여 언어 설정을 변경하세요.",
+    "edit": "편집",
+    "save": "저장",
+    "saving": "저장 중...",
+    "cancel": "취소",
+    "notSet": "설정되지 않음"
+  },
   "language": {
     "select": "언어 선택",
     "current": "현재 언어"

@@ -8,9 +8,15 @@
  * @module
  */
 
+import type * as cache from "../cache.js";
+import type * as corridorData from "../corridorData.js";
 import type * as corridors from "../corridors.js";
 import type * as health from "../health.js";
 import type * as ingestedContent from "../ingestedContent.js";
+import type * as integrations_costOfLiving from "../integrations/costOfLiving.js";
+import type * as integrations_countries from "../integrations/countries.js";
+import type * as integrations_visa from "../integrations/visa.js";
+import type * as passportIndex from "../passportIndex.js";
 import type * as protocols from "../protocols.js";
 import type * as users from "../users.js";
 
@@ -21,9 +27,15 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  cache: typeof cache;
+  corridorData: typeof corridorData;
   corridors: typeof corridors;
   health: typeof health;
   ingestedContent: typeof ingestedContent;
+  "integrations/costOfLiving": typeof integrations_costOfLiving;
+  "integrations/countries": typeof integrations_countries;
+  "integrations/visa": typeof integrations_visa;
+  passportIndex: typeof passportIndex;
   protocols: typeof protocols;
   users: typeof users;
 }>;

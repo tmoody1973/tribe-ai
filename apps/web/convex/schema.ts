@@ -126,4 +126,21 @@ export default defineSchema({
       dimensions: 1024,
       filterFields: ["corridorId"],
     }),
+
+  apiCache: defineTable({
+    key: v.string(),
+    data: v.any(),
+    cachedAt: v.number(),
+    expiresAt: v.number(),
+  })
+    .index("by_key", ["key"])
+    .index("by_expiry", ["expiresAt"]),
+
+  passportIndex: defineTable({
+    origin: v.string(),
+    destination: v.string(),
+    requirement: v.string(),
+  })
+    .index("by_origin", ["origin"])
+    .index("by_corridor", ["origin", "destination"]),
 });

@@ -122,6 +122,29 @@
     "select": "Yan Èdè",
     "current": "Èdè lọ́wọ́lọ́wọ́"
   },
+  "protocols": {
+    "yourProtocol": "Ìlànà Àdédé Rẹ",
+    "completed": "ti parí",
+    "noProtocols": "Kò sí ìlànà síbẹ̀. Ìwádìí ń lọ lọ́wọ́...",
+    "currentStep": "Ìgbésẹ̀ Lọ́wọ́lọ́wọ́",
+    "warnings": "Ìkìlọ̀",
+    "tips": "Àwọn Ìmọ̀ràn",
+    "categories": {
+      "visa": "Físà",
+      "finance": "Owó",
+      "housing": "Ilé",
+      "employment": "Iṣẹ́",
+      "legal": "Òfin",
+      "health": "Ìlera",
+      "social": "Àwùjọ"
+    },
+    "priorities": {
+      "critical": "Pàtàkì Púpọ̀",
+      "high": "Àkóso Gíga",
+      "medium": "Àárín",
+      "low": "Àkóso Kékeré"
+    }
+  },
   "errors": {
     "NETWORK_ERROR": "Àṣìṣe ìsopọ̀. Jọ̀wọ́ ṣàyẹ̀wò íntánẹ́ẹ̀tì rẹ.",
     "UNAUTHORIZED": "Jọ̀wọ́ wọlé láti tẹ̀síwájú",

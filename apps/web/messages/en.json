@@ -122,6 +122,29 @@
     "select": "Select Language",
     "current": "Current language"
   },
+  "protocols": {
+    "yourProtocol": "Your Arrival Protocol",
+    "completed": "completed",
+    "noProtocols": "No protocols yet. Research in progress...",
+    "currentStep": "Current Step",
+    "warnings": "Warnings",
+    "tips": "Pro Tips",
+    "categories": {
+      "visa": "Visa",
+      "finance": "Finance",
+      "housing": "Housing",
+      "employment": "Employment",
+      "legal": "Legal",
+      "health": "Health",
+      "social": "Social"
+    },
+    "priorities": {
+      "critical": "Critical",
+      "high": "High Priority",
+      "medium": "Medium",
+      "low": "Low Priority"
+    }
+  },
   "errors": {
     "NETWORK_ERROR": "Connection error. Please check your internet.",
     "UNAUTHORIZED": "Please sign in to continue",

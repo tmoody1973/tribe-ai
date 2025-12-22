@@ -2,14 +2,21 @@
 
 import { useTranslations } from "next-intl";
 import { Id } from "@/convex/_generated/dataModel";
+import { ProtocolCard } from "./ProtocolCard";
+
+type Category = "visa" | "finance" | "housing" | "employment" | "legal" | "health" | "social";
+type Priority = "critical" | "high" | "medium" | "low";
+type Status = "not_started" | "in_progress" | "completed" | "blocked";
 
 interface Protocol {
   _id: Id<"protocols">;
-  category: string;
+  category: Category;
   title: string;
   description: string;
-  status: string;
-  priority: string;
+  status: Status;
+  priority: Priority;
+  warnings?: string[];
+  hacks?: string[];
   order: number;
 }
 
@@ -18,28 +25,19 @@ interface ProtocolListProps {
   corridorId: Id<"corridors">;
 }
 
-const categoryColors: Record<string, string> = {
-  visa: "bg-red-100 text-red-800 border-red-800",
-  finance: "bg-green-100 text-green-800 border-green-800",
-  housing: "bg-blue-100 text-blue-800 border-blue-800",
-  employment: "bg-purple-100 text-purple-800 border-purple-800",
-  legal: "bg-orange-100 text-orange-800 border-orange-800",
-  health: "bg-pink-100 text-pink-800 border-pink-800",
-  social: "bg-teal-100 text-teal-800 border-teal-800",
-};
+export function ProtocolList({ protocols }: ProtocolListProps) {
+  const t = useTranslations("protocols");
 
-const priorityIcons: Record<string, string> = {
-  critical: "🔴",
-  high: "🟠",
-  medium: "🟡",
-  low: "🟢",
-};
+  // Sort by order
+  const sorted = [...protocols].sort((a, b) => a.order - b.order);
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function ProtocolList({ protocols, corridorId }: ProtocolListProps) {
-  const t = useTranslations("dashboard.protocols");
+  // Find current step (first non-completed)
+  const currentIndex = sorted.findIndex((p) => p.status !== "completed");
 
-  if (protocols.length === 0) {
+  // Count completed
+  const completedCount = sorted.filter((p) => p.status === "completed").length;
+
+  if (sorted.length === 0) {
     return (
       <div className="border-4 border-black bg-gray-50 p-8 text-center shadow-[4px_4px_0_0_#000]">
         <p className="text-gray-600">{t("noProtocols")}</p>
@@ -49,35 +47,30 @@ export function ProtocolList({ protocols, corridorId }: ProtocolListProps) {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-xl font-bold">{t("title")}</h2>
-      {protocols.map((protocol) => (
-        <div
-          key={protocol._id}
-          className="border-4 border-black bg-white p-4 shadow-[4px_4px_0_0_#000] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all"
-        >
-          <div className="flex items-start justify-between gap-4">
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-2">
-                <span
-                  className={`px-2 py-1 text-xs font-bold border ${categoryColors[protocol.category] ?? "bg-gray-100"}`}
-                >
-                  {protocol.category}
-                </span>
-                <span title={protocol.priority}>
-                  {priorityIcons[protocol.priority] ?? "⚪"}
-                </span>
-              </div>
-              <h3 className="font-bold text-lg">{protocol.title}</h3>
-              <p className="text-gray-600 text-sm mt-1 line-clamp-2">
-                {protocol.description}
-              </p>
-            </div>
-            <div className="text-2xl">
-              {protocol.status === "completed" ? "✅" : "⬜"}
-            </div>
-          </div>
+      {/* Header */}
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-xl font-bold">{t("yourProtocol")}</h2>
+        <span className="text-sm text-gray-600 border-2 border-black px-3 py-1 bg-white">
+          {completedCount} / {sorted.length} {t("completed")}
+        </span>
+      </div>
+
+      {/* Protocol Cards with Timeline */}
+      <div className="relative">
+        {/* Timeline Line */}
+        <div className="absolute left-7 top-5 bottom-5 w-1 bg-black -z-10" />
+
+        {/* Cards */}
+        <div className="space-y-4 relative">
+          {sorted.map((protocol, index) => (
+            <ProtocolCard
+              key={protocol._id}
+              protocol={protocol}
+              isCurrent={index === currentIndex}
+            />
+          ))}
         </div>
-      ))}
+      </div>
     </div>
   );
 }

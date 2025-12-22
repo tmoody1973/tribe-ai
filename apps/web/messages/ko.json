@@ -122,6 +122,29 @@
     "select": "언어 선택",
     "current": "현재 언어"
   },
+  "protocols": {
+    "yourProtocol": "도착 프로토콜",
+    "completed": "완료됨",
+    "noProtocols": "아직 프로토콜이 없습니다. 연구 진행 중...",
+    "currentStep": "현재 단계",
+    "warnings": "주의사항",
+    "tips": "프로 팁",
+    "categories": {
+      "visa": "비자",
+      "finance": "금융",
+      "housing": "주거",
+      "employment": "취업",
+      "legal": "법률",
+      "health": "건강",
+      "social": "사회"
+    },
+    "priorities": {
+      "critical": "긴급",
+      "high": "높은 우선순위",
+      "medium": "보통",
+      "low": "낮은 우선순위"
+    }
+  },
   "errors": {
     "NETWORK_ERROR": "연결 오류. 인터넷을 확인해 주세요.",
     "UNAUTHORIZED": "계속하려면 로그인해 주세요",

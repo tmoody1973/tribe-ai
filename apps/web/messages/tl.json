@@ -122,6 +122,29 @@
     "select": "Pumili ng Wika",
     "current": "Kasalukuyang wika"
   },
+  "protocols": {
+    "yourProtocol": "Iyong Arrival Protocol",
+    "completed": "nakumpleto",
+    "noProtocols": "Wala pang protocol. Nagpapatuloy ang research...",
+    "currentStep": "Kasalukuyang Hakbang",
+    "warnings": "Mga Babala",
+    "tips": "Pro Tips",
+    "categories": {
+      "visa": "Visa",
+      "finance": "Pinansyal",
+      "housing": "Pabahay",
+      "employment": "Trabaho",
+      "legal": "Legal",
+      "health": "Kalusugan",
+      "social": "Sosyal"
+    },
+    "priorities": {
+      "critical": "Kritikal",
+      "high": "Mataas na Priyoridad",
+      "medium": "Katamtaman",
+      "low": "Mababang Priyoridad"
+    }
+  },
   "errors": {
     "NETWORK_ERROR": "Error sa koneksyon. Pakisuri ang iyong internet.",
     "UNAUTHORIZED": "Mangyaring mag-sign in upang magpatuloy",

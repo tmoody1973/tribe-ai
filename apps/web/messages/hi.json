@@ -122,6 +122,29 @@
     "select": "भाषा चुनें",
     "current": "वर्तमान भाषा"
   },
+  "protocols": {
+    "yourProtocol": "आपका आगमन प्रोटोकॉल",
+    "completed": "पूर्ण",
+    "noProtocols": "अभी तक कोई प्रोटोकॉल नहीं। शोध जारी है...",
+    "currentStep": "वर्तमान चरण",
+    "warnings": "चेतावनियां",
+    "tips": "प्रो टिप्स",
+    "categories": {
+      "visa": "वीज़ा",
+      "finance": "वित्त",
+      "housing": "आवास",
+      "employment": "रोजगार",
+      "legal": "कानूनी",
+      "health": "स्वास्थ्य",
+      "social": "सामाजिक"
+    },
+    "priorities": {
+      "critical": "अति महत्वपूर्ण",
+      "high": "उच्च प्राथमिकता",
+      "medium": "मध्यम",
+      "low": "निम्न प्राथमिकता"
+    }
+  },
   "errors": {
     "NETWORK_ERROR": "कनेक्शन त्रुटि। कृपया अपना इंटरनेट जांचें।",
     "UNAUTHORIZED": "कृपया जारी रखने के लिए साइन इन करें",

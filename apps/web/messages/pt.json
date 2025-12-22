@@ -122,6 +122,29 @@
     "select": "Selecionar Idioma",
     "current": "Idioma atual"
   },
+  "protocols": {
+    "yourProtocol": "Seu Protocolo de Chegada",
+    "completed": "completo",
+    "noProtocols": "Ainda não há protocolos. Pesquisa em andamento...",
+    "currentStep": "Passo Atual",
+    "warnings": "Avisos",
+    "tips": "Dicas Pro",
+    "categories": {
+      "visa": "Visto",
+      "finance": "Finanças",
+      "housing": "Moradia",
+      "employment": "Emprego",
+      "legal": "Legal",
+      "health": "Saúde",
+      "social": "Social"
+    },
+    "priorities": {
+      "critical": "Crítico",
+      "high": "Alta Prioridade",
+      "medium": "Médio",
+      "low": "Baixa Prioridade"
+    }
+  },
   "errors": {
     "NETWORK_ERROR": "Erro de conexão. Por favor, verifique sua internet.",
     "UNAUTHORIZED": "Por favor, entre para continuar",

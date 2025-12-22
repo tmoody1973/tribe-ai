@@ -122,6 +122,29 @@
     "select": "Seleccionar idioma",
     "current": "Idioma actual"
   },
+  "protocols": {
+    "yourProtocol": "Tu Protocolo de Llegada",
+    "completed": "completado",
+    "noProtocols": "Aún no hay protocolos. Investigación en progreso...",
+    "currentStep": "Paso Actual",
+    "warnings": "Advertencias",
+    "tips": "Consejos Pro",
+    "categories": {
+      "visa": "Visa",
+      "finance": "Finanzas",
+      "housing": "Vivienda",
+      "employment": "Empleo",
+      "legal": "Legal",
+      "health": "Salud",
+      "social": "Social"
+    },
+    "priorities": {
+      "critical": "Crítico",
+      "high": "Alta Prioridad",
+      "medium": "Medio",
+      "low": "Baja Prioridad"
+    }
+  },
   "errors": {
     "NETWORK_ERROR": "Error de conexión. Por favor, verifica tu internet.",
     "UNAUTHORIZED": "Por favor, inicia sesión para continuar",

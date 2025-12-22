@@ -33,7 +33,12 @@
   },
   "dashboard": {
     "welcome": "Bienvenue sur TRIBE",
-    "description": "Votre tableau de bord d'intelligence de la diaspora est prêt."
+    "description": "Votre tableau de bord d'intelligence de la diaspora est prêt.",
+    "chatDescription": "Obtenez des réponses sur l'immigration, les visas et l'adaptation culturelle.",
+    "audioDescription": "Écoutez des briefings quotidiens adaptés à votre communauté.",
+    "settingsDescription": "Gérez votre profil et vos préférences.",
+    "quickTip": "Conseil Rapide",
+    "quickTipText": "Utilisez la fonction Demander à TRIBE pour obtenir des conseils personnalisés pour votre parcours migratoire."
   },
   "language": {
     "select": "Sélectionner la langue",

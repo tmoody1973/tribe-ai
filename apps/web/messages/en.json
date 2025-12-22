@@ -33,7 +33,12 @@
   },
   "dashboard": {
     "welcome": "Welcome to TRIBE",
-    "description": "Your diaspora intelligence dashboard is ready."
+    "description": "Your diaspora intelligence dashboard is ready.",
+    "chatDescription": "Get answers about immigration, visas, and cultural adaptation.",
+    "audioDescription": "Listen to daily briefings tailored to your community.",
+    "settingsDescription": "Manage your profile and preferences.",
+    "quickTip": "Quick Tip",
+    "quickTipText": "Use the Ask TRIBE feature to get personalized guidance on your migration journey."
   },
   "language": {
     "select": "Select Language",

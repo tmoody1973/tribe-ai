@@ -33,7 +33,12 @@
   },
   "dashboard": {
     "welcome": "Maligayang pagdating sa TRIBE",
-    "description": "Ang iyong diaspora intelligence dashboard ay handa na."
+    "description": "Ang iyong diaspora intelligence dashboard ay handa na.",
+    "chatDescription": "Makakuha ng mga sagot tungkol sa imigrasyon, visa, at kultural na pagbagay.",
+    "audioDescription": "Makinig sa mga pang-araw-araw na briefing na iniayon sa iyong komunidad.",
+    "settingsDescription": "Pamahalaan ang iyong profile at mga kagustuhan.",
+    "quickTip": "Mabilis na Tip",
+    "quickTipText": "Gamitin ang Magtanong sa TRIBE feature para makakuha ng personalized na gabay sa iyong paglalakbay sa migrasyon."
   },
   "language": {
     "select": "Pumili ng Wika",

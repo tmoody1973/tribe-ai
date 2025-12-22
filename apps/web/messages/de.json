@@ -33,7 +33,12 @@
   },
   "dashboard": {
     "welcome": "Willkommen bei TRIBE",
-    "description": "Ihr Diaspora-Intelligenz-Dashboard ist bereit."
+    "description": "Ihr Diaspora-Intelligenz-Dashboard ist bereit.",
+    "chatDescription": "Erhalten Sie Antworten zu Einwanderung, Visa und kultureller Anpassung.",
+    "audioDescription": "Hören Sie tägliche Briefings, die auf Ihre Gemeinschaft zugeschnitten sind.",
+    "settingsDescription": "Verwalten Sie Ihr Profil und Ihre Einstellungen.",
+    "quickTip": "Schneller Tipp",
+    "quickTipText": "Nutzen Sie die TRIBE fragen Funktion, um persönliche Beratung für Ihre Migrationsreise zu erhalten."
   },
   "language": {
     "select": "Sprache auswählen",

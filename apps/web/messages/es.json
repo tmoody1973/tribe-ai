@@ -33,7 +33,12 @@
   },
   "dashboard": {
     "welcome": "Bienvenido a TRIBE",
-    "description": "Tu panel de inteligencia de la diáspora está listo."
+    "description": "Tu panel de inteligencia de la diáspora está listo.",
+    "chatDescription": "Obtén respuestas sobre inmigración, visas y adaptación cultural.",
+    "audioDescription": "Escucha briefings diarios adaptados a tu comunidad.",
+    "settingsDescription": "Gestiona tu perfil y preferencias.",
+    "quickTip": "Consejo Rápido",
+    "quickTipText": "Usa la función Preguntar a TRIBE para obtener orientación personalizada en tu viaje migratorio."
   },
   "language": {
     "select": "Seleccionar idioma",

@@ -8,6 +8,8 @@
  * @module
  */
 
+import type * as ai_embeddings from "../ai/embeddings.js";
+import type * as ai_research from "../ai/research.js";
 import type * as cache from "../cache.js";
 import type * as corridorData from "../corridorData.js";
 import type * as corridors from "../corridors.js";
@@ -27,6 +29,8 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  "ai/embeddings": typeof ai_embeddings;
+  "ai/research": typeof ai_research;
   cache: typeof cache;
   corridorData: typeof corridorData;
   corridors: typeof corridors;

@@ -9,8 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ai-sdk/anthropic": "^2.0.56",
     "@clerk/nextjs": "^6.36.5",
+    "@mastra/core": "^0.24.9",
+    "@mendable/firecrawl-js": "^4.9.3",
     "@radix-ui/react-slot": "^1.2.4",
+    "@tavily/core": "^0.6.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "convex": "^1.31.2",
@@ -21,7 +25,8 @@
     "react-dom": "^18",
     "svix": "^1.82.0",
     "tailwind-merge": "^3.4.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@types/node": "^20",

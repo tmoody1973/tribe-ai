@@ -31,7 +31,7 @@ export default defineSchema({
     visaType: v.optional(v.string()),
     onboardingComplete: v.boolean(),
     createdAt: v.number(),
-    updatedAt: v.number(),
+    updatedAt: v.optional(v.number()),
   })
     .index("by_clerk_id", ["clerkId"])
     .index("by_email", ["email"]),

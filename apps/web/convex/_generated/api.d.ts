@@ -9,7 +9,9 @@
  */
 
 import type * as ai_embeddings from "../ai/embeddings.js";
+import type * as ai_pipeline from "../ai/pipeline.js";
 import type * as ai_research from "../ai/research.js";
+import type * as ai_synthesis from "../ai/synthesis.js";
 import type * as cache from "../cache.js";
 import type * as corridorData from "../corridorData.js";
 import type * as corridors from "../corridors.js";
@@ -30,7 +32,9 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   "ai/embeddings": typeof ai_embeddings;
+  "ai/pipeline": typeof ai_pipeline;
   "ai/research": typeof ai_research;
+  "ai/synthesis": typeof ai_synthesis;
   cache: typeof cache;
   corridorData: typeof corridorData;
   corridors: typeof corridors;

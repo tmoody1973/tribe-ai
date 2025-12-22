@@ -38,7 +38,27 @@
     "audioDescription": "커뮤니티에 맞춤화된 일일 브리핑을 들으세요.",
     "settingsDescription": "프로필과 환경설정을 관리하세요.",
     "quickTip": "빠른 팁",
-    "quickTipText": "TRIBE에 질문하기 기능을 사용하여 이민 여정에 대한 맞춤형 안내를 받으세요."
+    "quickTipText": "TRIBE에 질문하기 기능을 사용하여 이민 여정에 대한 맞춤형 안내를 받으세요.",
+    "yourJourney": "나의 여정",
+    "empty": {
+      "title": "코리도 연구 중...",
+      "description": "최신 이민 정보를 수집하고 있습니다.",
+      "estimatedTime": "보통 1-2분 정도 소요됩니다"
+    },
+    "stats": {
+      "title": "빠른 통계",
+      "visaRequired": "비자 필요",
+      "visaType": "비자 유형",
+      "language": "언어",
+      "currency": "통화",
+      "timezone": "시간대",
+      "yes": "예",
+      "no": "아니오"
+    },
+    "protocols": {
+      "title": "나의 이민 프로토콜",
+      "noProtocols": "아직 프로토콜이 없습니다. 연구가 진행 중입니다."
+    }
   },
   "onboarding": {
     "title": "TRIBE에 오신 것을 환영합니다",

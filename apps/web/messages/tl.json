@@ -38,7 +38,27 @@
     "audioDescription": "Makinig sa mga pang-araw-araw na briefing na iniayon sa iyong komunidad.",
     "settingsDescription": "Pamahalaan ang iyong profile at mga kagustuhan.",
     "quickTip": "Mabilis na Tip",
-    "quickTipText": "Gamitin ang Magtanong sa TRIBE feature para makakuha ng personalized na gabay sa iyong paglalakbay sa migrasyon."
+    "quickTipText": "Gamitin ang Magtanong sa TRIBE feature para makakuha ng personalized na gabay sa iyong paglalakbay sa migrasyon.",
+    "yourJourney": "Ang Iyong Paglalakbay",
+    "empty": {
+      "title": "Nagre-research ng iyong corridor...",
+      "description": "Nangongolekta kami ng pinakabagong migration intelligence para sa iyo.",
+      "estimatedTime": "Karaniwang tumatagal ito ng 1-2 minuto"
+    },
+    "stats": {
+      "title": "Mabilis na Stats",
+      "visaRequired": "Kailangan ng Visa",
+      "visaType": "Uri ng Visa",
+      "language": "Wika",
+      "currency": "Pera",
+      "timezone": "Timezone",
+      "yes": "Oo",
+      "no": "Hindi"
+    },
+    "protocols": {
+      "title": "Ang Iyong mga Protocol sa Migrasyon",
+      "noProtocols": "Wala pang available na protocol. Nagpapatuloy ang research."
+    }
   },
   "onboarding": {
     "title": "Maligayang pagdating sa TRIBE",

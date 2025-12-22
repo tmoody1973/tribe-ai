@@ -38,7 +38,27 @@
     "audioDescription": "Escucha briefings diarios adaptados a tu comunidad.",
     "settingsDescription": "Gestiona tu perfil y preferencias.",
     "quickTip": "Consejo Rápido",
-    "quickTipText": "Usa la función Preguntar a TRIBE para obtener orientación personalizada en tu viaje migratorio."
+    "quickTipText": "Usa la función Preguntar a TRIBE para obtener orientación personalizada en tu viaje migratorio.",
+    "yourJourney": "Tu Viaje",
+    "empty": {
+      "title": "Investigando tu corredor...",
+      "description": "Estamos recopilando la última inteligencia migratoria para ti.",
+      "estimatedTime": "Esto suele tomar 1-2 minutos"
+    },
+    "stats": {
+      "title": "Estadísticas Rápidas",
+      "visaRequired": "Visa Requerida",
+      "visaType": "Tipo de Visa",
+      "language": "Idioma",
+      "currency": "Moneda",
+      "timezone": "Zona Horaria",
+      "yes": "Sí",
+      "no": "No"
+    },
+    "protocols": {
+      "title": "Tus Protocolos de Migración",
+      "noProtocols": "No hay protocolos disponibles aún. La investigación está en progreso."
+    }
   },
   "onboarding": {
     "title": "Bienvenido a TRIBE",

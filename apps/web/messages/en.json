@@ -38,7 +38,27 @@
     "audioDescription": "Listen to daily briefings tailored to your community.",
     "settingsDescription": "Manage your profile and preferences.",
     "quickTip": "Quick Tip",
-    "quickTipText": "Use the Ask TRIBE feature to get personalized guidance on your migration journey."
+    "quickTipText": "Use the Ask TRIBE feature to get personalized guidance on your migration journey.",
+    "yourJourney": "Your Journey",
+    "empty": {
+      "title": "Researching your corridor...",
+      "description": "We're gathering the latest migration intelligence for you.",
+      "estimatedTime": "This usually takes 1-2 minutes"
+    },
+    "stats": {
+      "title": "Quick Stats",
+      "visaRequired": "Visa Required",
+      "visaType": "Visa Type",
+      "language": "Language",
+      "currency": "Currency",
+      "timezone": "Timezone",
+      "yes": "Yes",
+      "no": "No"
+    },
+    "protocols": {
+      "title": "Your Migration Protocols",
+      "noProtocols": "No protocols available yet. Research is in progress."
+    }
   },
   "onboarding": {
     "title": "Welcome to TRIBE",

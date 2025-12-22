@@ -31,7 +31,7 @@ export const cleanupExpiredContent = internalMutation({
  */
 export const refreshStaleCorridors = internalAction({
   args: {},
-  handler: async (ctx) => {
+  handler: async (ctx): Promise<{ found: number; refreshed: number }> => {
     // Find corridors that are stale
     const corridors = await ctx.runQuery(internal.corridors.getStaleCorridors, {
       limit: 5, // Limit to prevent overload

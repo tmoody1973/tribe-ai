@@ -38,7 +38,27 @@
     "audioDescription": "Gbọ́ ìròyìn ojoojúmọ́ tí a ṣe fún àwùjọ rẹ.",
     "settingsDescription": "Ṣàkóso àkọsílẹ̀ àti àwọn àṣàyàn rẹ.",
     "quickTip": "Ìmọ̀ràn Kíákíá",
-    "quickTipText": "Lo ẹ̀ka Béèrè TRIBE láti gba ìtọ́sọ́nà pàtó lórí ìrìnàjò ìṣíkiri rẹ."
+    "quickTipText": "Lo ẹ̀ka Béèrè TRIBE láti gba ìtọ́sọ́nà pàtó lórí ìrìnàjò ìṣíkiri rẹ.",
+    "yourJourney": "Ìrìnàjò Rẹ",
+    "empty": {
+      "title": "Ń ṣèwádìí kọ́rídọ̀ rẹ...",
+      "description": "A ń kó ìmọ̀ ìṣíkiri tuntun fún ọ.",
+      "estimatedTime": "Èyí máa ń gba ìṣẹ́jú 1-2"
+    },
+    "stats": {
+      "title": "Àwọn Àpapọ̀ Kíákíá",
+      "visaRequired": "Físà Nílò",
+      "visaType": "Irú Físà",
+      "language": "Èdè",
+      "currency": "Owó",
+      "timezone": "Àgbègbè Àkókò",
+      "yes": "Bẹ́ẹ̀ni",
+      "no": "Rárá"
+    },
+    "protocols": {
+      "title": "Àwọn Ìlànà Ìṣíkiri Rẹ",
+      "noProtocols": "Kò sí ìlànà tí ó wà ní báyìí. Ìṣèwádìí ń lọ lọ́wọ́."
+    }
   },
   "onboarding": {
     "title": "Ẹ kú àbọ̀ sí TRIBE",

@@ -47,15 +47,13 @@ export const getRecentEvents = query({
     event: v.optional(v.string()),
   },
   handler: async (ctx, { limit = 50, event }) => {
-    let query = ctx.db.query("metrics");
+    const allEvents = await ctx.db.query("metrics").collect();
 
-    if (event) {
-      query = query.withIndex("by_event", (q) => q.eq("event", event));
-    }
+    const filtered = event
+      ? allEvents.filter((e) => e.event === event)
+      : allEvents;
 
-    const events = await query.collect();
-
-    return events
+    return filtered
       .sort((a, b) => b.createdAt - a.createdAt)
       .slice(0, limit);
   },

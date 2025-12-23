@@ -238,6 +238,27 @@
       "tipBehind": "When it's morning in {origin}, it's still night/early morning in {destination}."
     }
   },
+  "briefing": {
+    "title": "Audio Briefings",
+    "noCorridor": "Please select a migration corridor to receive personalized briefings.",
+    "noBriefing": "No briefing available yet. Generate your first audio briefing to get started.",
+    "generateFirst": "Generate Your First Briefing",
+    "generateNew": "Generate New Briefing",
+    "generating": "Generating...",
+    "generatingAudio": "Converting your briefing to audio. This may take a moment...",
+    "audioFailed": "Audio generation failed. Please try again.",
+    "retry": "Retry",
+    "lastGenerated": "Last updated {time}",
+    "showTranscript": "Show Transcript",
+    "hideTranscript": "Hide Transcript",
+    "speed": "Speed",
+    "types": {
+      "daily": "Daily Briefing",
+      "dailyDuration": "~3 minutes",
+      "weekly": "Weekly Summary",
+      "weeklyDuration": "~10 minutes"
+    }
+  },
   "chat": {
     "title": "Ask TRIBE",
     "welcome": "Hi! I'm your migration assistant. Ask me anything about moving abroad, visas, housing, or settling into a new country.",

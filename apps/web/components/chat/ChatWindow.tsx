@@ -1,13 +1,16 @@
 "use client";
 
-import { useCopilotReadable } from "@copilotkit/react-core";
+import { useCopilotReadable, useCopilotChat } from "@copilotkit/react-core";
+import { TextMessage, MessageRole } from "@copilotkit/runtime-client-gql";
 import { CopilotChat } from "@copilotkit/react-ui";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useTranslations } from "next-intl";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { Trash2, Send } from "lucide-react";
+import { VoiceInputButton } from "./VoiceInputButton";
+import { TranscriptionPreview } from "./TranscriptionPreview";
 import "@copilotkit/react-ui/styles.css";
 
 interface ChatWindowProps {
@@ -16,6 +19,9 @@ interface ChatWindowProps {
 
 export function ChatWindow({ corridorId }: ChatWindowProps) {
   const t = useTranslations("chat");
+  const [transcription, setTranscription] = useState<string | null>(null);
+  const [isVoiceMode, setIsVoiceMode] = useState(false);
+
   const corridor = useQuery(
     api.corridors.getCorridor,
     corridorId ? { id: corridorId } : "skip"
@@ -26,6 +32,13 @@ export function ChatWindow({ corridorId }: ChatWindowProps) {
   );
   const messages = useQuery(api.chat.getMessages, { corridorId, limit: 50 });
   const clearHistory = useMutation(api.chat.clearHistory);
+  const profile = useQuery(api.users.getProfile);
+
+  // CopilotKit chat hook for programmatic message sending
+  const { appendMessage } = useCopilotChat();
+
+  // Get user's language for STT
+  const userLanguage = profile?.language ?? "en";
 
   // Sync corridor state to CopilotKit for context-aware responses
   useCopilotReadable({
@@ -50,6 +63,35 @@ export function ChatWindow({ corridorId }: ChatWindowProps) {
       await clearHistory({ corridorId });
     }
   }, [clearHistory, corridorId, t]);
+
+  // Handle voice transcription result
+  const handleTranscription = useCallback((text: string) => {
+    setTranscription(text);
+    setIsVoiceMode(true);
+  }, []);
+
+  // Send transcribed message via CopilotKit
+  const handleVoiceSend = useCallback(
+    async (text: string) => {
+      if (text.trim()) {
+        await appendMessage(
+          new TextMessage({
+            role: MessageRole.User,
+            content: text.trim(),
+          })
+        );
+      }
+      setTranscription(null);
+      setIsVoiceMode(false);
+    },
+    [appendMessage]
+  );
+
+  // Cancel voice input
+  const handleVoiceCancel = useCallback(() => {
+    setTranscription(null);
+    setIsVoiceMode(false);
+  }, []);
 
   // Get dynamic welcome message
   const getWelcomeMessage = () => {
@@ -119,6 +161,28 @@ RESPONSE FORMAT:
           className="h-full"
         />
       </div>
+
+      {/* Voice Input Section */}
+      {isVoiceMode && transcription ? (
+        <div className="p-4 border-t-4 border-black">
+          <TranscriptionPreview
+            text={transcription}
+            onSend={handleVoiceSend}
+            onCancel={handleVoiceCancel}
+            onReRecord={handleVoiceCancel}
+          />
+        </div>
+      ) : (
+        <div className="flex items-center justify-center gap-2 p-4 border-t-4 border-black bg-gray-50">
+          <span className="text-sm text-gray-600 mr-2">
+            {t("voice.holdToSpeak")}
+          </span>
+          <VoiceInputButton
+            onTranscription={handleTranscription}
+            language={userLanguage}
+          />
+        </div>
+      )}
     </div>
   );
 }

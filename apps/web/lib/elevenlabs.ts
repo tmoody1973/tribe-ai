@@ -104,3 +104,61 @@ export function getVoiceName(language: string): string {
   };
   return voiceNames[language] ?? "Bella";
 }
+
+// ============================================
+// Speech-to-Text (STT) Functions
+// ============================================
+
+export interface STTResult {
+  text: string;
+  language: string;
+}
+
+/**
+ * Convert speech to text using ElevenLabs STT API
+ * @param audioBlob - Audio blob from MediaRecorder (webm format)
+ * @param languageHint - Optional language code to help transcription
+ * @returns Transcribed text and detected language
+ */
+export async function speechToText(
+  audioBlob: Blob,
+  languageHint?: string
+): Promise<STTResult> {
+  const apiKey = process.env.NEXT_PUBLIC_ELEVENLABS_API_KEY;
+  if (!apiKey) {
+    throw new Error("ELEVENLABS_API_KEY not configured");
+  }
+
+  const formData = new FormData();
+  formData.append("audio", audioBlob, "recording.webm");
+
+  // Add model_id for better accuracy
+  formData.append("model_id", "scribe_v1");
+
+  if (languageHint) {
+    formData.append("language_code", languageHint);
+  }
+
+  const response = await fetch(
+    `${ELEVENLABS_API_URL}/speech-to-text`,
+    {
+      method: "POST",
+      headers: {
+        "xi-api-key": apiKey,
+      },
+      body: formData,
+    }
+  );
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(`ElevenLabs STT error: ${response.status} - ${error}`);
+  }
+
+  const data = await response.json();
+
+  return {
+    text: data.text || "",
+    language: data.language_code || languageHint || "en",
+  };
+}

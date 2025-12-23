@@ -281,6 +281,18 @@
       "oldSourcesWarning": "Some sources may be outdated (>6 months old)",
       "basedOn": "Based on {count} sources",
       "noSources": "No sources available"
+    },
+    "voice": {
+      "holdToSpeak": "Hold to speak",
+      "recording": "Recording...",
+      "transcription": "Your message:",
+      "editPlaceholder": "Edit your message...",
+      "send": "Send",
+      "cancel": "Cancel",
+      "reRecord": "Record again",
+      "transcriptionFailed": "Could not transcribe audio. Please try again.",
+      "microphoneError": "Could not access microphone. Please check permissions.",
+      "keyboardHint": "Press Enter to send, Escape to cancel"
     }
   }
 }

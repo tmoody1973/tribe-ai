@@ -64,6 +64,39 @@ export const getProfile = query({
   },
 });
 
+// Ensure user exists (fallback if webhook didn't fire)
+export const ensureUser = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    // Check if user already exists
+    const existingUser = await ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+      .unique();
+
+    if (existingUser) {
+      return existingUser._id;
+    }
+
+    // Create user from identity
+    const now = Date.now();
+    return await ctx.db.insert("users", {
+      clerkId: identity.subject,
+      email: identity.email ?? "",
+      name: identity.name ?? "User",
+      language: "en",
+      onboardingComplete: false,
+      createdAt: now,
+      updatedAt: now,
+    });
+  },
+});
+
 export const updateLanguage = mutation({
   args: {
     language: v.union(

@@ -130,7 +130,8 @@ export async function speechToText(
   }
 
   const formData = new FormData();
-  formData.append("audio", audioBlob, "recording.webm");
+  // ElevenLabs requires the field name to be "file"
+  formData.append("file", audioBlob, "recording.webm");
 
   // Add model_id for better accuracy
   formData.append("model_id", "scribe_v1");

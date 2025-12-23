@@ -176,4 +176,22 @@ export default defineSchema({
   })
     .index("by_user_corridor", ["userId", "corridorId"])
     .index("by_protocol", ["protocolId"]),
+
+  // Chat message history for Q&A interface
+  chatMessages: defineTable({
+    userId: v.id("users"),
+    corridorId: v.optional(v.id("corridors")),
+    role: v.union(v.literal("user"), v.literal("assistant")),
+    content: v.string(),
+    metadata: v.optional(
+      v.object({
+        sources: v.optional(v.array(v.string())),
+        model: v.optional(v.string()),
+        tokens: v.optional(v.number()),
+      })
+    ),
+    createdAt: v.number(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_corridor", ["userId", "corridorId"]),
 });

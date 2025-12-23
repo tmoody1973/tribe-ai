@@ -11,6 +11,9 @@
   "dependencies": {
     "@ai-sdk/anthropic": "^2.0.56",
     "@clerk/nextjs": "^6.36.5",
+    "@copilotkit/react-core": "^1.50.1",
+    "@copilotkit/react-ui": "^1.50.1",
+    "@copilotkit/runtime": "^1.50.1",
     "@google/genai": "^1.34.0",
     "@mastra/core": "^0.24.9",
     "@mendable/firecrawl-js": "^4.9.3",

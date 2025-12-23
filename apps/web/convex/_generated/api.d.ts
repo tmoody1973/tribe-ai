@@ -15,6 +15,7 @@ import type * as ai_refresh from "../ai/refresh.js";
 import type * as ai_research from "../ai/research.js";
 import type * as ai_synthesis from "../ai/synthesis.js";
 import type * as cache from "../cache.js";
+import type * as chat from "../chat.js";
 import type * as corridorData from "../corridorData.js";
 import type * as corridors from "../corridors.js";
 import type * as crons from "../crons.js";
@@ -44,6 +45,7 @@ declare const fullApi: ApiFromModules<{
   "ai/research": typeof ai_research;
   "ai/synthesis": typeof ai_synthesis;
   cache: typeof cache;
+  chat: typeof chat;
   corridorData: typeof corridorData;
   corridors: typeof corridors;
   crons: typeof crons;

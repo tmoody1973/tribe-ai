@@ -48,6 +48,8 @@ TRIBE is built from scratch using a modern Convex + Next.js stack optimized for 
 | 2025-12-21 | 1.0 | Initial architecture document | Winston |
 | 2025-12-22 | 1.1 | Added Google Cloud Translation integration for dynamic content | Claude |
 | 2025-12-22 | 1.2 | Added Cultural Bridge feature architecture (Epic 6) | Claude |
+| 2025-12-22 | 1.3 | Added Mastra + CopilotKit A2UI integration pattern | Claude |
+| 2025-12-22 | 1.4 | Changed AI model from Claude to Gemini 2.0 Flash | Claude |
 
 ---
 
@@ -161,7 +163,7 @@ tribe-ai/
 
 | Service | Purpose |
 |---------|---------|
-| Anthropic Claude | LLM for agent reasoning (claude-sonnet-4) |
+| Google Gemini | LLM for agent reasoning (gemini-3-flash-preview) |
 | Google Cloud Translation | Dynamic content translation (130+ languages) |
 | ElevenLabs | Text-to-speech, speech-to-text |
 | Firecrawl | Web scraping |
@@ -896,7 +898,36 @@ interface UIState {
 }
 ```
 
-### CopilotKit Integration
+### CopilotKit + Mastra A2UI Integration
+
+TRIBE uses the **Mastra + CopilotKit** integration pattern for agentic UIs. This enables bidirectional state synchronization where Mastra agents can render UI components dynamically.
+
+**Key packages:**
+- `@copilotkit/react-core` - React hooks for agent interaction
+- `@copilotkit/react-ui` - Pre-built chat components
+- `@copilotkit/runtime` - Server-side runtime
+- `@ag-ui/mastra` - AG-UI protocol adapter for Mastra
+
+**A2UI Widget Pattern:**
+Agents return structured widget specifications, which CopilotKit renders as React components:
+
+```typescript
+// Agent returns widget spec
+{
+  widget: "ProtocolCard",
+  props: { protocol: {...}, emphasis: "high" }
+}
+
+// CopilotKit renders via useCopilotAction
+useCopilotAction({
+  name: "showProtocolCard",
+  render: ({ args }) => <ProtocolCard {...args} />
+});
+```
+
+See `docs/a2ui-widgets.md` for full widget specifications.
+
+### CopilotKit Provider
 
 ```typescript
 // components/providers/CopilotKitProvider.tsx
@@ -1088,7 +1119,7 @@ import { perplexityTool } from "./tools/perplexity";
 
 export const corridorResearcher = new Agent({
   name: "CorridorResearcher",
-  model: "claude-sonnet-4-20250514",
+  model: "gemini-3-flash-preview",
   instructions: `You are a migration research specialist for TRIBE.
 Your role is to gather accurate, up-to-date information about migration pathways.
 
@@ -1106,7 +1137,7 @@ Flag any conflicting information for user review.`,
 // agents/protocolAdvisor.ts
 export const protocolAdvisor = new Agent({
   name: "ProtocolAdvisor",
-  model: "claude-sonnet-4-20250514",
+  model: "gemini-3-flash-preview",
   instructions: `You are a migration preparation advisor for TRIBE.
 Generate personalized protocol checklists based on:
 - Origin and destination countries
@@ -1126,7 +1157,7 @@ Prioritize protocols by:
 // agents/culturalBridge.ts
 export const culturalBridge = new Agent({
   name: "CulturalBridge",
-  model: "claude-sonnet-4-20250514",
+  model: "gemini-3-flash-preview",
   instructions: `You are a cultural intelligence specialist for TRIBE, helping bridge understanding between migrants and host communities.
 
 Your responsibilities:

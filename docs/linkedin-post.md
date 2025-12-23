@@ -32,7 +32,7 @@ TRIBE is an attempt to change that. It's an AI-powered platform that aggregates 
 
 ---
 
-The technical architecture reflects this mission. The platform uses AI agents (built on Mastra and Claude) to research any migration corridor dynamically. When a user selects their origin and destination countries, the system doesn't rely on pre-computed data. It actively scrapes government websites, expat forums, Reddit communities, and settlement resources using Firecrawl and Tavily, then synthesizes that information into actionable protocols.
+The technical architecture reflects this mission. The platform uses AI agents (built on Mastra and Google Gemini) to research any migration corridor dynamically. When a user selects their origin and destination countries, the system doesn't rely on pre-computed data. It actively scrapes government websites, expat forums, Reddit communities, and settlement resources using Firecrawl and Tavily, then synthesizes that information into actionable protocols.
 
 Every piece of advice includes attribution. If someone on r/ImmigrationCanada explained how to navigate the Express Entry system, their insight gets credited. If an Expatica article outlined the German Blue Card process, that source is linked. The goal is to build trust through transparency—you're not getting AI hallucinations, you're getting community knowledge with receipts.
 
@@ -73,7 +73,7 @@ Let's see what's possible.
 **The Hackathon:** VisaVerse AI Hackathon • December 26 deadline • $10K prize • 1,000+ participants • Judges from Netflix, AWS, Walmart, Oracle
 
 **The Stack:**
-- Claude (Anthropic) + Mastra for AI agent orchestration
+- Google Gemini (gemini-3-flash-preview) + Mastra for AI agent orchestration
 - Convex for real-time database and serverless functions
 - Firecrawl + Tavily + Perplexity for data ingestion
 - Google Cloud Translation for dynamic multilingual content

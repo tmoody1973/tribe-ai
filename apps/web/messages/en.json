@@ -158,6 +158,14 @@
     "currentStep": "Current Step",
     "warnings": "Warnings",
     "tips": "Pro Tips",
+    "loading": "Loading protocols...",
+    "recommended": "Focus Now",
+    "lowConfidenceWarning": "This information may need verification from official sources",
+    "confidence": "Confidence",
+    "generativeMode": "AI-personalized view",
+    "staticMode": "Standard view",
+    "switchToStatic": "Switch to standard view",
+    "switchToGenerative": "Switch to AI view",
     "categories": {
       "visa": "Visa",
       "finance": "Finance",
@@ -184,5 +192,64 @@
     "UNAUTHORIZED": "Please sign in to continue",
     "NOT_FOUND": "Page not found",
     "GENERIC": "An error occurred. Please try again."
+  },
+  "stats": {
+    "visaInfo": "Visa Information",
+    "visaRequired": "Visa Required",
+    "visaType": "Visa Type",
+    "processingTime": "Processing Time",
+    "stayDuration": "Stay Duration",
+    "days": "days",
+    "yes": "Yes",
+    "no": "No",
+    "eVisaAvailable": "e-Visa Available",
+    "apply": "Apply",
+    "requirements": "Requirements",
+    "language": "Language",
+    "primaryLanguage": "Primary Language",
+    "otherLanguages": "Also spoken",
+    "loadError": "Failed to load corridor statistics",
+    "partialData": "Some data unavailable",
+    "someDataMissing": "We couldn't fetch all statistics. Some information may be incomplete.",
+    "costs": {
+      "title": "Cost of Living Comparison",
+      "rent": "Rent (1BR apartment)",
+      "groceries": "Groceries (monthly)",
+      "transport": "Public Transport",
+      "utilities": "Utilities (monthly)",
+      "overall": "Overall Index",
+      "is": "is",
+      "moreExpensive": "more expensive",
+      "lessExpensive": "less expensive",
+      "than": "than",
+      "disclaimer": "Costs indexed relative to NYC (100). Lower = cheaper.",
+      "staleWarning": "Data may be outdated."
+    },
+    "currency": {
+      "title": "Currency Conversion",
+      "rateDisclaimer": "Exchange rates are approximate and may vary."
+    },
+    "timezone": {
+      "title": "Time Difference",
+      "hoursAhead": "{hours}h ahead",
+      "hoursBehind": "{hours}h behind",
+      "sameTime": "Same timezone",
+      "tipAhead": "When it's morning in {origin}, it's already afternoon/evening in {destination}.",
+      "tipBehind": "When it's morning in {origin}, it's still night/early morning in {destination}."
+    }
+  },
+  "chat": {
+    "title": "Ask TRIBE",
+    "welcome": "Hi! I'm your migration assistant. Ask me anything about moving abroad, visas, housing, or settling into a new country.",
+    "welcomeWithCorridor": "Hi! I'm your migration assistant. Ask me anything about your journey from {origin} to {destination}.",
+    "placeholder": "Ask about visas, costs, housing, culture...",
+    "loading": "Loading chat...",
+    "noCorridorTitle": "No Corridor Selected",
+    "noCorridorDescription": "Please complete your onboarding to select a migration corridor before using the chat.",
+    "clearHistory": "Clear chat history",
+    "confirmClear": "Are you sure you want to clear your chat history? This cannot be undone.",
+    "sources": "Sources",
+    "thinking": "Thinking...",
+    "error": "Sorry, something went wrong. Please try again."
   }
 }

@@ -170,7 +170,7 @@ The neobrutalist aesthetic via RetroUI creates visual distinction from generic S
 
 | Category | Service | Purpose |
 |----------|---------|---------|
-| **AI - Core** | Claude API (Anthropic) | Synthesis, RAG, translation |
+| **AI - Core** | Google Gemini (gemini-3-flash-preview) | Synthesis, RAG, agent reasoning |
 | **AI - Voice** | ElevenLabs | TTS, STT for voice features |
 | **AI - Embeddings** | Voyage AI | Semantic search embeddings |
 | **AI - Search** | Perplexity API | Real-time web search |

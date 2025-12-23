@@ -235,6 +235,12 @@ export default defineSchema({
       totalSteps: v.number(),
       recentCompletions: v.array(v.string()),
     }),
+    // Audio fields for TTS
+    audioStatus: v.optional(
+      v.union(v.literal("pending"), v.literal("ready"), v.literal("failed"))
+    ),
+    audioStorageId: v.optional(v.id("_storage")),
+    audioDuration: v.optional(v.number()), // seconds
     createdAt: v.number(),
     expiresAt: v.optional(v.number()),
   })

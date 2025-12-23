@@ -2,7 +2,7 @@
 
 import { action } from "../_generated/server";
 import { v } from "convex/values";
-import { internal } from "../_generated/api";
+import { api, internal } from "../_generated/api";
 import { Id } from "../_generated/dataModel";
 import { briefingWriter, buildBriefingPrompt } from "../../agents/briefingWriter";
 
@@ -12,6 +12,7 @@ interface BriefingResult {
   script: string;
   cached: boolean;
   wordCount: number;
+  briefingId?: string;
 }
 
 interface UserProfile {
@@ -37,9 +38,11 @@ interface Progress {
 }
 
 interface CachedBriefing {
+  _id: Id<"briefings">;
   script: string;
   wordCount: number;
   createdAt: number;
+  audioStatus?: "pending" | "ready" | "failed";
 }
 
 const WORD_TARGETS: Record<BriefingType, { min: number; max: number }> = {
@@ -84,7 +87,12 @@ export const generateBriefingScript = action({
       // Return cached if recent enough
       const maxAge = CACHE_DURATION[type];
       if (cached && Date.now() - cached.createdAt < maxAge) {
-        return { script: cached.script, cached: true, wordCount: cached.wordCount };
+        return {
+          script: cached.script,
+          cached: true,
+          wordCount: cached.wordCount,
+          briefingId: cached._id,
+        };
       }
     }
 
@@ -151,8 +159,8 @@ export const generateBriefingScript = action({
     const script = result.text;
     const wordCount = script.split(/\s+/).length;
 
-    // Save to database
-    await ctx.runMutation(internal.briefingsQueries.saveBriefingInternal, {
+    // Save to database and get the briefingId
+    const briefingId = await ctx.runMutation(internal.briefingsQueries.saveBriefingInternal, {
       userId: profile._id,
       corridorId,
       type,
@@ -167,6 +175,11 @@ export const generateBriefingScript = action({
       },
     });
 
+    // Schedule audio generation in the background
+    await ctx.scheduler.runAfter(0, api.ai.tts.generateAudio, {
+      briefingId,
+    });
+
     // Log token usage for monitoring
     await ctx.runMutation(internal.briefingsQueries.logBriefingUsage, {
       type,
@@ -177,6 +190,6 @@ export const generateBriefingScript = action({
 
     console.log(`Briefing generated in ${Date.now() - startTime}ms, ${wordCount} words`);
 
-    return { script, cached: false, wordCount };
+    return { script, cached: false, wordCount, briefingId };
   },
 });

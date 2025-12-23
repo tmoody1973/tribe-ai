@@ -20,6 +20,7 @@ import type * as ai_responseTTS from "../ai/responseTTS.js";
 import type * as ai_search from "../ai/search.js";
 import type * as ai_searchActions from "../ai/searchActions.js";
 import type * as ai_synthesis from "../ai/synthesis.js";
+import type * as ai_translation from "../ai/translation.js";
 import type * as ai_tts from "../ai/tts.js";
 import type * as briefingsQueries from "../briefingsQueries.js";
 import type * as cache from "../cache.js";
@@ -39,6 +40,7 @@ import type * as passportIndex from "../passportIndex.js";
 import type * as progress from "../progress.js";
 import type * as protocols from "../protocols.js";
 import type * as rateLimits from "../rateLimits.js";
+import type * as translation from "../translation.js";
 import type * as ttsQueries from "../ttsQueries.js";
 import type * as users from "../users.js";
 
@@ -61,6 +63,7 @@ declare const fullApi: ApiFromModules<{
   "ai/search": typeof ai_search;
   "ai/searchActions": typeof ai_searchActions;
   "ai/synthesis": typeof ai_synthesis;
+  "ai/translation": typeof ai_translation;
   "ai/tts": typeof ai_tts;
   briefingsQueries: typeof briefingsQueries;
   cache: typeof cache;
@@ -80,6 +83,7 @@ declare const fullApi: ApiFromModules<{
   progress: typeof progress;
   protocols: typeof protocols;
   rateLimits: typeof rateLimits;
+  translation: typeof translation;
   ttsQueries: typeof ttsQueries;
   users: typeof users;
 }>;

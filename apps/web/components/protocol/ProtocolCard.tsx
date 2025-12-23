@@ -3,10 +3,11 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Id } from "@/convex/_generated/dataModel";
-import { ChevronDown, ChevronUp, AlertTriangle, Lightbulb } from "lucide-react";
+import { ChevronDown, ChevronUp, AlertTriangle, Lightbulb, Languages, Loader2 } from "lucide-react";
 import { Attribution, detectSourceType } from "./Attribution";
 import { CommunityVerifiedBadge } from "./CommunityVerifiedBadge";
 import { Confetti } from "./Confetti";
+import { useTranslatedProtocol } from "@/hooks/useTranslatedProtocol";
 
 type Category = "visa" | "finance" | "housing" | "employment" | "legal" | "health" | "social";
 type Priority = "critical" | "high" | "medium" | "low";
@@ -69,7 +70,7 @@ const priorityColors: Record<Priority, string> = {
 };
 
 export function ProtocolCard({
-  protocol,
+  protocol: originalProtocol,
   isCurrent,
   isCompleted: isCompletedProp,
   onComplete,
@@ -78,6 +79,9 @@ export function ProtocolCard({
   const [expanded, setExpanded] = useState(isCurrent);
   const [showConfetti, setShowConfetti] = useState(false);
   const t = useTranslations("protocols");
+
+  // Translate protocol content if needed
+  const { protocol, isTranslating, isTranslated } = useTranslatedProtocol(originalProtocol);
 
   // Use prop if provided, otherwise fall back to status field
   const isCompleted = isCompletedProp ?? protocol.status === "completed";
@@ -138,6 +142,17 @@ export function ProtocolCard({
             {isCurrent && (
               <span className="bg-yellow-400 text-black text-xs font-bold px-2 py-0.5">
                 {t("currentStep")}
+              </span>
+            )}
+            {/* Translation indicator */}
+            {isTranslating && (
+              <span className="flex items-center gap-1 text-gray-500 text-xs">
+                <Loader2 size={12} className="animate-spin" />
+              </span>
+            )}
+            {isTranslated && !isTranslating && (
+              <span className="text-gray-400" title="Translated">
+                <Languages size={14} />
               </span>
             )}
           </div>

@@ -248,4 +248,19 @@ export default defineSchema({
     .index("by_user", ["userId"])
     .index("by_user_corridor", ["userId", "corridorId"])
     .index("by_user_type", ["userId", "type"]),
+
+  // Translation cache for dynamic content
+  translations: defineTable({
+    hash: v.string(), // SHA256 hash of content + target locale
+    originalText: v.string(),
+    translatedText: v.string(),
+    sourceLocale: v.string(),
+    targetLocale: v.string(),
+    charCount: v.number(), // For usage tracking
+    createdAt: v.number(),
+    expiresAt: v.number(), // TTL for cache invalidation
+  })
+    .index("by_hash", ["hash"])
+    .index("by_expiry", ["expiresAt"])
+    .index("by_locale_pair", ["sourceLocale", "targetLocale"]),
 });

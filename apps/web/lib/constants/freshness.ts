@@ -3,6 +3,20 @@
 export const FRESHNESS_THRESHOLD_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
 export const CONTENT_EXPIRY_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
 
+// Translation cache TTL
+export const TRANSLATION_TTL = {
+  PROTOCOL: 7 * 24 * 60 * 60 * 1000, // 7 days
+  QA_RESPONSE: 24 * 60 * 60 * 1000, // 24 hours
+  AUDIO_SCRIPT: 12 * 60 * 60 * 1000, // 12 hours
+  CORRIDOR_DATA: 24 * 60 * 60 * 1000, // 24 hours
+} as const;
+
+// Stale threshold - show "updating" indicator before full refresh
+export const STALE_THRESHOLD = {
+  PROTOCOL: 5 * 24 * 60 * 60 * 1000, // Show "updating" after 5 days
+  QA_RESPONSE: 18 * 60 * 60 * 1000, // Show "updating" after 18 hours
+} as const;
+
 /**
  * Check if a corridor's research is still fresh
  */

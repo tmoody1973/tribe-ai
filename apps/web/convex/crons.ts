@@ -24,4 +24,11 @@ crons.weekly(
   internal.maintenance.cleanupOldMetrics
 );
 
+// Daily cleanup of expired translations (3:30 AM UTC)
+crons.daily(
+  "cleanup expired translations",
+  { hourUTC: 3, minuteUTC: 30 },
+  internal.translation.cleanExpired
+);
+
 export default crons;

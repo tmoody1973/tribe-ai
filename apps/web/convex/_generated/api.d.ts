@@ -11,6 +11,7 @@
 import type * as admin from "../admin.js";
 import type * as ai_embeddings from "../ai/embeddings.js";
 import type * as ai_pipeline from "../ai/pipeline.js";
+import type * as ai_qa from "../ai/qa.js";
 import type * as ai_refresh from "../ai/refresh.js";
 import type * as ai_research from "../ai/research.js";
 import type * as ai_search from "../ai/search.js";
@@ -28,6 +29,7 @@ import type * as integrations_countries from "../integrations/countries.js";
 import type * as integrations_visa from "../integrations/visa.js";
 import type * as maintenance from "../maintenance.js";
 import type * as metrics from "../metrics.js";
+import type * as monitoring from "../monitoring.js";
 import type * as passportIndex from "../passportIndex.js";
 import type * as progress from "../progress.js";
 import type * as protocols from "../protocols.js";
@@ -43,6 +45,7 @@ declare const fullApi: ApiFromModules<{
   admin: typeof admin;
   "ai/embeddings": typeof ai_embeddings;
   "ai/pipeline": typeof ai_pipeline;
+  "ai/qa": typeof ai_qa;
   "ai/refresh": typeof ai_refresh;
   "ai/research": typeof ai_research;
   "ai/search": typeof ai_search;
@@ -60,6 +63,7 @@ declare const fullApi: ApiFromModules<{
   "integrations/visa": typeof integrations_visa;
   maintenance: typeof maintenance;
   metrics: typeof metrics;
+  monitoring: typeof monitoring;
   passportIndex: typeof passportIndex;
   progress: typeof progress;
   protocols: typeof protocols;

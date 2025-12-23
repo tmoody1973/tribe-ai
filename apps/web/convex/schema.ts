@@ -194,4 +194,16 @@ export default defineSchema({
   })
     .index("by_user", ["userId"])
     .index("by_user_corridor", ["userId", "corridorId"]),
+
+  // Token usage logging for cost monitoring
+  tokenUsage: defineTable({
+    model: v.string(),
+    inputTokens: v.number(),
+    outputTokens: v.number(),
+    action: v.string(),
+    corridorId: v.optional(v.id("corridors")),
+    timestamp: v.number(),
+  })
+    .index("by_timestamp", ["timestamp"])
+    .index("by_action", ["action"]),
 });

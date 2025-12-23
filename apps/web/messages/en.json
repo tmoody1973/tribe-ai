@@ -248,12 +248,18 @@
     "noCorridorDescription": "Please complete your onboarding to select a migration corridor before using the chat.",
     "clearHistory": "Clear chat history",
     "confirmClear": "Are you sure you want to clear your chat history? This cannot be undone.",
-    "sources": "Sources",
     "thinking": "Thinking...",
     "error": "Sorry, something went wrong. Please try again.",
-    "realtimeSource": "Real-time web search",
-    "communitySource": "Community knowledge",
     "rateLimited": "You've reached the limit for real-time searches. Try again in an hour.",
-    "perplexityNote": "This answer includes real-time information that may be more current than our cached knowledge."
+    "perplexityNote": "This answer includes real-time information that may be more current than our cached knowledge.",
+    "sources": {
+      "title": "Sources",
+      "community": "Community",
+      "realtime": "Real-time",
+      "asOf": "Information as of {date}",
+      "oldSourcesWarning": "Some sources may be outdated (>6 months old)",
+      "basedOn": "Based on {count} sources",
+      "noSources": "No sources available"
+    }
   }
 }

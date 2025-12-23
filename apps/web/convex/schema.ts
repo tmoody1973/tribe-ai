@@ -249,6 +249,32 @@ export default defineSchema({
     .index("by_user_corridor", ["userId", "corridorId"])
     .index("by_user_type", ["userId", "type"]),
 
+  // Cultural profiles from AI-guided interview
+  culturalProfiles: defineTable({
+    userId: v.id("users"),
+    originCulture: v.string(), // e.g., "Nigerian Yoruba"
+    communicationStyle: v.union(
+      v.literal("direct"),
+      v.literal("indirect"),
+      v.literal("context-dependent")
+    ),
+    familyStructure: v.union(
+      v.literal("nuclear"),
+      v.literal("extended"),
+      v.literal("multi-generational")
+    ),
+    timeOrientation: v.union(
+      v.literal("monochronic"),
+      v.literal("polychronic")
+    ),
+    values: v.array(v.string()),
+    foodDietary: v.array(v.string()),
+    celebrations: v.array(v.string()),
+    interviewResponses: v.any(), // Record<string, string>
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }).index("by_user", ["userId"]),
+
   // Translation cache for dynamic content
   translations: defineTable({
     hash: v.string(), // SHA256 hash of content + target locale

@@ -304,5 +304,46 @@
       "listenToResponse": "Listen to the last response",
       "stopListening": "Stop listening"
     }
+  },
+  "cultural": {
+    "buildProfile": "Build Your Cultural Profile",
+    "profileDescription": "Help us understand your cultural background through a short conversation. This will help us personalize your migration experience.",
+    "startInterview": "Start Interview",
+    "culturalInterview": "Cultural Interview",
+    "question": "Question",
+    "complete": "Complete!",
+    "typeYourAnswer": "Type your answer...",
+    "pressEnterToSend": "Press Enter to send",
+    "loading": "Loading...",
+    "interviewError": "Something went wrong. Please try again.",
+    "profileCreated": "Your cultural profile has been created!",
+    "viewDashboard": "View Dashboard",
+    "startOver": "Start Over",
+    "confirmReset": "Are you sure you want to start over? Your current profile will be deleted.",
+    "noCulturalProfile": "Tell Us About Your Culture",
+    "completeProfileCta": "Complete a short interview to help us understand your cultural background and personalize your experience.",
+    "yourCulturalProfile": "Your Cultural Profile",
+    "editProfile": "Edit Profile",
+    "communication": "Communication",
+    "family": "Family",
+    "timeOrientation": "Time",
+    "coreValues": "Core Values",
+    "foodDietary": "Food & Dietary",
+    "celebrations": "Celebrations",
+    "lastUpdated": "Last updated",
+    "styles": {
+      "direct": "Direct",
+      "indirect": "Indirect",
+      "context-dependent": "Context-Dependent"
+    },
+    "familyTypes": {
+      "nuclear": "Nuclear Family",
+      "extended": "Extended Family",
+      "multi-generational": "Multi-Generational"
+    },
+    "timeTypes": {
+      "monochronic": "Structured",
+      "polychronic": "Flexible"
+    }
   }
 }

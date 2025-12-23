@@ -1,4 +1,4 @@
-import { mutation, query, internalMutation } from "./_generated/server";
+import { mutation, query, internalMutation, internalQuery } from "./_generated/server";
 import { v } from "convex/values";
 
 export const createFromClerk = mutation({
@@ -323,5 +323,16 @@ export const backfillCorridors = internalMutation({
     }
 
     return { created };
+  },
+});
+
+// Internal query to get user by Clerk ID (for actions)
+export const getUserByClerkId = internalQuery({
+  args: { clerkId: v.string() },
+  handler: async (ctx, { clerkId }) => {
+    return ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
+      .unique();
   },
 });

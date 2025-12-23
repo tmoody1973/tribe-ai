@@ -96,7 +96,18 @@ export const searchRelevantContent = action({
     const contentIds = searchResults.map((r) => r._id);
     const contents = await ctx.runQuery(internal.ai.search.getContentByIds, {
       ids: contentIds,
-    });
+    }) as Array<{
+      _id: Id<"ingestedContent">;
+      content: string;
+      title: string;
+      url: string;
+      metadata: {
+        author?: string;
+        publishedAt?: number;
+        subreddit?: string;
+      };
+      corridorId: Id<"corridors">;
+    }>;
 
     // Create a map for quick lookup
     const contentMap = new Map(contents.map((c) => [c._id, c]));
@@ -161,7 +172,18 @@ export const getSimilarContent = action({
     const contentIds = filteredResults.slice(0, limit).map((r) => r._id);
     const contents = await ctx.runQuery(internal.ai.search.getContentByIds, {
       ids: contentIds,
-    });
+    }) as Array<{
+      _id: Id<"ingestedContent">;
+      content: string;
+      title: string;
+      url: string;
+      metadata: {
+        author?: string;
+        publishedAt?: number;
+        subreddit?: string;
+      };
+      corridorId: Id<"corridors">;
+    }>;
 
     // Create a map for quick lookup
     const contentMap = new Map(contents.map((c) => [c._id, c]));

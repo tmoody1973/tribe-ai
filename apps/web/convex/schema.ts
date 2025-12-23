@@ -216,4 +216,29 @@ export default defineSchema({
   })
     .index("by_user_action", ["userId", "action"])
     .index("by_window", ["windowStart"]),
+
+  // Audio briefings for personalized migration updates
+  briefings: defineTable({
+    userId: v.id("users"),
+    corridorId: v.id("corridors"),
+    type: v.union(
+      v.literal("daily"),
+      v.literal("weekly"),
+      v.literal("progress")
+    ),
+    script: v.string(),
+    wordCount: v.number(),
+    language: v.string(),
+    context: v.object({
+      stage: v.string(),
+      completedSteps: v.number(),
+      totalSteps: v.number(),
+      recentCompletions: v.array(v.string()),
+    }),
+    createdAt: v.number(),
+    expiresAt: v.optional(v.number()),
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_corridor", ["userId", "corridorId"])
+    .index("by_user_type", ["userId", "type"]),
 });

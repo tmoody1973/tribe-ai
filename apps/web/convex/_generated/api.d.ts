@@ -9,6 +9,7 @@
  */
 
 import type * as admin from "../admin.js";
+import type * as ai_briefings from "../ai/briefings.js";
 import type * as ai_embeddings from "../ai/embeddings.js";
 import type * as ai_perplexity from "../ai/perplexity.js";
 import type * as ai_pipeline from "../ai/pipeline.js";
@@ -18,6 +19,7 @@ import type * as ai_research from "../ai/research.js";
 import type * as ai_search from "../ai/search.js";
 import type * as ai_searchActions from "../ai/searchActions.js";
 import type * as ai_synthesis from "../ai/synthesis.js";
+import type * as briefingsQueries from "../briefingsQueries.js";
 import type * as cache from "../cache.js";
 import type * as chat from "../chat.js";
 import type * as corridorData from "../corridorData.js";
@@ -45,6 +47,7 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   admin: typeof admin;
+  "ai/briefings": typeof ai_briefings;
   "ai/embeddings": typeof ai_embeddings;
   "ai/perplexity": typeof ai_perplexity;
   "ai/pipeline": typeof ai_pipeline;
@@ -54,6 +57,7 @@ declare const fullApi: ApiFromModules<{
   "ai/search": typeof ai_search;
   "ai/searchActions": typeof ai_searchActions;
   "ai/synthesis": typeof ai_synthesis;
+  briefingsQueries: typeof briefingsQueries;
   cache: typeof cache;
   chat: typeof chat;
   corridorData: typeof corridorData;

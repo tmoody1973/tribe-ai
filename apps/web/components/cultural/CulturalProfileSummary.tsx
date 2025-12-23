@@ -7,9 +7,6 @@ import {
   MessageCircle,
   Users,
   Clock,
-  Heart,
-  Utensils,
-  PartyPopper,
   Edit3,
   Loader2,
 } from "lucide-react";

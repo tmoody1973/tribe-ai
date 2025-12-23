@@ -1,5 +1,4 @@
 import { CulturalProfileBuilder } from "@/components/cultural/CulturalProfileBuilder";
-import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
 
 export async function generateMetadata({

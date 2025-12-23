@@ -28,6 +28,8 @@ import type * as chat from "../chat.js";
 import type * as corridorData from "../corridorData.js";
 import type * as corridors from "../corridors.js";
 import type * as crons from "../crons.js";
+import type * as cultural_interview from "../cultural/interview.js";
+import type * as cultural_profile from "../cultural/profile.js";
 import type * as health from "../health.js";
 import type * as ingestedContent from "../ingestedContent.js";
 import type * as integrations_costOfLiving from "../integrations/costOfLiving.js";
@@ -71,6 +73,8 @@ declare const fullApi: ApiFromModules<{
   corridorData: typeof corridorData;
   corridors: typeof corridors;
   crons: typeof crons;
+  "cultural/interview": typeof cultural_interview;
+  "cultural/profile": typeof cultural_profile;
   health: typeof health;
   ingestedContent: typeof ingestedContent;
   "integrations/costOfLiving": typeof integrations_costOfLiving;

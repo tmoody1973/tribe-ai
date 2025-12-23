@@ -206,4 +206,14 @@ export default defineSchema({
   })
     .index("by_timestamp", ["timestamp"])
     .index("by_action", ["action"]),
+
+  // Rate limiting for API calls (e.g., Perplexity)
+  rateLimits: defineTable({
+    userId: v.string(),
+    action: v.string(),
+    windowStart: v.number(),
+    count: v.number(),
+  })
+    .index("by_user_action", ["userId", "action"])
+    .index("by_window", ["windowStart"]),
 });

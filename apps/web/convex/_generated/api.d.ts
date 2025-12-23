@@ -10,6 +10,7 @@
 
 import type * as admin from "../admin.js";
 import type * as ai_embeddings from "../ai/embeddings.js";
+import type * as ai_perplexity from "../ai/perplexity.js";
 import type * as ai_pipeline from "../ai/pipeline.js";
 import type * as ai_qa from "../ai/qa.js";
 import type * as ai_refresh from "../ai/refresh.js";
@@ -33,6 +34,7 @@ import type * as monitoring from "../monitoring.js";
 import type * as passportIndex from "../passportIndex.js";
 import type * as progress from "../progress.js";
 import type * as protocols from "../protocols.js";
+import type * as rateLimits from "../rateLimits.js";
 import type * as users from "../users.js";
 
 import type {
@@ -44,6 +46,7 @@ import type {
 declare const fullApi: ApiFromModules<{
   admin: typeof admin;
   "ai/embeddings": typeof ai_embeddings;
+  "ai/perplexity": typeof ai_perplexity;
   "ai/pipeline": typeof ai_pipeline;
   "ai/qa": typeof ai_qa;
   "ai/refresh": typeof ai_refresh;
@@ -67,6 +70,7 @@ declare const fullApi: ApiFromModules<{
   passportIndex: typeof passportIndex;
   progress: typeof progress;
   protocols: typeof protocols;
+  rateLimits: typeof rateLimits;
   users: typeof users;
 }>;
 

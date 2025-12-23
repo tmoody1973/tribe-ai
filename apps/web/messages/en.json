@@ -250,6 +250,10 @@
     "confirmClear": "Are you sure you want to clear your chat history? This cannot be undone.",
     "sources": "Sources",
     "thinking": "Thinking...",
-    "error": "Sorry, something went wrong. Please try again."
+    "error": "Sorry, something went wrong. Please try again.",
+    "realtimeSource": "Real-time web search",
+    "communitySource": "Community knowledge",
+    "rateLimited": "You've reached the limit for real-time searches. Try again in an hour.",
+    "perplexityNote": "This answer includes real-time information that may be more current than our cached knowledge."
   }
 }

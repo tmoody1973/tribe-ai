@@ -132,9 +132,9 @@ const runtime = new CopilotRuntime({
   ],
 });
 
-// Use Google Gemini as the LLM provider with system instructions
+// Use Google Gemini as the LLM provider
 const serviceAdapter = new GoogleGenerativeAIAdapter({
-  model: "gemini-2.0-flash",
+  model: "gemini-3-flash-preview",
 });
 
 export const POST = async (req: Request) => {

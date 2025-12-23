@@ -13,6 +13,8 @@ import type * as ai_embeddings from "../ai/embeddings.js";
 import type * as ai_pipeline from "../ai/pipeline.js";
 import type * as ai_refresh from "../ai/refresh.js";
 import type * as ai_research from "../ai/research.js";
+import type * as ai_search from "../ai/search.js";
+import type * as ai_searchActions from "../ai/searchActions.js";
 import type * as ai_synthesis from "../ai/synthesis.js";
 import type * as cache from "../cache.js";
 import type * as chat from "../chat.js";
@@ -43,6 +45,8 @@ declare const fullApi: ApiFromModules<{
   "ai/pipeline": typeof ai_pipeline;
   "ai/refresh": typeof ai_refresh;
   "ai/research": typeof ai_research;
+  "ai/search": typeof ai_search;
+  "ai/searchActions": typeof ai_searchActions;
   "ai/synthesis": typeof ai_synthesis;
   cache: typeof cache;
   chat: typeof chat;

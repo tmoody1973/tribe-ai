@@ -75,7 +75,7 @@ export const searchRealtime = action({
 
       // Log usage for cost tracking
       await ctx.runMutation(api.monitoring.logTokenUsage, {
-        model: "perplexity-sonar",
+        model: "sonar",
         inputTokens: result.usage.inputTokens,
         outputTokens: result.usage.outputTokens,
         action: "perplexity_search",

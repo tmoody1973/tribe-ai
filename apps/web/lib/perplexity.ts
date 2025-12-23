@@ -70,7 +70,7 @@ Provide specific, actionable information with dates and processing times when av
       Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
-      model: "llama-3.1-sonar-small-128k-online",
+      model: "sonar",
       messages,
       return_citations: true,
       temperature: 0.2, // Lower temperature for factual responses

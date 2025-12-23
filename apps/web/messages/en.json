@@ -145,7 +145,12 @@
     "save": "Save",
     "saving": "Saving...",
     "cancel": "Cancel",
-    "notSet": "Not set"
+    "notSet": "Not set",
+    "voice": {
+      "title": "Voice Settings",
+      "autoSpeak": "Auto-speak responses",
+      "autoSpeakDescription": "Automatically read assistant responses aloud"
+    }
   },
   "language": {
     "select": "Select Language",
@@ -292,7 +297,12 @@
       "reRecord": "Record again",
       "transcriptionFailed": "Could not transcribe audio. Please try again.",
       "microphoneError": "Could not access microphone. Please check permissions.",
-      "keyboardHint": "Press Enter to send, Escape to cancel"
+      "keyboardHint": "Press Enter to send, Escape to cancel",
+      "speaking": "Speaking",
+      "listen": "Listen",
+      "stop": "Stop",
+      "listenToResponse": "Listen to the last response",
+      "stopListening": "Stop listening"
     }
   }
 }

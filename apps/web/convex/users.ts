@@ -194,6 +194,7 @@ export const updateProfile = mutation({
         v.literal("es")
       )
     ),
+    autoSpeak: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -219,6 +220,7 @@ export const updateProfile = mutation({
     if (args.stage !== undefined) updates.stage = args.stage;
     if (args.visaType !== undefined) updates.visaType = args.visaType;
     if (args.language !== undefined) updates.language = args.language;
+    if (args.autoSpeak !== undefined) updates.autoSpeak = args.autoSpeak;
 
     await ctx.db.patch(user._id, updates);
 

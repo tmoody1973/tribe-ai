@@ -30,6 +30,7 @@ export default defineSchema({
     ),
     visaType: v.optional(v.string()),
     onboardingComplete: v.boolean(),
+    autoSpeak: v.optional(v.boolean()), // Auto-speak TTS responses
     createdAt: v.number(),
     updatedAt: v.optional(v.number()),
   })

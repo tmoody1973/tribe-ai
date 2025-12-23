@@ -260,6 +260,35 @@ export default function SettingsPage() {
               <h2 className="font-bold text-lg mb-2">{t("language")}</h2>
               <p className="text-gray-600">{t("languageHint")}</p>
             </div>
+
+            {/* Voice Settings */}
+            <div className="border-4 border-black bg-white p-6 shadow-brutal">
+              <h2 className="font-bold text-lg mb-4">{t("voice.title")}</h2>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-bold">{t("voice.autoSpeak")}</p>
+                  <p className="text-sm text-gray-600">{t("voice.autoSpeakDescription")}</p>
+                </div>
+                <button
+                  onClick={async () => {
+                    await updateProfile({ autoSpeak: !profile?.autoSpeak });
+                  }}
+                  className={`
+                    w-14 h-8 border-4 border-black relative transition-colors
+                    ${profile?.autoSpeak ? "bg-green-500" : "bg-gray-200"}
+                  `}
+                  aria-label={t("voice.autoSpeak")}
+                >
+                  <div
+                    className={`
+                      absolute top-0.5 w-6 h-6 bg-white border-2 border-black
+                      transition-all
+                      ${profile?.autoSpeak ? "right-0.5" : "left-0.5"}
+                    `}
+                  />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </main>

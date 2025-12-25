@@ -45,7 +45,7 @@ Always start with a broad search, then dive deeper into specific sources.`;
 export const corridorResearcher = new Agent({
   name: "CorridorResearcher",
   instructions: CORRIDOR_RESEARCH_INSTRUCTIONS,
-  model: "google/gemini-3-flash-preview",
+  model: "google/gemini-2.5-flash",
   tools: {
     tavily_search: tavilyTool,
     reddit_search: redditTool,

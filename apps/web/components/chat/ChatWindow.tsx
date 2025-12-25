@@ -109,9 +109,9 @@ export function ChatWindow({ corridorId }: ChatWindowProps) {
       : null,
   });
 
-  // Sync protocols to CopilotKit
+  // Sync protocols to CopilotKit (read-only context)
   useCopilotReadable({
-    description: "User's migration protocol checklist",
+    description: "Migration protocols and steps the user has saved (read-only reference)",
     value: protocols ?? [],
   });
 
@@ -180,33 +180,28 @@ export function ChatWindow({ corridorId }: ChatWindowProps) {
       {/* Chat Body */}
       <div className="flex-1 overflow-hidden copilot-chat-container">
         <CopilotChat
-          instructions={`You are TRIBE's Migration Intelligence Advisor, helping users navigate international relocation using community-sourced knowledge and real-time information.
+          instructions={`You are TRIBE's Migration Intelligence Advisor, helping users navigate international relocation.
 
 IMPORTANT RULES:
 1. Always respond in the user's preferred language when specified
-2. Cite sources using [1], [2], etc. format when referencing knowledge
-3. Be concise but actionable - users need practical guidance
-4. Admit when information is not available rather than guessing
-5. Never invent facts not in the provided context
-6. Flag potentially outdated information with warnings
-7. Prioritize community experiences and real-world tips
+2. Be concise but actionable - users need practical guidance
+3. Admit when information is not available rather than guessing
+4. Never invent facts
+5. Flag potentially outdated information with warnings
+6. Prioritize practical, actionable advice
 
-TOOLS AVAILABLE:
-- searchMigrationKnowledge: Use for general migration questions, community experiences, tips, and advice
-- searchRealtimeInfo: Use for current processing times, recent policy changes, visa slot availability, embassy appointments, and any time-sensitive information (requires user ID for rate limiting)
+CONTEXT:
+You have access to read-only information about the user's migration corridor (origin/destination) and any saved protocol steps. Use this context to provide personalized guidance.
 
-When answering questions:
-1. For general advice and experiences → use searchMigrationKnowledge
-2. For current status, processing times, recent changes → use searchRealtimeInfo
-3. For comprehensive answers, you may use both tools
-
-Mark real-time sources as "[Real-time]" and community sources as "[Community]" in your citations.
+DO NOT:
+- Attempt to modify any state or checklist data
+- Make up visa processing times or costs
+- Provide legal advice
 
 RESPONSE FORMAT:
 - Start with a direct answer to the question
-- Provide supporting details with citations
-- End with actionable next steps if applicable
-- Include a Sources section at the end listing cited references`}
+- Provide supporting details
+- End with actionable next steps if applicable`}
           labels={{
             title: "",
             initial: getWelcomeMessage(),

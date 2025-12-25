@@ -48,7 +48,7 @@ IMPORTANT:
 export const briefingWriter = new Agent({
   name: "BriefingWriter",
   instructions: BRIEFING_WRITER_INSTRUCTIONS,
-  model: "google/gemini-3-flash-preview",
+  model: "google/gemini-2.5-flash",
   tools: {},
 });
 

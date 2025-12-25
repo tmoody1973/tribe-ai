@@ -107,6 +107,7 @@ export function getVoiceName(language: string): string {
 
 // ============================================
 // Speech-to-Text (STT) Functions
+// Using Web Speech API (Google's speech recognition)
 // ============================================
 
 export interface STTResult {
@@ -114,52 +115,47 @@ export interface STTResult {
   language: string;
 }
 
+// Language code mapping for Web Speech API (uses BCP 47 format)
+const SPEECH_LANG_MAP: Record<string, string> = {
+  en: "en-US",
+  yo: "en-NG", // Yoruba not directly supported, use Nigerian English
+  hi: "hi-IN",
+  pt: "pt-BR",
+  tl: "fil-PH", // Filipino/Tagalog
+  ko: "ko-KR",
+  de: "de-DE",
+  fr: "fr-FR",
+  es: "es-ES",
+};
+
 /**
- * Convert speech to text using ElevenLabs STT API
- * @param audioBlob - Audio blob from MediaRecorder (webm format)
- * @param languageHint - Optional language code to help transcription
- * @returns Transcribed text and detected language
+ * Convert speech to text using Web Speech API
+ * This uses Google's speech recognition under the hood (in Chrome)
+ * @deprecated Use Web Speech API directly in VoiceInputButton
  */
 export async function speechToText(
-  audioBlob: Blob,
-  languageHint?: string
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _audioBlob: Blob,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _languageHint?: string
 ): Promise<STTResult> {
-  const apiKey = process.env.NEXT_PUBLIC_ELEVENLABS_API_KEY;
-  if (!apiKey) {
-    throw new Error("ELEVENLABS_API_KEY not configured");
-  }
+  // Web Speech API doesn't use the blob - it records directly
+  // This function signature is kept for compatibility but the
+  // actual implementation is in VoiceInputButton using the hook
+  throw new Error("Use useWebSpeechRecognition hook instead");
+}
 
-  const formData = new FormData();
-  // ElevenLabs requires the field name to be "file"
-  formData.append("file", audioBlob, "recording.webm");
+/**
+ * Check if Web Speech API is supported
+ */
+export function isWebSpeechSupported(): boolean {
+  if (typeof window === "undefined") return false;
+  return "webkitSpeechRecognition" in window || "SpeechRecognition" in window;
+}
 
-  // Add model_id for better accuracy
-  formData.append("model_id", "scribe_v1");
-
-  if (languageHint) {
-    formData.append("language_code", languageHint);
-  }
-
-  const response = await fetch(
-    `${ELEVENLABS_API_URL}/speech-to-text`,
-    {
-      method: "POST",
-      headers: {
-        "xi-api-key": apiKey,
-      },
-      body: formData,
-    }
-  );
-
-  if (!response.ok) {
-    const error = await response.text();
-    throw new Error(`ElevenLabs STT error: ${response.status} - ${error}`);
-  }
-
-  const data = await response.json();
-
-  return {
-    text: data.text || "",
-    language: data.language_code || languageHint || "en",
-  };
+/**
+ * Get the speech recognition language code for a given app language
+ */
+export function getSpeechLang(language: string): string {
+  return SPEECH_LANG_MAP[language] || "en-US";
 }

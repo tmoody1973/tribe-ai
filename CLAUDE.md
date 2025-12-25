@@ -65,3 +65,18 @@ docs/qa/gates/        → Quality gate decision files
 ## Brownfield Projects
 
 For existing codebases, use the architect's `*document-project` task to generate contextual artifacts before adding features. See `.bmad-core/working-in-the-brownfield.md`.
+
+## AI Models
+
+This project uses Google Gemini models. Use these specific model IDs:
+
+| Use Case | Model ID |
+|----------|----------|
+| Text Chat (CopilotKit) | `gemini-2.5-flash` |
+| Mastra Agents | `google/gemini-2.5-flash` |
+| Voice/Live API | `gemini-2.0-flash-live-preview-04-09` |
+
+**Important:**
+- Do NOT use `gemini-3-flash-preview` - it has "thinking mode" enabled which causes ZodError in CopilotKit
+- For real-time voice, use the Gemini Live API with WebSocket connections
+- See: https://docs.cloud.google.com/vertex-ai/generative-ai/docs/model-reference/multimodal-live

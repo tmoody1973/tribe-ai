@@ -81,7 +81,7 @@ IMPORTANT GUIDELINES:
 export const protocolSynthesizer = new Agent({
   name: "ProtocolSynthesizer",
   instructions: PROTOCOL_SYNTHESIS_INSTRUCTIONS,
-  model: "google/gemini-3-flash-preview",
+  model: "google/gemini-2.5-flash",
   tools: {},
 });
 

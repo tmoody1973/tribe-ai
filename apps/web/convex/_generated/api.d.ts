@@ -16,6 +16,7 @@ import type * as ai_pipeline from "../ai/pipeline.js";
 import type * as ai_qa from "../ai/qa.js";
 import type * as ai_refresh from "../ai/refresh.js";
 import type * as ai_research from "../ai/research.js";
+import type * as ai_researchScheduler from "../ai/researchScheduler.js";
 import type * as ai_responseTTS from "../ai/responseTTS.js";
 import type * as ai_search from "../ai/search.js";
 import type * as ai_searchActions from "../ai/searchActions.js";
@@ -61,6 +62,7 @@ declare const fullApi: ApiFromModules<{
   "ai/qa": typeof ai_qa;
   "ai/refresh": typeof ai_refresh;
   "ai/research": typeof ai_research;
+  "ai/researchScheduler": typeof ai_researchScheduler;
   "ai/responseTTS": typeof ai_responseTTS;
   "ai/search": typeof ai_search;
   "ai/searchActions": typeof ai_searchActions;

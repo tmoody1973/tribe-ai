@@ -8,6 +8,7 @@ import { Attribution, detectSourceType } from "./Attribution";
 import { CommunityVerifiedBadge } from "./CommunityVerifiedBadge";
 import { Confetti } from "./Confetti";
 import { useTranslatedProtocol } from "@/hooks/useTranslatedProtocol";
+import { StepAssistant } from "./StepAssistant";
 
 type Category = "visa" | "finance" | "housing" | "employment" | "legal" | "health" | "social";
 type Priority = "critical" | "high" | "medium" | "low";
@@ -35,6 +36,7 @@ interface Protocol {
 
 interface ProtocolCardProps {
   protocol: Protocol;
+  corridorId: Id<"corridors">;
   isCurrent: boolean;
   isCompleted?: boolean;
   onComplete?: (protocolId: Id<"protocols">) => void;
@@ -71,6 +73,7 @@ const priorityColors: Record<Priority, string> = {
 
 export function ProtocolCard({
   protocol: originalProtocol,
+  corridorId,
   isCurrent,
   isCompleted: isCompletedProp,
   onComplete,
@@ -229,6 +232,20 @@ export function ProtocolCard({
               />
             </div>
           )}
+
+          {/* AI Step Assistant */}
+          <div className="mt-4 pt-4 border-t-2 border-gray-300">
+            <StepAssistant
+              protocolId={protocol._id}
+              corridorId={corridorId}
+              stepTitle={protocol.title}
+              stepDescription={protocol.description}
+              stepCategory={protocol.category}
+              stepPriority={protocol.priority}
+              warnings={protocol.warnings}
+              hacks={protocol.hacks}
+            />
+          </div>
         </div>
       )}
     </div>

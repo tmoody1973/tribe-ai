@@ -6,6 +6,7 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { ProtocolCard } from "./ProtocolCard";
 import { ProgressBar } from "./ProgressBar";
+import { VoiceStepWalkthrough } from "./VoiceStepWalkthrough";
 
 type Category = "visa" | "finance" | "housing" | "employment" | "legal" | "health" | "social";
 type Priority = "critical" | "high" | "medium" | "low";
@@ -39,13 +40,16 @@ interface ProtocolListProps {
 export function ProtocolList({ protocols, corridorId }: ProtocolListProps) {
   const t = useTranslations("protocols");
 
+  // Fetch corridor details for progress display
+  const corridor = useQuery(api.corridors.getCorridor, { id: corridorId });
+
   // Fetch user progress
   const progress = useQuery(api.progress.getProgress, { corridorId });
   const markComplete = useMutation(api.progress.markComplete);
   const markIncomplete = useMutation(api.progress.markIncomplete);
 
   // Create set of completed protocol IDs
-  const completedIds = new Set(progress?.map((p) => p.protocolId) ?? []);
+  const completedIds = new Set(progress?.map((p: { protocolId: Id<"protocols"> }) => p.protocolId) ?? []);
   const completedCount = completedIds.size;
 
   // Sort: incomplete first (by order), then completed (by order)
@@ -78,7 +82,20 @@ export function ProtocolList({ protocols, corridorId }: ProtocolListProps) {
   return (
     <div className="space-y-6">
       {/* Progress Bar */}
-      <ProgressBar completed={completedCount} total={protocols.length} />
+      <ProgressBar
+        completed={completedCount}
+        total={protocols.length}
+        corridorOrigin={corridor?.origin}
+        corridorDestination={corridor?.destination}
+      />
+
+      {/* Voice Walkthrough Button */}
+      {currentProtocol && (
+        <VoiceStepWalkthrough
+          stepTitle={currentProtocol.title}
+          stepDescription={currentProtocol.description}
+        />
+      )}
 
       {/* Header */}
       <div className="flex items-center justify-between">
@@ -99,6 +116,7 @@ export function ProtocolList({ protocols, corridorId }: ProtocolListProps) {
             <ProtocolCard
               key={protocol._id}
               protocol={protocol}
+              corridorId={corridorId}
               isCurrent={protocol._id === currentProtocol?._id}
               isCompleted={completedIds.has(protocol._id)}
               onComplete={handleComplete}

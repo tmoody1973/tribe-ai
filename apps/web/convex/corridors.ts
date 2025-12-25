@@ -1,5 +1,6 @@
 import { mutation, query, internalMutation, internalQuery } from "./_generated/server";
 import { v } from "convex/values";
+import { internal } from "./_generated/api";
 
 const FRESHNESS_THRESHOLD_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
 
@@ -27,14 +28,22 @@ export const createCorridor = mutation({
     if (!user) throw new Error("User not found");
 
     const now = Date.now();
-    return await ctx.db.insert("corridors", {
+    const corridorId = await ctx.db.insert("corridors", {
       userId: user._id,
       origin: args.origin,
       destination: args.destination,
       stage: args.stage,
       createdAt: now,
       updatedAt: now,
+      researchStatus: "stale", // Mark as needing research
     });
+
+    // Schedule research to run after corridor creation (delayed by 1 second)
+    await ctx.scheduler.runAfter(1000, internal.ai.researchScheduler.researchCorridorBackground, {
+      corridorId,
+    });
+
+    return corridorId;
   },
 });
 

@@ -35,6 +35,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-map-gl": "^8.1.0",
+    "react-markdown": "^10.1.0",
     "svix": "^1.82.0",
     "tailwind-merge": "^3.4.0",
     "tailwindcss-animate": "^1.0.7",

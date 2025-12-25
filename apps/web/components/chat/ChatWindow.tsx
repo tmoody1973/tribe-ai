@@ -8,10 +8,11 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useTranslations } from "next-intl";
 import { useCallback, useState, useEffect, useRef } from "react";
-import { Trash2, Send, Volume2, VolumeX, Loader2 } from "lucide-react";
+import { Trash2, Send, Volume2, VolumeX, Loader2, Phone } from "lucide-react";
 import { VoiceInputButton } from "./VoiceInputButton";
 import { TranscriptionPreview } from "./TranscriptionPreview";
 import { SpeakingIndicator } from "./SpeakingIndicator";
+import { VoiceChat } from "./VoiceChat";
 import { useVoiceResponse } from "@/hooks/useVoiceResponse";
 import "@copilotkit/react-ui/styles.css";
 
@@ -23,6 +24,7 @@ export function ChatWindow({ corridorId }: ChatWindowProps) {
   const t = useTranslations("chat");
   const [transcription, setTranscription] = useState<string | null>(null);
   const [isVoiceMode, setIsVoiceMode] = useState(false);
+  const [showVoiceChat, setShowVoiceChat] = useState(false);
   const lastSpokenMessageRef = useRef<string | null>(null);
 
   const corridor = useQuery(
@@ -166,15 +168,26 @@ export function ChatWindow({ corridorId }: ChatWindowProps) {
       {/* Chat Header */}
       <div className="flex items-center justify-between p-4 border-b-4 border-black bg-yellow-100">
         <h2 className="text-xl font-bold">{t("title")}</h2>
-        {convexMessages && convexMessages.length > 0 && (
+        <div className="flex items-center gap-2">
+          {/* Voice Chat Button */}
           <button
-            onClick={handleClearHistory}
-            className="p-2 border-2 border-black hover:bg-red-100 transition-colors"
-            title={t("clearHistory")}
+            onClick={() => setShowVoiceChat(true)}
+            className="p-2 border-2 border-black hover:bg-green-100 transition-colors bg-white"
+            title={t("voice.startVoiceChat") || "Voice Chat"}
           >
-            <Trash2 size={18} />
+            <Phone size={18} />
           </button>
-        )}
+          {/* Clear History Button */}
+          {convexMessages && convexMessages.length > 0 && (
+            <button
+              onClick={handleClearHistory}
+              className="p-2 border-2 border-black hover:bg-red-100 transition-colors"
+              title={t("clearHistory")}
+            >
+              <Trash2 size={18} />
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Chat Body */}
@@ -274,6 +287,14 @@ RESPONSE FORMAT:
             </div>
           )}
         </div>
+      )}
+
+      {/* Voice Chat Modal */}
+      {showVoiceChat && (
+        <VoiceChat
+          language={userLanguage}
+          onClose={() => setShowVoiceChat(false)}
+        />
       )}
     </div>
   );

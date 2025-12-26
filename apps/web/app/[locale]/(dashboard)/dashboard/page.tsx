@@ -8,6 +8,7 @@ import { ProtocolTabs } from "@/components/protocol/ProtocolTabs";
 import { DashboardSkeleton } from "@/components/corridor/DashboardSkeleton";
 import { EmptyState } from "@/components/corridor/EmptyState";
 import { JourneyMap } from "@/components/dashboard/JourneyMap";
+import { CulturalBridge } from "@/components/dashboard/CulturalBridge";
 import { CountryInfoCard } from "@/components/dashboard/CountryInfoCard";
 import { VisaEligibilityQuiz } from "@/components/dashboard/VisaEligibilityQuiz";
 import { TrueCostCalculator } from "@/components/dashboard/TrueCostCalculator";
@@ -82,6 +83,12 @@ export default function DashboardPage() {
 
         <div className="space-y-6">
           <QuickStats corridorId={corridor._id} />
+
+          {/* Cultural Bridge - AI-powered cultural comparison */}
+          <CulturalBridge
+            origin={corridor.origin}
+            destination={corridor.destination}
+          />
 
           {/* Country Guide Card */}
           <CountryInfoCard

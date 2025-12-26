@@ -193,8 +193,32 @@ export const batchCreateProtocols = mutation({
       generatedForStage = corridor?.stage;
     }
 
+    // CRITICAL: Check for existing active protocols to prevent duplicates
+    const existingProtocols = await ctx.db
+      .query("protocols")
+      .withIndex("by_corridor", (q) => q.eq("corridorId", corridorId))
+      .filter((q) => q.neq(q.field("archived"), true))
+      .collect();
+
+    // If we already have protocols, skip creation to prevent duplicates
+    if (existingProtocols.length > 0) {
+      console.log(`Skipping batch create - ${existingProtocols.length} protocols already exist`);
+      return existingProtocols.map((p) => p._id);
+    }
+
+    // Create a set of existing titles for deduplication
+    const existingTitles = new Set(existingProtocols.map((p) => p.title.toLowerCase().trim()));
+
     const ids = [];
     for (const protocol of protocols) {
+      // Skip if title already exists (case-insensitive)
+      const normalizedTitle = protocol.title.toLowerCase().trim();
+      if (existingTitles.has(normalizedTitle)) {
+        console.log(`Skipping duplicate protocol: ${protocol.title}`);
+        continue;
+      }
+      existingTitles.add(normalizedTitle);
+
       const id = await ctx.db.insert("protocols", {
         corridorId,
         category: protocol.category,
@@ -220,6 +244,42 @@ export const deleteProtocol = mutation({
   args: { id: v.id("protocols") },
   handler: async (ctx, { id }) => {
     await ctx.db.delete(id);
+  },
+});
+
+// Clean up duplicate protocols (keep first occurrence)
+export const deduplicateProtocols = mutation({
+  args: { corridorId: v.id("corridors") },
+  handler: async (ctx, { corridorId }) => {
+    const protocols = await ctx.db
+      .query("protocols")
+      .withIndex("by_corridor", (q) => q.eq("corridorId", corridorId))
+      .filter((q) => q.neq(q.field("archived"), true))
+      .collect();
+
+    const seenTitles = new Map<string, string>(); // title -> first protocol id
+    const duplicateIds: string[] = [];
+
+    // Sort by order to keep the first occurrence
+    protocols.sort((a, b) => a.order - b.order);
+
+    for (const protocol of protocols) {
+      const normalizedTitle = protocol.title.toLowerCase().trim();
+      if (seenTitles.has(normalizedTitle)) {
+        duplicateIds.push(protocol._id);
+      } else {
+        seenTitles.set(normalizedTitle, protocol._id);
+      }
+    }
+
+    // Delete duplicates
+    for (const protocol of protocols) {
+      if (duplicateIds.includes(protocol._id)) {
+        await ctx.db.delete(protocol._id);
+      }
+    }
+
+    return { removed: duplicateIds.length, remaining: seenTitles.size };
   },
 });
 

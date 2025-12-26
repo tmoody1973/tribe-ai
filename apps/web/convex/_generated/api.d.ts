@@ -45,6 +45,7 @@ import type * as progress from "../progress.js";
 import type * as protocolArchive from "../protocolArchive.js";
 import type * as protocols from "../protocols.js";
 import type * as rateLimits from "../rateLimits.js";
+import type * as tasks from "../tasks.js";
 import type * as translation from "../translation.js";
 import type * as ttsQueries from "../ttsQueries.js";
 import type * as userDocuments from "../userDocuments.js";
@@ -94,6 +95,7 @@ declare const fullApi: ApiFromModules<{
   protocolArchive: typeof protocolArchive;
   protocols: typeof protocols;
   rateLimits: typeof rateLimits;
+  tasks: typeof tasks;
   translation: typeof translation;
   ttsQueries: typeof ttsQueries;
   userDocuments: typeof userDocuments;

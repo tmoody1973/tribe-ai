@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import { ChevronDown, ChevronUp, AlertTriangle, Lightbulb, Languages, Loader2, Bookmark, BookmarkCheck } from "lucide-react";
+import { ChevronDown, ChevronUp, AlertTriangle, Lightbulb, Languages, Loader2, Bookmark, BookmarkCheck, LayoutGrid, Check } from "lucide-react";
 import { Attribution, detectSourceType } from "./Attribution";
 import { CommunityVerifiedBadge } from "./CommunityVerifiedBadge";
 import { Confetti } from "./Confetti";
@@ -93,6 +93,7 @@ export function ProtocolCard({
   const [expanded, setExpanded] = useState(isCurrent);
   const [showConfetti, setShowConfetti] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isAddingToBoard, setIsAddingToBoard] = useState(false);
   const t = useTranslations("protocols");
 
   // Translate protocol content if needed
@@ -104,10 +105,17 @@ export function ProtocolCard({
   });
   const isSaved = savedStatus?.isSaved ?? false;
 
+  // Check if protocol already has a task on the board
+  const existingTask = useQuery(api.tasks.getTaskForProtocolStep, {
+    protocolStepId: protocol._id,
+  });
+  const isOnBoard = !!existingTask;
+
   // Save/unsave mutations
   const saveProtocol = useMutation(api.protocolArchive.saveProtocol);
   const unsaveProtocol = useMutation(api.protocolArchive.unsaveProtocol);
   const restoreProtocol = useMutation(api.protocolArchive.restoreProtocol);
+  const createTaskFromProtocol = useMutation(api.tasks.createTaskFromProtocol);
 
   // Handle bookmark toggle
   const handleBookmarkClick = async (e: React.MouseEvent) => {
@@ -134,6 +142,21 @@ export function ProtocolCard({
       onRestore?.(protocol._id);
     } catch (error) {
       console.error("Failed to restore protocol:", error);
+    }
+  };
+
+  // Handle adding to task board
+  const handleAddToBoard = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isOnBoard || isAddingToBoard) return;
+
+    setIsAddingToBoard(true);
+    try {
+      await createTaskFromProtocol({ protocolStepId: protocol._id });
+    } catch (error) {
+      console.error("Failed to add to board:", error);
+    } finally {
+      setIsAddingToBoard(false);
     }
   };
 
@@ -222,6 +245,34 @@ export function ProtocolCard({
 
         {/* Action Buttons */}
         <div className="flex items-center gap-1 flex-shrink-0">
+          {/* Add to Board Button */}
+          {!isArchived && (
+            <button
+              onClick={handleAddToBoard}
+              disabled={isOnBoard || isAddingToBoard}
+              className={`
+                p-2 transition-colors rounded flex items-center gap-1
+                ${isOnBoard
+                  ? "text-cyan-600 bg-cyan-100 cursor-default"
+                  : "text-gray-400 hover:text-cyan-600 hover:bg-cyan-50"
+                }
+                ${isAddingToBoard ? "opacity-50 cursor-not-allowed" : ""}
+              `}
+              title={isOnBoard ? t("onBoard") : t("addToBoard")}
+            >
+              {isAddingToBoard ? (
+                <Loader2 size={18} className="animate-spin" />
+              ) : isOnBoard ? (
+                <>
+                  <Check size={14} />
+                  <LayoutGrid size={16} />
+                </>
+              ) : (
+                <LayoutGrid size={18} />
+              )}
+            </button>
+          )}
+
           {/* Bookmark Button */}
           <button
             onClick={handleBookmarkClick}

@@ -50,6 +50,7 @@ TRIBE is built from scratch using a modern Convex + Next.js stack optimized for 
 | 2025-12-22 | 1.2 | Added Cultural Bridge feature architecture (Epic 6) | Claude |
 | 2025-12-22 | 1.3 | Added Mastra + CopilotKit A2UI integration pattern | Claude |
 | 2025-12-22 | 1.4 | Changed AI model from Claude to Gemini 2.0 Flash | Claude |
+| 2025-12-26 | 1.5 | Added Task Board (Kanban) architecture (Epic 7) | Claude |
 
 ---
 
@@ -147,6 +148,8 @@ tribe-ai/
 | RetroUI | Neobrutalist component library | latest |
 | CopilotKit | Agentic chat UI | 1.x |
 | next-intl | Internationalization (5 languages) | 3.x |
+| @dnd-kit/core | Drag-and-drop for Kanban board | 6.x |
+| @dnd-kit/sortable | Sortable items within columns | 8.x |
 | Framer Motion | Animations | 10.x |
 | React Flow | Pathway visualization | 11.x |
 
@@ -308,6 +311,24 @@ interface LocalCustom {
   recoveryPhrases: string[];       // How to recover if you mess up
   sources: string[];
 }
+
+// Task: User-created or protocol-derived action items (Kanban board)
+interface Task {
+  _id: Id<"tasks">;
+  corridorId: Id<"corridors">;     // Journey-scoped
+  protocolStepId?: Id<"protocols">; // Optional link to protocol step
+  title: string;
+  description?: string;
+  column: "todo" | "in_progress" | "blocked" | "done";
+  priority: "critical" | "high" | "medium" | "low";
+  category?: "visa" | "finance" | "housing" | "employment" | "legal" | "health" | "social";
+  dueDate?: number;
+  order: number;                   // Position within column for drag-drop
+  notes?: string;                  // User notes/comments
+  completedAt?: number;
+  createdAt: number;
+  updatedAt: number;
+}
 ```
 
 ### Relationships
@@ -317,6 +338,8 @@ User (1) ──────< Corridor (many)
 Corridor (1) ──────< Protocol (many)
 Corridor (1) ──────< IngestedContent (many)
 Corridor (1) ──────< ChatMessage (many)
+Corridor (1) ──────< Task (many)
+Protocol (1) ──────< Task (optional, 0..1) # Task may reference a protocol step
 ```
 
 ---
@@ -349,6 +372,25 @@ export const getProtocols = query({
   returns: v.array(v.object({...})),
   handler: async (ctx, { corridorId }) => { ... }
 });
+
+// convex/tasks.ts
+export const getTasks = query({
+  args: { corridorId: v.id("corridors") },
+  returns: v.array(v.object({...})),
+  handler: async (ctx, { corridorId }) => { ... }
+});
+
+export const getTasksByColumn = query({
+  args: { corridorId: v.id("corridors"), column: v.string() },
+  returns: v.array(v.object({...})),
+  handler: async (ctx, { corridorId, column }) => { ... }
+});
+
+export const getTaskForProtocolStep = query({
+  args: { protocolStepId: v.id("protocols") },
+  returns: v.union(v.object({...}), v.null()),
+  handler: async (ctx, { protocolStepId }) => { ... }
+});
 ```
 
 #### Mutations (Write Operations)
@@ -366,6 +408,74 @@ export const updateProtocolStatus = mutation({
   args: { id: v.id("protocols"), status: v.string() },
   returns: v.null(),
   handler: async (ctx, { id, status }) => { ... }
+});
+
+// convex/tasks.ts
+export const createTask = mutation({
+  args: {
+    corridorId: v.id("corridors"),
+    title: v.string(),
+    description: v.optional(v.string()),
+    priority: v.string(),
+    category: v.optional(v.string()),
+    dueDate: v.optional(v.number()),
+    column: v.optional(v.string()), // defaults to "todo"
+  },
+  returns: v.id("tasks"),
+  handler: async (ctx, args) => { ... }
+});
+
+export const createTaskFromProtocol = mutation({
+  args: { protocolStepId: v.id("protocols") },
+  returns: v.id("tasks"),
+  handler: async (ctx, { protocolStepId }) => {
+    // Create task linked to protocol step
+    // Inherit title, description, priority from protocol
+  }
+});
+
+export const updateTaskColumn = mutation({
+  args: {
+    taskId: v.id("tasks"),
+    column: v.string(),
+    order: v.number(),
+  },
+  returns: v.null(),
+  handler: async (ctx, { taskId, column, order }) => {
+    // Update task column and order
+    // If column is "done" and task has protocolStepId, mark protocol step complete
+  }
+});
+
+export const updateTask = mutation({
+  args: {
+    taskId: v.id("tasks"),
+    title: v.optional(v.string()),
+    description: v.optional(v.string()),
+    priority: v.optional(v.string()),
+    category: v.optional(v.string()),
+    dueDate: v.optional(v.number()),
+    notes: v.optional(v.string()),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => { ... }
+});
+
+export const deleteTask = mutation({
+  args: { taskId: v.id("tasks") },
+  returns: v.null(),
+  handler: async (ctx, { taskId }) => { ... }
+});
+
+export const reorderTasks = mutation({
+  args: {
+    taskIds: v.array(v.id("tasks")),
+    orders: v.array(v.number()),
+  },
+  returns: v.null(),
+  handler: async (ctx, { taskIds, orders }) => {
+    // Batch update task orders for drag-drop reordering
+  }
 });
 ```
 
@@ -460,6 +570,16 @@ components/
 │   ├── BelongingDashboard.tsx       # Integration tracking
 │   ├── MilestoneCard.tsx            # Single milestone
 │   └── BelongingScore.tsx           # Score visualization
+├── taskboard/             # Kanban Task Board components
+│   ├── TaskBoard.tsx                # Main board container
+│   ├── TaskColumn.tsx               # Kanban column (To Do, In Progress, etc.)
+│   ├── TaskCard.tsx                 # Individual task card
+│   ├── TaskCardDraggable.tsx        # Draggable wrapper using @dnd-kit
+│   ├── TaskDetailModal.tsx          # Task detail/edit modal
+│   ├── TaskForm.tsx                 # Create/edit task form
+│   ├── TaskFilters.tsx              # Filter bar for category/priority/due date
+│   ├── AddTaskButton.tsx            # Floating action button for quick add
+│   └── EmptyColumn.tsx              # Empty state for columns
 └── providers/             # Context providers
     ├── ConvexProvider.tsx
     ├── CopilotKitProvider.tsx
@@ -700,6 +820,41 @@ sequenceDiagram
     Frontend->>User: Display protocol checklist
 ```
 
+### Task Board Flow
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant TaskBoard
+    participant Convex
+    participant Protocol
+
+    Note over User,Protocol: Add Task from Protocol Step
+    User->>Protocol: Click "Add to Board" on step
+    Protocol->>Convex: createTaskFromProtocol(stepId)
+    Convex->>Convex: Create task with protocolStepId
+    Convex-->>TaskBoard: New task in "todo" column
+    TaskBoard->>User: Display task card
+
+    Note over User,Protocol: Drag Task to Done
+    User->>TaskBoard: Drag task to "done" column
+    TaskBoard->>Convex: updateTaskColumn(taskId, "done")
+    Convex->>Convex: Update task column & completedAt
+    alt Task has linked protocol step
+        Convex->>Convex: Mark protocol step completed
+    end
+    Convex-->>TaskBoard: Optimistic update confirmed
+    Convex-->>Protocol: Protocol progress updated
+
+    Note over User,Protocol: Create Custom Task
+    User->>TaskBoard: Click "Add Task"
+    TaskBoard->>User: Show TaskForm modal
+    User->>TaskBoard: Fill form and save
+    TaskBoard->>Convex: createTask(title, priority, etc.)
+    Convex->>Convex: Create task (no protocolStepId)
+    Convex-->>TaskBoard: New task in selected column
+```
+
 ---
 
 ## 9. Database Schema
@@ -840,6 +995,45 @@ export default defineSchema({
   })
     .index("by_corridor", ["corridorId"])
     .index("by_type", ["corridorId", "type"]),
+
+  // Task Board (Kanban) - User action items
+  tasks: defineTable({
+    corridorId: v.id("corridors"),
+    protocolStepId: v.optional(v.id("protocols")),
+    title: v.string(),
+    description: v.optional(v.string()),
+    column: v.union(
+      v.literal("todo"),
+      v.literal("in_progress"),
+      v.literal("blocked"),
+      v.literal("done")
+    ),
+    priority: v.union(
+      v.literal("critical"),
+      v.literal("high"),
+      v.literal("medium"),
+      v.literal("low")
+    ),
+    category: v.optional(v.union(
+      v.literal("visa"),
+      v.literal("finance"),
+      v.literal("housing"),
+      v.literal("employment"),
+      v.literal("legal"),
+      v.literal("health"),
+      v.literal("social")
+    )),
+    dueDate: v.optional(v.number()),
+    order: v.number(),
+    notes: v.optional(v.string()),
+    completedAt: v.optional(v.number()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_corridor", ["corridorId"])
+    .index("by_corridor_column", ["corridorId", "column"])
+    .index("by_protocol_step", ["protocolStepId"])
+    .index("by_category", ["corridorId", "category"]),
 
   // Visa data cache (from Travel Buddy API)
   visaRequirements: defineTable({

@@ -313,6 +313,9 @@ Add audio briefings and conversational voice agent with multi-language support v
 ### Epic 6: Cultural Bridge & Inclusion
 Build bi-directional cultural intelligence features that promote understanding between migrants and host communities—cultural profiles, shareable cultural cards, local customs decoder, and belonging tracking.
 
+### Epic 7: Task Board (Kanban)
+Create a Trello-style task board that integrates with protocols and journeys, allowing users to track their migration tasks visually with drag-and-drop functionality. Tasks can be created from protocol steps or added manually, with journey-scoped boards and two-way sync between task completion and protocol progress.
+
 ---
 
 ## 6. Epic Details
@@ -903,6 +906,167 @@ Build bi-directional cultural intelligence features that promote understanding b
 7. Privacy controls for what profile info is shared
 
 *Note: This story is marked for future implementation beyond MVP due to additional safety/moderation requirements.*
+
+---
+
+### Epic 7: Task Board (Kanban)
+
+**Goal:** Create a visual task management system that integrates with the existing protocol system, allowing users to track their migration tasks using a familiar Trello-style Kanban board. Tasks can originate from protocol steps or be created manually, providing a personal action-oriented view of the migration journey.
+
+**Key Innovation:** Unlike generic to-do apps, TRIBE's Task Board is journey-aware and protocol-integrated. Protocol steps serve as AI-generated reference guides, while tasks represent the user's personal action items. This separation allows users to maintain their own workflow while still benefiting from the structured guidance protocols provide.
+
+---
+
+#### Story 7.1: Task Board Data Model & Backend
+
+**As a** developer,
+**I want** a data model for tasks that integrates with journeys and protocols,
+**so that** tasks can be tracked per journey with optional protocol step references.
+
+**Acceptance Criteria:**
+1. Tasks table with: id, corridorId, title, description, status, priority, dueDate, protocolStepId (optional), order, column
+2. Column enum: "todo", "in_progress", "blocked", "done"
+3. Tasks indexed by corridorId for efficient journey-scoped queries
+4. Tasks indexed by status for column filtering
+5. Optional reference to protocol step (protocolStepId) for tasks derived from protocols
+6. Order field for drag-and-drop positioning within columns
+7. TypeScript types generated and exported for frontend use
+
+---
+
+#### Story 7.2: Task Board UI Component
+
+**As a** user,
+**I want** a Kanban-style task board on my dashboard,
+**so that** I can visually track my migration tasks across different stages.
+
+**Acceptance Criteria:**
+1. Four-column board layout: To Do, In Progress, Blocked, Done
+2. Each column displays task cards with title, priority indicator, and due date
+3. RetroUI/neobrutalist styling consistent with existing dashboard
+4. Responsive design: columns stack on mobile, side-by-side on desktop
+5. Empty state for each column with helpful messaging
+6. Column headers show task count
+7. Board is journey-scoped (shows tasks for active corridor only)
+
+---
+
+#### Story 7.3: Drag-and-Drop Task Management
+
+**As a** user,
+**I want** to drag tasks between columns,
+**so that** I can easily update task status with a natural interaction.
+
+**Acceptance Criteria:**
+1. Drag-and-drop implemented using @dnd-kit/core (shadcn-kanban pattern)
+2. Visual feedback during drag (card lifts, drop zone highlights)
+3. Task status updates in Convex when dropped in new column
+4. Optimistic UI update for smooth experience
+5. Reordering within columns supported
+6. Touch-friendly for mobile users
+7. Keyboard accessibility for drag operations (a11y)
+
+---
+
+#### Story 7.4: Add Task from Protocol Step
+
+**As a** user,
+**I want** to add protocol steps to my task board,
+**so that** I can turn AI-generated guidance into personal action items.
+
+**Acceptance Criteria:**
+1. "Add to Board" button on each protocol step card
+2. Creates task with title and description from protocol step
+3. Task links to source protocol step (protocolStepId)
+4. Default status: "todo", priority inherited from protocol priority
+5. Prevents duplicate tasks for same protocol step (shows "Already on board" badge)
+6. Protocol card shows indicator when step has associated task
+7. Clicking indicator navigates to task on board
+
+---
+
+#### Story 7.5: Create Custom Task
+
+**As a** user,
+**I want** to create custom tasks not tied to protocols,
+**so that** I can track personal migration tasks that aren't covered by AI guidance.
+
+**Acceptance Criteria:**
+1. "Add Task" button in each column header or floating action button
+2. Quick-add form with title (required), description (optional), priority, due date
+3. Task created in selected column or defaults to "todo"
+4. Custom tasks have no protocolStepId (null)
+5. Category selector matching protocol categories (visa, finance, housing, etc.)
+6. Keyboard shortcut for quick task creation (Cmd/Ctrl + N)
+7. Cancel and save buttons with proper states
+
+---
+
+#### Story 7.6: Two-Way Protocol-Task Sync
+
+**As a** user,
+**I want** task completion to sync with protocol progress,
+**so that** completing a task marks the related protocol step as done and vice versa.
+
+**Acceptance Criteria:**
+1. Moving task to "Done" column marks linked protocol step as completed
+2. Marking protocol step complete moves linked task to "Done" column
+3. Sync is bidirectional and real-time (Convex reactivity)
+4. Completion triggers celebration animation on both task and protocol
+5. Tasks without protocol links don't affect protocol progress
+6. Un-completing (moving out of Done) un-marks protocol step
+7. Sync operations are atomic (both update or neither)
+
+---
+
+#### Story 7.7: Task Board Filters and Views
+
+**As a** user,
+**I want** to filter and customize my task board view,
+**so that** I can focus on specific categories or priorities.
+
+**Acceptance Criteria:**
+1. Filter by category (visa, finance, housing, employment, legal, health, social)
+2. Filter by priority (critical, high, medium, low)
+3. Filter by due date (overdue, today, this week, upcoming, no date)
+4. Toggle to show/hide completed tasks
+5. Filter state persisted in URL for shareable links
+6. Clear all filters button
+7. Active filter indicators visible
+
+---
+
+#### Story 7.8: Task Details Modal
+
+**As a** user,
+**I want** to view and edit task details,
+**so that** I can add notes, change priority, or update due dates.
+
+**Acceptance Criteria:**
+1. Click task card opens detail modal/drawer
+2. Edit title, description, priority, due date, category
+3. View linked protocol step (if any) with link to full protocol
+4. Add notes/comments to task
+5. Delete task with confirmation
+6. Created/updated timestamps displayed
+7. Close modal saves changes (auto-save or explicit save button)
+
+---
+
+#### Story 7.9: Task Board Journey Switching
+
+**As a** user,
+**I want** my task board to update when I switch journeys,
+**so that** I see tasks relevant to my current migration corridor.
+
+**Acceptance Criteria:**
+1. Task board automatically filters to active corridor
+2. Journey switcher in header updates board instantly
+3. Each journey has independent task board state
+4. Switching journeys preserves filter selections
+5. Empty state when switching to journey with no tasks
+6. Task count per journey shown in journey switcher dropdown
+7. No task data bleeds between journeys
 
 ---
 

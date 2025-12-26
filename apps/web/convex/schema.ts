@@ -373,6 +373,47 @@ export default defineSchema({
     .index("by_user_category", ["userId", "category"])
     .index("by_expiry", ["expiryDate"]),
 
+  // Task Board (Kanban) - User action items
+  tasks: defineTable({
+    corridorId: v.id("corridors"),
+    protocolStepId: v.optional(v.id("protocols")), // Optional link to protocol step
+    title: v.string(),
+    description: v.optional(v.string()),
+    column: v.union(
+      v.literal("todo"),
+      v.literal("in_progress"),
+      v.literal("blocked"),
+      v.literal("done")
+    ),
+    priority: v.union(
+      v.literal("critical"),
+      v.literal("high"),
+      v.literal("medium"),
+      v.literal("low")
+    ),
+    category: v.optional(
+      v.union(
+        v.literal("visa"),
+        v.literal("finance"),
+        v.literal("housing"),
+        v.literal("employment"),
+        v.literal("legal"),
+        v.literal("health"),
+        v.literal("social")
+      )
+    ),
+    dueDate: v.optional(v.number()),
+    order: v.number(), // Position within column for drag-drop
+    notes: v.optional(v.string()), // User notes/comments
+    completedAt: v.optional(v.number()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_corridor", ["corridorId"])
+    .index("by_corridor_column", ["corridorId", "column"])
+    .index("by_protocol_step", ["protocolStepId"])
+    .index("by_category", ["corridorId", "category"]),
+
   // Translation cache for dynamic content
   translations: defineTable({
     hash: v.string(), // SHA256 hash of content + target locale

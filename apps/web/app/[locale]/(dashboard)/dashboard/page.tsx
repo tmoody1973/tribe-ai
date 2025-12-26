@@ -17,6 +17,7 @@ import { EmergencyInfoCard } from "@/components/dashboard/EmergencyInfoCard";
 import { SalaryRealityCheck } from "@/components/dashboard/SalaryRealityCheck";
 import { CulturalProfileSummary } from "@/components/cultural/CulturalProfileSummary";
 import { DocumentVault } from "@/components/documents/DocumentVault";
+import { TaskBoard } from "@/components/taskboard";
 
 export default function DashboardPage() {
   // Get active corridor
@@ -60,6 +61,9 @@ export default function DashboardPage() {
         origin={corridor.origin}
         destination={corridor.destination}
       />
+
+      {/* Task Board - Full Width */}
+      <TaskBoard corridorId={corridor._id} />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="md:col-span-2">

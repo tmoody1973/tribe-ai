@@ -7,6 +7,7 @@ import { QuickStats } from "@/components/corridor/QuickStats";
 import { ProtocolTabs } from "@/components/protocol/ProtocolTabs";
 import { DashboardSkeleton } from "@/components/corridor/DashboardSkeleton";
 import { EmptyState } from "@/components/corridor/EmptyState";
+import { DashboardNav } from "@/components/layout/DashboardNav";
 import { JourneyMap } from "@/components/dashboard/JourneyMap";
 import { CulturalBridge } from "@/components/dashboard/CulturalBridge";
 import { CountryInfoCard } from "@/components/dashboard/CountryInfoCard";
@@ -16,8 +17,8 @@ import { First48HoursGuide } from "@/components/dashboard/First48HoursGuide";
 import { EmergencyInfoCard } from "@/components/dashboard/EmergencyInfoCard";
 import { SalaryRealityCheck } from "@/components/dashboard/SalaryRealityCheck";
 import { CulturalProfileSummary } from "@/components/cultural/CulturalProfileSummary";
-import { DocumentVault } from "@/components/documents/DocumentVault";
-import { TaskBoard } from "@/components/taskboard";
+import { DocumentVaultSummary } from "@/components/documents/DocumentVaultSummary";
+import { TaskBoardSummary } from "@/components/taskboard/TaskBoardSummary";
 
 export default function DashboardPage() {
   // Get active corridor
@@ -34,7 +35,12 @@ export default function DashboardPage() {
 
   // Loading state
   if (corridor === undefined) {
-    return <DashboardSkeleton />;
+    return (
+      <>
+        <DashboardNav />
+        <DashboardSkeleton />
+      </>
+    );
   }
 
   // No corridor - this shouldn't happen due to DashboardGuard,
@@ -53,78 +59,82 @@ export default function DashboardPage() {
   const hasNoProtocols = protocols.length === 0;
 
   return (
-    <div className="space-y-6">
-      <CorridorHeader corridor={corridor} />
+    <>
+      <DashboardNav />
 
-      {/* Journey Map */}
-      <JourneyMap
-        origin={corridor.origin}
-        destination={corridor.destination}
-      />
+      <div className="space-y-6">
+        <CorridorHeader corridor={corridor} />
 
-      {/* Task Board - Full Width */}
-      <TaskBoard corridorId={corridor._id} />
+        {/* Journey Map */}
+        <JourneyMap
+          origin={corridor.origin}
+          destination={corridor.destination}
+        />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="md:col-span-2">
-          {hasNoProtocols ? (
-            <EmptyState corridorId={corridor._id} />
-          ) : (
-            <ProtocolTabs
-              protocols={protocols}
-              corridorId={corridor._id}
-              corridorOrigin={corridor.origin}
-              corridorDestination={corridor.destination}
-              userId={profile?._id}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="md:col-span-2">
+            {hasNoProtocols ? (
+              <EmptyState corridorId={corridor._id} />
+            ) : (
+              <ProtocolTabs
+                protocols={protocols}
+                corridorId={corridor._id}
+                corridorOrigin={corridor.origin}
+                corridorDestination={corridor.destination}
+                userId={profile?._id}
+              />
+            )}
+
+            {/* Show refreshing indicator if updating */}
+            {isResearching && protocols.length > 0 && (
+              <div className="mt-4 border-4 border-black bg-blue-50 p-4 text-center">
+                <span className="animate-pulse">🔄</span> Updating protocols with latest research...
+              </div>
+            )}
+          </div>
+
+          <div className="space-y-6">
+            {/* Task Board Summary - Links to full board */}
+            <TaskBoardSummary corridorId={corridor._id} />
+
+            {/* Document Vault Summary - Links to full vault */}
+            <DocumentVaultSummary />
+
+            <QuickStats corridorId={corridor._id} />
+
+            {/* Cultural Profile - Interview summary or CTA */}
+            <CulturalProfileSummary />
+
+            {/* Cultural Bridge - AI-powered cultural comparison */}
+            <CulturalBridge
+              origin={corridor.origin}
+              destination={corridor.destination}
             />
-          )}
 
-          {/* Show refreshing indicator if updating */}
-          {isResearching && protocols.length > 0 && (
-            <div className="mt-4 border-4 border-black bg-blue-50 p-4 text-center">
-              <span className="animate-pulse">🔄</span> Updating protocols with latest research...
-            </div>
-          )}
-        </div>
+            {/* Country Guide Card */}
+            <CountryInfoCard
+              destination={corridor.destination}
+              origin={corridor.origin}
+            />
 
-        <div className="space-y-6">
-          <QuickStats corridorId={corridor._id} />
-
-          {/* Cultural Profile - Interview summary or CTA */}
-          <CulturalProfileSummary />
-
-          {/* Document Vault - Store important migration documents */}
-          <DocumentVault />
-
-          {/* Cultural Bridge - AI-powered cultural comparison */}
-          <CulturalBridge
-            origin={corridor.origin}
-            destination={corridor.destination}
-          />
-
-          {/* Country Guide Card */}
-          <CountryInfoCard
-            destination={corridor.destination}
-            origin={corridor.origin}
-          />
-
-          {/* Migrant Tools */}
-          <VisaEligibilityQuiz
-            destination={corridor.destination}
-            origin={corridor.origin}
-          />
-          <TrueCostCalculator
-            destination={corridor.destination}
-            origin={corridor.origin}
-          />
-          <SalaryRealityCheck destination={corridor.destination} />
-          <First48HoursGuide destination={corridor.destination} />
-          <EmergencyInfoCard
-            destination={corridor.destination}
-            origin={corridor.origin}
-          />
+            {/* Migrant Tools */}
+            <VisaEligibilityQuiz
+              destination={corridor.destination}
+              origin={corridor.origin}
+            />
+            <TrueCostCalculator
+              destination={corridor.destination}
+              origin={corridor.origin}
+            />
+            <SalaryRealityCheck destination={corridor.destination} />
+            <First48HoursGuide destination={corridor.destination} />
+            <EmergencyInfoCard
+              destination={corridor.destination}
+              origin={corridor.origin}
+            />
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

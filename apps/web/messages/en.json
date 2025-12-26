@@ -12,10 +12,75 @@
   },
   "navigation": {
     "dashboard": "Dashboard",
+    "tasks": "Tasks",
+    "documents": "Documents",
     "chat": "Ask TRIBE",
     "audio": "Audio Briefings",
     "settings": "Settings",
     "home": "Home"
+  },
+  "tasks": {
+    "title": "Task Board",
+    "noCorridor": "No Journey Selected",
+    "noCorridorDescription": "Please complete onboarding to set up your migration journey first.",
+    "startOnboarding": "Start Onboarding",
+    "backToDashboard": "Back to Dashboard",
+    "columns": {
+      "todo": "To Do",
+      "inProgress": "In Progress",
+      "blocked": "Blocked",
+      "done": "Done"
+    },
+    "summary": {
+      "title": "Task Board",
+      "viewAll": "View All",
+      "empty": "No tasks yet",
+      "addFirst": "Add First Task",
+      "progress": "Progress",
+      "activeTasks": "active tasks need attention"
+    },
+    "tips": {
+      "dragDrop": {
+        "title": "Drag & Drop",
+        "description": "Drag tasks between columns to update their status. Tasks automatically sync with your protocols."
+      },
+      "protocols": {
+        "title": "From Protocols",
+        "description": "Click 'Add to Board' on any protocol step to create a task automatically."
+      },
+      "sync": {
+        "title": "Two-Way Sync",
+        "description": "Complete a task to mark the protocol step as done, and vice versa."
+      }
+    }
+  },
+  "documents": {
+    "title": "Document Vault",
+    "subtitle": "Securely store and organize your migration documents",
+    "backToDashboard": "Back to Dashboard",
+    "summary": {
+      "title": "Document Vault",
+      "viewAll": "View All",
+      "empty": "No documents yet",
+      "uploadFirst": "Upload First Document",
+      "documents": "documents",
+      "totalSize": "total size",
+      "expiringSoon": "documents expiring soon"
+    },
+    "tips": {
+      "organize": {
+        "title": "Stay Organized",
+        "description": "Categorize documents by type for easy access when you need them."
+      },
+      "expiry": {
+        "title": "Track Expiry Dates",
+        "description": "Set expiry dates on passports and visas to get reminded before they expire."
+      },
+      "secure": {
+        "title": "Secure Storage",
+        "description": "Your documents are encrypted and only accessible by you."
+      }
+    }
   },
   "landing": {
     "title": "TRIBE",

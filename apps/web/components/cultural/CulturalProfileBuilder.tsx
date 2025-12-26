@@ -1,10 +1,21 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { useAction } from "convex/react";
+import { useAction, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useTranslations } from "next-intl";
-import { Send, Loader2, RefreshCw } from "lucide-react";
+import Link from "next/link";
+import {
+  Send,
+  Loader2,
+  RefreshCw,
+  CheckCircle2,
+  MessageCircle,
+  Users,
+  Clock,
+  ArrowRight,
+  Sparkles,
+} from "lucide-react";
 
 interface InterviewState {
   questionNumber: number;
@@ -23,6 +34,9 @@ export function CulturalProfileBuilder() {
   const startInterview = useAction(api.cultural.interview.startInterview);
   const continueInterview = useAction(api.cultural.interview.continueInterview);
   const resetInterview = useAction(api.cultural.interview.resetInterview);
+
+  // Fetch profile to show on completion
+  const profile = useQuery(api.cultural.profile.getProfile);
 
   const [state, setState] = useState<InterviewState | null>(null);
   const [answer, setAnswer] = useState("");
@@ -125,37 +139,141 @@ export function CulturalProfileBuilder() {
     );
   }
 
+  // Completion state - show profile summary
+  if (state.isComplete) {
+    return (
+      <div className="bg-white border-4 border-black shadow-[8px_8px_0_0_#000] overflow-hidden">
+        {/* Success Header */}
+        <div className="bg-gradient-to-r from-green-400 to-emerald-400 border-b-4 border-black p-6 text-center">
+          <CheckCircle2 size={48} className="mx-auto text-white mb-3" />
+          <h2 className="font-head text-2xl text-white mb-1">{t("profileComplete")}</h2>
+          <p className="text-white/80">{t("profileSaved")}</p>
+        </div>
+
+        {/* Thank You Message */}
+        <div className="p-6 bg-green-50 border-b-4 border-black">
+          <p className="text-gray-700 leading-relaxed">
+            {messages[messages.length - 1]?.content || t("thankYouMessage")}
+          </p>
+        </div>
+
+        {/* Profile Summary Preview */}
+        {profile && (
+          <div className="p-6 space-y-4">
+            <div className="flex items-center gap-2 mb-4">
+              <Sparkles size={20} className="text-amber-500" />
+              <h3 className="font-bold text-lg">{t("yourProfileSummary")}</h3>
+            </div>
+
+            {/* Cultural Dimensions */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="flex items-center gap-3 p-3 bg-blue-50 border-2 border-black">
+                <div className="p-2 bg-blue-200 border-2 border-black">
+                  <MessageCircle size={18} className="text-blue-600" />
+                </div>
+                <div>
+                  <div className="text-xs text-gray-500 uppercase">{t("communication")}</div>
+                  <div className="font-bold">{t(`styles.${profile.communicationStyle}`)}</div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3 p-3 bg-green-50 border-2 border-black">
+                <div className="p-2 bg-green-200 border-2 border-black">
+                  <Users size={18} className="text-green-600" />
+                </div>
+                <div>
+                  <div className="text-xs text-gray-500 uppercase">{t("family")}</div>
+                  <div className="font-bold">{t(`familyTypes.${profile.familyStructure}`)}</div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3 p-3 bg-purple-50 border-2 border-black">
+                <div className="p-2 bg-purple-200 border-2 border-black">
+                  <Clock size={18} className="text-purple-600" />
+                </div>
+                <div>
+                  <div className="text-xs text-gray-500 uppercase">{t("timeOrientation")}</div>
+                  <div className="font-bold">{t(`timeTypes.${profile.timeOrientation}`)}</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Values Tags */}
+            {profile.values && profile.values.length > 0 && (
+              <div>
+                <div className="text-xs text-gray-500 uppercase mb-2">{t("coreValues")}</div>
+                <div className="flex flex-wrap gap-2">
+                  {profile.values.slice(0, 5).map((value: string, i: number) => (
+                    <span
+                      key={i}
+                      className="bg-red-100 border-2 border-black px-2 py-1 text-sm font-medium"
+                    >
+                      {value}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Celebrations Tags */}
+            {profile.celebrations && profile.celebrations.length > 0 && (
+              <div>
+                <div className="text-xs text-gray-500 uppercase mb-2">{t("celebrations")}</div>
+                <div className="flex flex-wrap gap-2">
+                  {profile.celebrations.slice(0, 4).map((item: string, i: number) => (
+                    <span
+                      key={i}
+                      className="bg-yellow-100 border-2 border-black px-2 py-1 text-sm font-medium"
+                    >
+                      {item}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Action Buttons */}
+        <div className="p-6 bg-gray-50 border-t-4 border-black space-y-3">
+          <Link
+            href="/dashboard"
+            className="w-full flex items-center justify-center gap-2 bg-green-500 text-white border-4 border-black px-6 py-3 font-bold shadow-[4px_4px_0_0_#000] hover:shadow-[2px_2px_0_0_#000] hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+          >
+            {t("viewDashboard")}
+            <ArrowRight size={20} />
+          </Link>
+
+          <button
+            onClick={handleReset}
+            disabled={isLoading}
+            className="w-full flex items-center justify-center gap-2 bg-gray-200 border-4 border-black px-6 py-3 font-bold shadow-[4px_4px_0_0_#000] hover:shadow-[2px_2px_0_0_#000] hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50"
+          >
+            <RefreshCw size={18} />
+            {t("startOver")}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Interview in progress
   return (
     <div className="bg-white border-4 border-black shadow-[8px_8px_0_0_#000]">
       {/* Progress Header */}
       <div className="bg-gradient-to-r from-amber-400 to-orange-400 border-b-4 border-black p-4">
         <div className="flex items-center justify-between mb-2">
           <span className="font-bold text-lg">{t("culturalInterview")}</span>
-          <div className="flex items-center gap-4">
-            <span className="text-sm font-medium bg-white/50 px-2 py-1 rounded">
-              {state.isComplete
-                ? t("complete")
-                : `${t("question")} ${state.questionNumber} / 10`}
-            </span>
-            {state.isComplete && (
-              <button
-                onClick={handleReset}
-                disabled={isLoading}
-                className="flex items-center gap-1 text-sm bg-white/50 px-2 py-1 rounded hover:bg-white/70"
-                title={t("startOver")}
-              >
-                <RefreshCw size={14} />
-                {t("startOver")}
-              </button>
-            )}
-          </div>
+          <span className="text-sm font-medium bg-white/50 px-2 py-1 rounded">
+            {t("question")} {state.questionNumber} / 10
+          </span>
         </div>
         {/* Progress Bar */}
         <div className="h-3 bg-white/30 border-2 border-black rounded-full overflow-hidden">
           <div
             className="h-full bg-green-500 transition-all duration-500"
             style={{
-              width: `${state.isComplete ? 100 : (state.questionNumber / 10) * 100}%`,
+              width: `${(state.questionNumber / 10) * 100}%`,
             }}
           />
         </div>
@@ -190,44 +308,27 @@ export function CulturalProfileBuilder() {
       </div>
 
       {/* Input Area */}
-      {!state.isComplete && (
-        <div className="border-t-4 border-black p-4 bg-white">
-          <div className="flex gap-2">
-            <textarea
-              value={answer}
-              onChange={(e) => setAnswer(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder={t("typeYourAnswer")}
-              rows={2}
-              className="flex-1 border-4 border-black p-3 focus:outline-none focus:ring-2 focus:ring-amber-400 resize-none"
-              disabled={isLoading}
-            />
-            <button
-              onClick={handleSubmit}
-              disabled={isLoading || !answer.trim()}
-              className="bg-green-500 border-4 border-black p-3 shadow-[3px_3px_0_0_#000] hover:shadow-[1px_1px_0_0_#000] hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50 disabled:cursor-not-allowed self-end"
-            >
-              <Send size={20} />
-            </button>
-          </div>
-          <p className="text-xs text-gray-500 mt-2">{t("pressEnterToSend")}</p>
-        </div>
-      )}
-
-      {/* Completion Actions */}
-      {state.isComplete && (
-        <div className="border-t-4 border-black p-4 bg-green-50 text-center">
-          <p className="text-green-700 font-medium mb-3">
-            {t("profileCreated")}
-          </p>
-          <a
-            href="/dashboard"
-            className="inline-block bg-green-500 text-white border-4 border-black px-6 py-2 font-bold shadow-[3px_3px_0_0_#000] hover:shadow-[1px_1px_0_0_#000] hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+      <div className="border-t-4 border-black p-4 bg-white">
+        <div className="flex gap-2">
+          <textarea
+            value={answer}
+            onChange={(e) => setAnswer(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder={t("typeYourAnswer")}
+            rows={2}
+            className="flex-1 border-4 border-black p-3 focus:outline-none focus:ring-2 focus:ring-amber-400 resize-none"
+            disabled={isLoading}
+          />
+          <button
+            onClick={handleSubmit}
+            disabled={isLoading || !answer.trim()}
+            className="bg-green-500 border-4 border-black p-3 shadow-[3px_3px_0_0_#000] hover:shadow-[1px_1px_0_0_#000] hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50 disabled:cursor-not-allowed self-end"
           >
-            {t("viewDashboard")}
-          </a>
+            <Send size={20} />
+          </button>
         </div>
-      )}
+        <p className="text-xs text-gray-500 mt-2">{t("pressEnterToSend")}</p>
+      </div>
     </div>
   );
 }

@@ -241,18 +241,17 @@ async function fetchSubredditPosts(
   try {
     const token = await getRedditAccessToken();
 
-    // If no OAuth, try unauthenticated (may be blocked)
-    const headers: Record<string, string> = {
-      "User-Agent": "TRIBE:v1.0.0 (by /u/tribe_migration_app)",
-    };
-
-    let url = `https://www.reddit.com/r/${subreddit}/new.json?limit=${limit}`;
-
-    if (token) {
-      headers["Authorization"] = `Bearer ${token}`;
-      url = `https://oauth.reddit.com/r/${subreddit}/new?limit=${limit}`;
+    // If no OAuth, return empty (will use sample data)
+    if (!token) {
+      return results;
     }
 
+    const headers: Record<string, string> = {
+      "User-Agent": "TRIBE:v1.0.0 (by /u/tribe_migration_app)",
+      "Authorization": `Bearer ${token}`,
+    };
+
+    const url = `https://oauth.reddit.com/r/${subreddit}/new?limit=${limit}`;
     const response = await fetch(url, { headers });
 
     if (!response.ok) {

@@ -444,6 +444,61 @@ export const deleteJourney = mutation({
   },
 });
 
+// Force refresh protocols - archives old ones and triggers new research
+export const forceRefreshProtocols = mutation({
+  args: {
+    corridorId: v.id("corridors"),
+  },
+  handler: async (ctx, { corridorId }) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Unauthenticated");
+
+    const corridor = await ctx.db.get(corridorId);
+    if (!corridor) throw new Error("Journey not found");
+
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+      .unique();
+
+    if (!user || corridor.userId !== user._id) {
+      throw new Error("Unauthorized");
+    }
+
+    const now = Date.now();
+
+    // Archive all existing protocols for this corridor
+    const protocols = await ctx.db
+      .query("protocols")
+      .withIndex("by_corridor", (q) => q.eq("corridorId", corridorId))
+      .filter((q) => q.neq(q.field("archived"), true))
+      .collect();
+
+    for (const protocol of protocols) {
+      await ctx.db.patch(protocol._id, {
+        archived: true,
+        archivedAt: now,
+        archivedReason: "force_refresh",
+      });
+    }
+
+    // Mark corridor as stale to trigger new research
+    await ctx.db.patch(corridorId, {
+      researchStatus: "stale",
+      lastResearchedAt: undefined,
+      protocolCount: 0,
+      updatedAt: now,
+    });
+
+    // Schedule new research
+    await ctx.scheduler.runAfter(500, internal.ai.researchScheduler.researchCorridorBackground, {
+      corridorId,
+    });
+
+    return { archived: protocols.length };
+  },
+});
+
 // Get all journeys with summary data
 export const getAllJourneys = query({
   args: {},

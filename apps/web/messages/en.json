@@ -96,8 +96,11 @@
       "origin": "Where are you from?",
       "destination": "Where are you going?",
       "stage": "What stage are you at?",
-      "visa": "What visa type? (optional)"
+      "visa": "What visa type? (optional)",
+      "culture": "Cultural Profile (optional)"
     },
+    "cultureDescription": "Help us understand your cultural background to personalize your experience. A short 10-question conversation about your values and traditions.",
+    "cultureTime": "Takes about 3-5 minutes",
     "stages": {
       "dreaming": {
         "title": "Dreaming",
@@ -130,7 +133,10 @@
       "back": "Back",
       "skip": "Skip",
       "complete": "Complete Setup",
-      "completing": "Completing..."
+      "completing": "Completing...",
+      "startInterview": "Start Cultural Interview",
+      "skipForNow": "Skip for Now",
+      "loading": "Loading..."
     }
   },
   "settings": {
@@ -348,6 +354,8 @@
   "cultural": {
     "buildProfile": "Build Your Cultural Profile",
     "profileDescription": "Help us understand your cultural background through a short conversation. This will help us personalize your migration experience.",
+    "profileComplete": "Cultural Profile Complete",
+    "profileCompleteDesc": "You've already shared your cultural background. Continue to your dashboard!",
     "startInterview": "Start Interview",
     "culturalInterview": "Cultural Interview",
     "question": "Question",

@@ -219,3 +219,279 @@ export const getStaleCorridors = internalQuery({
       .slice(0, limit);
   },
 });
+
+// ============================================
+// MULTI-JOURNEY SUPPORT
+// ============================================
+
+// Create a new journey (corridor with name)
+export const createJourney = mutation({
+  args: {
+    origin: v.string(),
+    destination: v.string(),
+    stage: v.union(
+      v.literal("dreaming"),
+      v.literal("planning"),
+      v.literal("preparing"),
+      v.literal("relocating"),
+      v.literal("settling")
+    ),
+    name: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Unauthenticated");
+
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+      .unique();
+
+    if (!user) throw new Error("User not found");
+
+    // Check journey limit (max 5)
+    const existingCorridors = await ctx.db
+      .query("corridors")
+      .withIndex("by_user", (q) => q.eq("userId", user._id))
+      .collect();
+
+    if (existingCorridors.length >= 5) {
+      throw new Error("Maximum 5 journeys allowed. Please archive or delete an existing journey.");
+    }
+
+    // Set all existing journeys to not primary
+    for (const corridor of existingCorridors) {
+      if (corridor.isPrimary) {
+        await ctx.db.patch(corridor._id, { isPrimary: false });
+      }
+    }
+
+    const now = Date.now();
+    const corridorId = await ctx.db.insert("corridors", {
+      userId: user._id,
+      origin: args.origin,
+      destination: args.destination,
+      stage: args.stage,
+      name: args.name || `Journey ${existingCorridors.length + 1}`,
+      isPrimary: true, // New journey becomes primary
+      createdAt: now,
+      updatedAt: now,
+      researchStatus: "stale",
+    });
+
+    // Schedule research
+    await ctx.scheduler.runAfter(1000, internal.ai.researchScheduler.researchCorridorBackground, {
+      corridorId,
+    });
+
+    return corridorId;
+  },
+});
+
+// Get the primary (active) journey
+export const getPrimaryJourney = query({
+  args: {},
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return null;
+
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+      .unique();
+
+    if (!user) return null;
+
+    // First try to get explicitly primary corridor
+    const corridors = await ctx.db
+      .query("corridors")
+      .withIndex("by_user", (q) => q.eq("userId", user._id))
+      .collect();
+
+    const primary = corridors.find((c) => c.isPrimary);
+    if (primary) return primary;
+
+    // Fallback: return most recently updated (for backwards compat)
+    return corridors.sort((a, b) => b.updatedAt - a.updatedAt)[0] ?? null;
+  },
+});
+
+// Switch which journey is primary
+export const switchPrimaryJourney = mutation({
+  args: {
+    corridorId: v.id("corridors"),
+  },
+  handler: async (ctx, { corridorId }) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Unauthenticated");
+
+    const corridor = await ctx.db.get(corridorId);
+    if (!corridor) throw new Error("Journey not found");
+
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+      .unique();
+
+    if (!user || corridor.userId !== user._id) {
+      throw new Error("Unauthorized");
+    }
+
+    // Set all user's corridors to not primary
+    const allCorridors = await ctx.db
+      .query("corridors")
+      .withIndex("by_user", (q) => q.eq("userId", user._id))
+      .collect();
+
+    for (const c of allCorridors) {
+      if (c.isPrimary) {
+        await ctx.db.patch(c._id, { isPrimary: false });
+      }
+    }
+
+    // Set the selected corridor as primary
+    await ctx.db.patch(corridorId, {
+      isPrimary: true,
+      updatedAt: Date.now(),
+    });
+
+    return corridorId;
+  },
+});
+
+// Rename a journey
+export const renameJourney = mutation({
+  args: {
+    corridorId: v.id("corridors"),
+    name: v.string(),
+  },
+  handler: async (ctx, { corridorId, name }) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Unauthenticated");
+
+    const corridor = await ctx.db.get(corridorId);
+    if (!corridor) throw new Error("Journey not found");
+
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+      .unique();
+
+    if (!user || corridor.userId !== user._id) {
+      throw new Error("Unauthorized");
+    }
+
+    await ctx.db.patch(corridorId, {
+      name,
+      updatedAt: Date.now(),
+    });
+
+    return corridorId;
+  },
+});
+
+// Delete a journey (and all associated protocols)
+export const deleteJourney = mutation({
+  args: {
+    corridorId: v.id("corridors"),
+  },
+  handler: async (ctx, { corridorId }) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Unauthenticated");
+
+    const corridor = await ctx.db.get(corridorId);
+    if (!corridor) throw new Error("Journey not found");
+
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+      .unique();
+
+    if (!user || corridor.userId !== user._id) {
+      throw new Error("Unauthorized");
+    }
+
+    // Don't allow deleting if it's the only journey
+    const allCorridors = await ctx.db
+      .query("corridors")
+      .withIndex("by_user", (q) => q.eq("userId", user._id))
+      .collect();
+
+    if (allCorridors.length <= 1) {
+      throw new Error("Cannot delete your only journey. Create another journey first.");
+    }
+
+    // Delete all protocols for this corridor
+    const protocols = await ctx.db
+      .query("protocols")
+      .withIndex("by_corridor", (q) => q.eq("corridorId", corridorId))
+      .collect();
+
+    for (const protocol of protocols) {
+      await ctx.db.delete(protocol._id);
+    }
+
+    // Delete the corridor
+    await ctx.db.delete(corridorId);
+
+    // If this was primary, set another as primary
+    if (corridor.isPrimary) {
+      const remaining = allCorridors.filter((c) => c._id !== corridorId);
+      if (remaining.length > 0) {
+        await ctx.db.patch(remaining[0]._id, { isPrimary: true });
+      }
+    }
+  },
+});
+
+// Get all journeys with summary data
+export const getAllJourneys = query({
+  args: {},
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return [];
+
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+      .unique();
+
+    if (!user) return [];
+
+    const corridors = await ctx.db
+      .query("corridors")
+      .withIndex("by_user", (q) => q.eq("userId", user._id))
+      .collect();
+
+    // Get protocol counts for each corridor
+    const journeysWithStats = await Promise.all(
+      corridors.map(async (corridor) => {
+        const protocols = await ctx.db
+          .query("protocols")
+          .withIndex("by_corridor", (q) => q.eq("corridorId", corridor._id))
+          .filter((q) => q.neq(q.field("archived"), true))
+          .collect();
+
+        const completedCount = protocols.filter(
+          (p) => p.status === "completed"
+        ).length;
+
+        return {
+          ...corridor,
+          protocolCount: protocols.length,
+          completedCount,
+          progress: protocols.length > 0
+            ? Math.round((completedCount / protocols.length) * 100)
+            : 0,
+        };
+      })
+    );
+
+    return journeysWithStats.sort((a, b) => {
+      // Primary first, then by updated date
+      if (a.isPrimary && !b.isPrimary) return -1;
+      if (!a.isPrimary && b.isPrimary) return 1;
+      return b.updatedAt - a.updatedAt;
+    });
+  },
+});

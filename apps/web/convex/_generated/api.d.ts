@@ -47,6 +47,7 @@ import type * as protocols from "../protocols.js";
 import type * as rateLimits from "../rateLimits.js";
 import type * as translation from "../translation.js";
 import type * as ttsQueries from "../ttsQueries.js";
+import type * as userDocuments from "../userDocuments.js";
 import type * as users from "../users.js";
 
 import type {
@@ -95,6 +96,7 @@ declare const fullApi: ApiFromModules<{
   rateLimits: typeof rateLimits;
   translation: typeof translation;
   ttsQueries: typeof ttsQueries;
+  userDocuments: typeof userDocuments;
   users: typeof users;
 }>;
 

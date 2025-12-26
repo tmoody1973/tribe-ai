@@ -48,6 +48,9 @@ export default defineSchema({
       v.literal("relocating"),
       v.literal("settling")
     ),
+    // Multi-journey support
+    name: v.optional(v.string()), // User-defined name like "Berlin Option"
+    isPrimary: v.optional(v.boolean()), // Active journey (only one per user)
     // Freshness tracking
     lastResearchedAt: v.optional(v.number()),
     researchStatus: v.optional(
@@ -64,6 +67,7 @@ export default defineSchema({
     updatedAt: v.number(),
   })
     .index("by_user", ["userId"])
+    .index("by_user_primary", ["userId", "isPrimary"])
     .index("by_corridor", ["origin", "destination"])
     .index("by_status", ["researchStatus"]),
 
@@ -329,6 +333,7 @@ export default defineSchema({
         required: v.boolean(),
         completed: v.boolean(),
         completedAt: v.optional(v.number()),
+        attachedDocumentId: v.optional(v.id("userDocuments")), // Link to uploaded file
       })
     ),
     generatedAt: v.number(),
@@ -336,6 +341,37 @@ export default defineSchema({
   })
     .index("by_protocol", ["protocolId"])
     .index("by_user_corridor", ["userId", "corridorId"]),
+
+  // User document vault - uploaded files (passport, certificates, etc.)
+  userDocuments: defineTable({
+    userId: v.id("users"),
+    storageId: v.id("_storage"), // Convex file storage
+    fileName: v.string(), // Original filename
+    fileType: v.string(), // MIME type
+    fileSize: v.number(), // bytes
+    category: v.union(
+      v.literal("passport"),
+      v.literal("visa"),
+      v.literal("identity"),
+      v.literal("education"),
+      v.literal("employment"),
+      v.literal("financial"),
+      v.literal("medical"),
+      v.literal("legal"),
+      v.literal("other")
+    ),
+    displayName: v.string(), // User-editable name
+    description: v.optional(v.string()),
+    expiryDate: v.optional(v.number()), // For documents that expire
+    issuedDate: v.optional(v.number()),
+    issuingCountry: v.optional(v.string()),
+    tags: v.optional(v.array(v.string())), // User-defined tags
+    uploadedAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_category", ["userId", "category"])
+    .index("by_expiry", ["expiryDate"]),
 
   // Translation cache for dynamic content
   translations: defineTable({

@@ -183,7 +183,55 @@ const COUNTRY_SUBREDDITS: Record<string, string[]> = {
   "New Zealand": ["newzealand"],
 };
 
-// Fetch recent posts from a subreddit (more reliable than search)
+// Reddit OAuth token cache
+let redditToken: { token: string; expires: number } | null = null;
+
+async function getRedditAccessToken(): Promise<string | null> {
+  // Check if we have a valid cached token
+  if (redditToken && redditToken.expires > Date.now()) {
+    return redditToken.token;
+  }
+
+  const clientId = process.env.REDDIT_CLIENT_ID;
+  const clientSecret = process.env.REDDIT_CLIENT_SECRET;
+
+  if (!clientId || !clientSecret) {
+    console.log("Reddit credentials not configured");
+    return null;
+  }
+
+  try {
+    const auth = Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
+
+    const response = await fetch("https://www.reddit.com/api/v1/access_token", {
+      method: "POST",
+      headers: {
+        "Authorization": `Basic ${auth}`,
+        "Content-Type": "application/x-www-form-urlencoded",
+        "User-Agent": "TRIBE:v1.0.0 (by /u/tribe_migration_app)",
+      },
+      body: "grant_type=client_credentials",
+    });
+
+    if (!response.ok) {
+      console.error("Failed to get Reddit token:", response.status);
+      return null;
+    }
+
+    const data = await response.json();
+    redditToken = {
+      token: data.access_token,
+      expires: Date.now() + (data.expires_in - 60) * 1000, // Refresh 1 min early
+    };
+
+    return redditToken.token;
+  } catch (e) {
+    console.error("Reddit OAuth error:", e);
+    return null;
+  }
+}
+
+// Fetch recent posts from a subreddit using OAuth
 async function fetchSubredditPosts(
   subreddit: string,
   limit: number = 10
@@ -191,16 +239,21 @@ async function fetchSubredditPosts(
   const results: RedditPost[] = [];
 
   try {
-    // Fetch "new" posts which is more reliable than search
-    const url = `https://www.reddit.com/r/${subreddit}/new.json?limit=${limit}`;
+    const token = await getRedditAccessToken();
 
-    const response = await fetch(url, {
-      headers: {
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
-        "Accept": "application/json",
-      },
-      next: { revalidate: 300 }, // Cache for 5 minutes
-    });
+    // If no OAuth, try unauthenticated (may be blocked)
+    const headers: Record<string, string> = {
+      "User-Agent": "TRIBE:v1.0.0 (by /u/tribe_migration_app)",
+    };
+
+    let url = `https://www.reddit.com/r/${subreddit}/new.json?limit=${limit}`;
+
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+      url = `https://oauth.reddit.com/r/${subreddit}/new?limit=${limit}`;
+    }
+
+    const response = await fetch(url, { headers });
 
     if (!response.ok) {
       console.log(`Reddit returned ${response.status} for r/${subreddit}`);

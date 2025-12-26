@@ -35,13 +35,22 @@ interface Protocol {
 interface ProtocolListProps {
   protocols: Protocol[];
   corridorId: Id<"corridors">;
+  corridorOrigin?: string;
+  corridorDestination?: string;
 }
 
-export function ProtocolList({ protocols, corridorId }: ProtocolListProps) {
+export function ProtocolList({ protocols, corridorId, corridorOrigin, corridorDestination }: ProtocolListProps) {
   const t = useTranslations("protocols");
 
-  // Fetch corridor details for progress display
-  const corridor = useQuery(api.corridors.getCorridor, { id: corridorId });
+  // Fetch corridor details for progress display (only if not provided as props)
+  const corridor = useQuery(
+    api.corridors.getCorridor,
+    corridorOrigin ? "skip" : { id: corridorId }
+  );
+
+  // Use props if provided, otherwise fall back to fetched corridor
+  const origin = corridorOrigin ?? corridor?.origin;
+  const destination = corridorDestination ?? corridor?.destination;
 
   // Fetch user progress
   const progress = useQuery(api.progress.getProgress, { corridorId });
@@ -85,8 +94,8 @@ export function ProtocolList({ protocols, corridorId }: ProtocolListProps) {
       <ProgressBar
         completed={completedCount}
         total={protocols.length}
-        corridorOrigin={corridor?.origin}
-        corridorDestination={corridor?.destination}
+        corridorOrigin={origin}
+        corridorDestination={destination}
       />
 
       {/* Voice Walkthrough Button */}
@@ -117,8 +126,8 @@ export function ProtocolList({ protocols, corridorId }: ProtocolListProps) {
               key={protocol._id}
               protocol={protocol}
               corridorId={corridorId}
-              corridorOrigin={corridor?.origin}
-              corridorDestination={corridor?.destination}
+              corridorOrigin={origin}
+              corridorDestination={destination}
               isCurrent={protocol._id === currentProtocol?._id}
               isCompleted={completedIds.has(protocol._id)}
               onComplete={handleComplete}

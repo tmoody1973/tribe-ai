@@ -42,6 +42,7 @@ import type * as metrics from "../metrics.js";
 import type * as monitoring from "../monitoring.js";
 import type * as passportIndex from "../passportIndex.js";
 import type * as progress from "../progress.js";
+import type * as protocolArchive from "../protocolArchive.js";
 import type * as protocols from "../protocols.js";
 import type * as rateLimits from "../rateLimits.js";
 import type * as translation from "../translation.js";
@@ -89,6 +90,7 @@ declare const fullApi: ApiFromModules<{
   monitoring: typeof monitoring;
   passportIndex: typeof passportIndex;
   progress: typeof progress;
+  protocolArchive: typeof protocolArchive;
   protocols: typeof protocols;
   rateLimits: typeof rateLimits;
   translation: typeof translation;

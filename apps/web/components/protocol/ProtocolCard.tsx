@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { useMutation, useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import { ChevronDown, ChevronUp, AlertTriangle, Lightbulb, Languages, Loader2 } from "lucide-react";
+import { ChevronDown, ChevronUp, AlertTriangle, Lightbulb, Languages, Loader2, Bookmark, BookmarkCheck } from "lucide-react";
 import { Attribution, detectSourceType } from "./Attribution";
 import { CommunityVerifiedBadge } from "./CommunityVerifiedBadge";
 import { Confetti } from "./Confetti";
@@ -42,9 +44,11 @@ interface ProtocolCardProps {
   corridorDestination?: string;
   isCurrent: boolean;
   isCompleted?: boolean;
+  isArchived?: boolean; // For archive view
   onComplete?: (protocolId: Id<"protocols">) => void;
   onUncomplete?: (protocolId: Id<"protocols">) => void;
   onStatusChange?: (status: Status) => void;
+  onRestore?: (protocolId: Id<"protocols">) => void; // For archive view
 }
 
 const categoryColors: Record<Category, string> = {
@@ -81,15 +85,57 @@ export function ProtocolCard({
   corridorDestination,
   isCurrent,
   isCompleted: isCompletedProp,
+  isArchived,
   onComplete,
   onUncomplete,
+  onRestore,
 }: ProtocolCardProps) {
   const [expanded, setExpanded] = useState(isCurrent);
   const [showConfetti, setShowConfetti] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const t = useTranslations("protocols");
 
   // Translate protocol content if needed
   const { protocol, isTranslating, isTranslated } = useTranslatedProtocol(originalProtocol);
+
+  // Check if protocol is saved (bookmarked)
+  const savedStatus = useQuery(api.protocolArchive.isProtocolSaved, {
+    protocolId: protocol._id,
+  });
+  const isSaved = savedStatus?.isSaved ?? false;
+
+  // Save/unsave mutations
+  const saveProtocol = useMutation(api.protocolArchive.saveProtocol);
+  const unsaveProtocol = useMutation(api.protocolArchive.unsaveProtocol);
+  const restoreProtocol = useMutation(api.protocolArchive.restoreProtocol);
+
+  // Handle bookmark toggle
+  const handleBookmarkClick = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsSaving(true);
+    try {
+      if (isSaved) {
+        await unsaveProtocol({ protocolId: protocol._id });
+      } else {
+        await saveProtocol({ protocolId: protocol._id });
+      }
+    } catch (error) {
+      console.error("Failed to toggle bookmark:", error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // Handle restore from archive
+  const handleRestore = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      await restoreProtocol({ protocolId: protocol._id });
+      onRestore?.(protocol._id);
+    } catch (error) {
+      console.error("Failed to restore protocol:", error);
+    }
+  };
 
   // Use prop if provided, otherwise fall back to status field
   const isCompleted = isCompletedProp ?? protocol.status === "completed";
@@ -174,10 +220,47 @@ export function ProtocolCard({
           )}
         </div>
 
-        {/* Expand Icon */}
-        <button className="p-1 flex-shrink-0">
-          {expanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-        </button>
+        {/* Action Buttons */}
+        <div className="flex items-center gap-1 flex-shrink-0">
+          {/* Bookmark Button */}
+          <button
+            onClick={handleBookmarkClick}
+            disabled={isSaving}
+            className={`
+              p-2 transition-colors rounded
+              ${isSaved
+                ? "text-yellow-600 hover:text-yellow-700 bg-yellow-100"
+                : "text-gray-400 hover:text-yellow-600 hover:bg-yellow-50"
+              }
+              ${isSaving ? "opacity-50 cursor-not-allowed" : ""}
+            `}
+            title={isSaved ? t("unsaveProtocol") : t("saveProtocol")}
+          >
+            {isSaving ? (
+              <Loader2 size={18} className="animate-spin" />
+            ) : isSaved ? (
+              <BookmarkCheck size={18} />
+            ) : (
+              <Bookmark size={18} />
+            )}
+          </button>
+
+          {/* Restore Button (Archive view only) */}
+          {isArchived && (
+            <button
+              onClick={handleRestore}
+              className="p-2 text-blue-500 hover:text-blue-700 hover:bg-blue-50 transition-colors rounded"
+              title={t("restoreProtocol")}
+            >
+              ↩️
+            </button>
+          )}
+
+          {/* Expand Icon */}
+          <button className="p-1">
+            {expanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+          </button>
+        </div>
       </div>
 
       {/* Expanded Content */}

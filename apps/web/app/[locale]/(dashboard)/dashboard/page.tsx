@@ -4,7 +4,7 @@ import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { CorridorHeader } from "@/components/corridor/CorridorHeader";
 import { QuickStats } from "@/components/corridor/QuickStats";
-import { ProtocolList } from "@/components/protocol/ProtocolList";
+import { ProtocolTabs } from "@/components/protocol/ProtocolTabs";
 import { DashboardSkeleton } from "@/components/corridor/DashboardSkeleton";
 import { EmptyState } from "@/components/corridor/EmptyState";
 import { JourneyMap } from "@/components/dashboard/JourneyMap";
@@ -17,6 +17,9 @@ import { SalaryRealityCheck } from "@/components/dashboard/SalaryRealityCheck";
 export default function DashboardPage() {
   // Get active corridor
   const corridor = useQuery(api.corridors.getActiveCorridor);
+
+  // Get user profile for userId
+  const profile = useQuery(api.users.getProfile);
 
   // Get protocols with freshness
   const protocolData = useQuery(
@@ -59,7 +62,13 @@ export default function DashboardPage() {
           {hasNoProtocols ? (
             <EmptyState corridorId={corridor._id} />
           ) : (
-            <ProtocolList protocols={protocols} corridorId={corridor._id} />
+            <ProtocolTabs
+              protocols={protocols}
+              corridorId={corridor._id}
+              corridorOrigin={corridor.origin}
+              corridorDestination={corridor.destination}
+              userId={profile?._id}
+            />
           )}
 
           {/* Show refreshing indicator if updating */}

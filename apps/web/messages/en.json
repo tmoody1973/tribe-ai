@@ -171,6 +171,9 @@
     "staticMode": "Standard view",
     "switchToStatic": "Switch to standard view",
     "switchToGenerative": "Switch to AI view",
+    "saveProtocol": "Save to My Protocols",
+    "unsaveProtocol": "Remove from saved",
+    "restoreProtocol": "Restore to active",
     "categories": {
       "visa": "Visa",
       "finance": "Finance",
@@ -185,6 +188,38 @@
       "high": "High Priority",
       "medium": "Medium",
       "low": "Low Priority"
+    },
+    "tabs": {
+      "active": "Active",
+      "archived": "Archive",
+      "saved": "Saved"
+    },
+    "archive": {
+      "title": "Protocol Archive",
+      "description": "Protocols from previous stages of your journey",
+      "empty": "No archived protocols yet",
+      "emptyDescription": "When you change stages, your previous protocols will be preserved here",
+      "stage": "Stage",
+      "archivedOn": "Archived on",
+      "completedCount": "{count} completed"
+    },
+    "saved": {
+      "title": "My Saved Protocols",
+      "description": "Protocols you've bookmarked for quick reference",
+      "empty": "No saved protocols yet",
+      "emptyDescription": "Click the bookmark icon on any protocol to save it here",
+      "addNotes": "Add notes",
+      "notes": "Your notes",
+      "savedOn": "Saved on"
+    },
+    "stageTransition": {
+      "title": "Moving to {newStage}",
+      "description": "You're about to change your migration stage. Here's what will happen:",
+      "archiveExplanation": "Your current protocols will be archived so you can reference them later",
+      "newProtocols": "New protocols relevant to {newStage} will be generated",
+      "saveReminder": "Want to bookmark any current protocols first?",
+      "confirm": "Continue",
+      "cancel": "Stay on {currentStage}"
     }
   },
   "attribution": {

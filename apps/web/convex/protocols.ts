@@ -59,10 +59,13 @@ export const createProtocol = mutation({
 export const getProtocols = query({
   args: { corridorId: v.id("corridors") },
   handler: async (ctx, { corridorId }) => {
-    return await ctx.db
+    // Only return active (non-archived) protocols by default
+    const protocols = await ctx.db
       .query("protocols")
       .withIndex("by_corridor", (q) => q.eq("corridorId", corridorId))
+      .filter((q) => q.neq(q.field("archived"), true))
       .collect();
+    return protocols;
   },
 });
 
@@ -172,8 +175,24 @@ export const batchCreateProtocols = mutation({
         ),
       })
     ),
+    stage: v.optional(
+      v.union(
+        v.literal("dreaming"),
+        v.literal("planning"),
+        v.literal("preparing"),
+        v.literal("relocating"),
+        v.literal("settling")
+      )
+    ),
   },
-  handler: async (ctx, { corridorId, protocols }) => {
+  handler: async (ctx, { corridorId, protocols, stage }) => {
+    // Get corridor stage if not provided
+    let generatedForStage = stage;
+    if (!generatedForStage) {
+      const corridor = await ctx.db.get(corridorId);
+      generatedForStage = corridor?.stage;
+    }
+
     const ids = [];
     for (const protocol of protocols) {
       const id = await ctx.db.insert("protocols", {
@@ -188,6 +207,8 @@ export const batchCreateProtocols = mutation({
         hacks: protocol.hacks,
         attribution: protocol.attribution,
         aiGenerated: true,
+        generatedForStage,
+        archived: false,
       });
       ids.push(id);
     }
@@ -202,20 +223,38 @@ export const deleteProtocol = mutation({
   },
 });
 
-// Delete all protocols for a corridor (used before refresh)
+// Archive all protocols for a corridor (used before refresh) - SOFT DELETE
 export const deleteByCorridorId = mutation({
-  args: { corridorId: v.id("corridors") },
-  handler: async (ctx, { corridorId }) => {
+  args: {
+    corridorId: v.id("corridors"),
+    hardDelete: v.optional(v.boolean()), // Only true for complete cleanup
+  },
+  handler: async (ctx, { corridorId, hardDelete }) => {
     const protocols = await ctx.db
       .query("protocols")
       .withIndex("by_corridor", (q) => q.eq("corridorId", corridorId))
+      .filter((q) => q.neq(q.field("archived"), true)) // Only active protocols
       .collect();
 
-    for (const protocol of protocols) {
-      await ctx.db.delete(protocol._id);
-    }
+    const now = Date.now();
 
-    return { deleted: protocols.length };
+    if (hardDelete) {
+      // Permanent deletion (rarely used)
+      for (const protocol of protocols) {
+        await ctx.db.delete(protocol._id);
+      }
+      return { deleted: protocols.length, archived: 0 };
+    } else {
+      // Soft delete - archive instead
+      for (const protocol of protocols) {
+        await ctx.db.patch(protocol._id, {
+          archived: true,
+          archivedAt: now,
+          archivedReason: "refresh",
+        });
+      }
+      return { deleted: 0, archived: protocols.length };
+    }
   },
 });
 
@@ -226,10 +265,14 @@ export const getProtocolsWithFreshness = query({
     const corridor = await ctx.db.get(corridorId);
     if (!corridor) return null;
 
-    const protocols = await ctx.db
+    // Only get active (non-archived) protocols
+    const allProtocols = await ctx.db
       .query("protocols")
       .withIndex("by_corridor", (q) => q.eq("corridorId", corridorId))
       .collect();
+
+    const protocols = allProtocols.filter((p) => !p.archived);
+    const archivedCount = allProtocols.filter((p) => p.archived).length;
 
     const lastResearchedAt = corridor.lastResearchedAt;
     const isStale = !lastResearchedAt || Date.now() - lastResearchedAt >= FRESHNESS_THRESHOLD_MS;
@@ -243,6 +286,7 @@ export const getProtocolsWithFreshness = query({
         status: corridor.researchStatus ?? "unknown",
         refreshing: corridor.researchStatus === "refreshing",
         protocolCount: protocols.length,
+        archivedCount,
       },
     };
   },

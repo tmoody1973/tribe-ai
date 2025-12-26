@@ -106,10 +106,51 @@ export default defineSchema({
     completedAt: v.optional(v.number()),
     aiGenerated: v.boolean(),
     order: v.number(),
+    // Archive fields - track which stage generated this and soft delete
+    generatedForStage: v.optional(
+      v.union(
+        v.literal("dreaming"),
+        v.literal("planning"),
+        v.literal("preparing"),
+        v.literal("relocating"),
+        v.literal("settling")
+      )
+    ),
+    archived: v.optional(v.boolean()),
+    archivedAt: v.optional(v.number()),
+    archivedReason: v.optional(v.string()), // "stage_change", "manual", "refresh"
   })
     .index("by_corridor", ["corridorId"])
     .index("by_status", ["corridorId", "status"])
-    .index("by_category", ["corridorId", "category"]),
+    .index("by_category", ["corridorId", "category"])
+    .index("by_archived", ["corridorId", "archived"])
+    .index("by_stage", ["corridorId", "generatedForStage"]),
+
+  // User-saved protocols - bookmarked items with personal notes
+  savedProtocols: defineTable({
+    userId: v.id("users"),
+    corridorId: v.id("corridors"),
+    originalProtocolId: v.optional(v.id("protocols")), // Reference to original (may be deleted)
+    // Snapshot of protocol data at time of save
+    snapshot: v.object({
+      category: v.string(),
+      title: v.string(),
+      description: v.string(),
+      priority: v.string(),
+      status: v.string(),
+      warnings: v.optional(v.array(v.string())),
+      hacks: v.optional(v.array(v.string())),
+      generatedForStage: v.optional(v.string()),
+    }),
+    // User's personal additions
+    notes: v.optional(v.string()),
+    tags: v.optional(v.array(v.string())), // User-defined tags
+    savedAt: v.number(),
+    updatedAt: v.optional(v.number()),
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_corridor", ["userId", "corridorId"])
+    .index("by_original", ["originalProtocolId"]),
 
   ingestedContent: defineTable({
     corridorId: v.id("corridors"),

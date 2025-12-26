@@ -795,8 +795,7 @@ export interface JobSearchResult {
 }
 
 export function getJobSearchResources(
-  destinationCountry: string,
-  _industry?: string
+  destinationCountry: string
 ): JobSearchResult {
   const destLower = destinationCountry.toLowerCase().replace(/\s+/g, "-");
   const destEncoded = encodeURIComponent(destinationCountry);

@@ -910,12 +910,6 @@ export function useMigrationTools() {
         description: "Country looking for jobs in",
         required: true,
       },
-      {
-        name: "industry",
-        type: "string",
-        description: "Industry or field (e.g., 'tech', 'healthcare', 'finance')",
-        required: false,
-      },
     ],
     render: ({ status, args, result }) => {
       if (status === "inProgress") {
@@ -981,8 +975,8 @@ export function useMigrationTools() {
         </div>
       );
     },
-    handler: async ({ destinationCountry, industry }) => {
-      return getJobSearchResources(destinationCountry, industry);
+    handler: async ({ destinationCountry }) => {
+      return getJobSearchResources(destinationCountry);
     },
   });
 }

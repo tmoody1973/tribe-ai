@@ -1,83 +1,118 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ConvexHttpClient } from "convex/browser";
 import { api } from "@/convex/_generated/api";
+import FirecrawlApp from "@mendable/firecrawl-js";
+import fs from "fs";
+import path from "path";
 
 const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 
-// Convert country codes to full names for Reddit search
-function getCountryName(code: string): string {
-  const countryNames: Record<string, string> = {
-    US: "United States",
-    JP: "Japan",
-    DE: "Germany",
-    GB: "United Kingdom",
-    UK: "United Kingdom",
-    CA: "Canada",
-    AU: "Australia",
-    FR: "France",
-    IT: "Italy",
-    ES: "Spain",
-    PT: "Portugal",
-    NL: "Netherlands",
-    BE: "Belgium",
-    CH: "Switzerland",
-    AT: "Austria",
-    SE: "Sweden",
-    NO: "Norway",
-    DK: "Denmark",
-    FI: "Finland",
-    IE: "Ireland",
-    NZ: "New Zealand",
-    SG: "Singapore",
-    HK: "Hong Kong",
-    KR: "South Korea",
-    CN: "China",
-    IN: "India",
-    BR: "Brazil",
-    MX: "Mexico",
-    AR: "Argentina",
-    CL: "Chile",
-    CO: "Colombia",
-    PE: "Peru",
-    ZA: "South Africa",
-    NG: "Nigeria",
-    KE: "Kenya",
-    GH: "Ghana",
-    EG: "Egypt",
-    MA: "Morocco",
-    AE: "United Arab Emirates",
-    SA: "Saudi Arabia",
-    IL: "Israel",
-    TR: "Turkey",
-    RU: "Russia",
-    PL: "Poland",
-    CZ: "Czech Republic",
-    HU: "Hungary",
-    RO: "Romania",
-    GR: "Greece",
-    TH: "Thailand",
-    VN: "Vietnam",
-    PH: "Philippines",
-    MY: "Malaysia",
-    ID: "Indonesia",
-    TW: "Taiwan",
-  };
+// Initialize Firecrawl
+const firecrawl = new FirecrawlApp({
+  apiKey: process.env.FIRECRAWL_API_KEY || "",
+});
 
-  // If it's already a full name (more than 3 characters), return as-is
-  if (code.length > 3) return code;
-
-  return countryNames[code.toUpperCase()] || code;
+// Load migration data from JSON file
+interface SubredditInfo {
+  name: string;
+  url: string;
+  type: string;
+  language?: string;
+  notes?: string;
 }
 
-interface RedditPost {
-  title: string;
-  selftext: string;
-  author: string;
-  permalink: string;
-  score: number;
-  num_comments: number;
-  created_utc: number;
-  subreddit: string;
+interface CountryData {
+  country: string;
+  isoCode: string;
+  subreddits: SubredditInfo[];
+}
+
+interface RegionData {
+  name: string;
+  countries: CountryData[];
+}
+
+interface MigrationData {
+  regions: RegionData[];
+  global_migration_subreddits: SubredditInfo[];
+  migration_forums: Array<{
+    name: string;
+    url: string;
+    type: string;
+    country?: string;
+    isoCode?: string;
+    scrapable?: boolean;
+    notes?: string;
+  }>;
+}
+
+let migrationData: MigrationData | null = null;
+
+function loadMigrationData(): MigrationData {
+  if (migrationData) return migrationData;
+
+  try {
+    const filePath = path.join(process.cwd(), "docs", "migration_app_complete.json");
+    const fileContent = fs.readFileSync(filePath, "utf-8");
+    migrationData = JSON.parse(fileContent);
+    return migrationData!;
+  } catch (e) {
+    console.error("Error loading migration data:", e);
+    return { regions: [], global_migration_subreddits: [], migration_forums: [] };
+  }
+}
+
+// Get country name from ISO code
+function getCountryName(code: string): string {
+  const data = loadMigrationData();
+
+  // Search through regions to find country by ISO code
+  for (const region of data.regions) {
+    for (const country of region.countries) {
+      if (country.isoCode.toUpperCase() === code.toUpperCase()) {
+        return country.country;
+      }
+    }
+  }
+
+  // Fallback mapping for common codes
+  const fallbackNames: Record<string, string> = {
+    US: "United States",
+    UK: "United Kingdom",
+    GB: "United Kingdom",
+  };
+
+  return fallbackNames[code.toUpperCase()] || code;
+}
+
+// Get subreddits for a country from the JSON data
+function getSubredditsForCountry(isoCode: string): SubredditInfo[] {
+  const data = loadMigrationData();
+
+  for (const region of data.regions) {
+    for (const country of region.countries) {
+      if (country.isoCode.toUpperCase() === isoCode.toUpperCase()) {
+        return country.subreddits;
+      }
+    }
+  }
+
+  return [];
+}
+
+// Get global migration subreddits
+function getGlobalSubreddits(): SubredditInfo[] {
+  const data = loadMigrationData();
+  return data.global_migration_subreddits || [];
+}
+
+// Get expat forums for a country
+function getExpatForums(isoCode: string): Array<{ name: string; url: string }> {
+  const data = loadMigrationData();
+
+  return data.migration_forums
+    .filter((forum) => forum.isoCode?.toUpperCase() === isoCode.toUpperCase() && forum.scrapable)
+    .map((forum) => ({ name: forum.name, url: forum.url }));
 }
 
 interface FeedItem {
@@ -135,216 +170,154 @@ function detectAlert(title: string, content: string): { isAlert: boolean; alertT
   return { isAlert: false };
 }
 
-// Build search queries for a corridor
-function buildSearchQueries(origin: string, destination: string): string[] {
-  const destLower = destination.toLowerCase();
-  const originLower = origin.toLowerCase();
+// Parse Reddit posts from scraped markdown content
+function parseRedditPosts(markdown: string, subredditName: string): FeedItem[] {
+  const posts: FeedItem[] = [];
 
-  return [
-    `${originLower} to ${destLower}`,
-    `moving to ${destLower} from ${originLower}`,
-    `${destLower} visa ${originLower}`,
-    `${destLower} immigration`,
-    `relocating to ${destLower}`,
-    `expat ${destLower}`,
-  ];
+  // Reddit pages have posts in various formats, look for common patterns
+  // Posts often appear as links with titles
+  const lines = markdown.split("\n");
+
+  let currentTitle = "";
+  let currentUrl = "";
+  let currentSnippet = "";
+
+  for (const line of lines) {
+    // Match markdown links that look like posts: [title](url)
+    const linkMatch = line.match(/\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/);
+    if (linkMatch) {
+      const title = linkMatch[1];
+      const url = linkMatch[2];
+
+      // Skip navigation links, user profiles, etc.
+      if (
+        url.includes("/comments/") ||
+        (url.includes("/r/") && !url.includes("/user/") && !url.includes("/wiki/"))
+      ) {
+        // If we have a previous post, save it
+        if (currentTitle && currentUrl) {
+          const alert = detectAlert(currentTitle, currentSnippet);
+          posts.push({
+            source: "reddit",
+            title: currentTitle,
+            snippet: currentSnippet.slice(0, 200),
+            url: currentUrl,
+            subreddit: subredditName,
+            ...alert,
+          });
+        }
+
+        currentTitle = title;
+        currentUrl = url.startsWith("http") ? url : `https://reddit.com${url}`;
+        currentSnippet = "";
+      }
+    } else if (currentTitle && line.trim() && !line.startsWith("#") && !line.startsWith("[")) {
+      // Collect text as snippet for the current post
+      currentSnippet += line.trim() + " ";
+    }
+  }
+
+  // Don't forget the last post
+  if (currentTitle && currentUrl) {
+    const alert = detectAlert(currentTitle, currentSnippet);
+    posts.push({
+      source: "reddit",
+      title: currentTitle,
+      snippet: currentSnippet.slice(0, 200),
+      url: currentUrl,
+      subreddit: subredditName,
+      ...alert,
+    });
+  }
+
+  return posts;
 }
 
-// Relevant subreddits for migration
-const MIGRATION_SUBREDDITS = [
-  "IWantOut",
-  "expats",
-  "immigration",
-  "digitalnomad",
-  "AmerExit",
-  "movingtojapan",
-  "germany",
-  "AskUK",
-  "canada",
-  "iwanttobeabroad",
-];
-
-// Country-specific subreddits
-const COUNTRY_SUBREDDITS: Record<string, string[]> = {
-  Germany: ["germany", "Berlin", "Munich", "de"],
-  "United Kingdom": ["AskUK", "ukvisa", "London"],
-  Canada: ["canada", "ImmigrationCanada", "PersonalFinanceCanada"],
-  Australia: ["australia", "AusVisa", "sydney", "melbourne"],
-  Japan: ["movingtojapan", "japanlife", "teachinginjapan"],
-  "United States": ["USCIS", "immigration", "h1b"],
-  Netherlands: ["Netherlands", "Amsterdam"],
-  France: ["france", "paris", "French"],
-  Spain: ["spain", "Madrid", "Barcelona"],
-  Portugal: ["portugal", "Lisbon"],
-  Singapore: ["singapore", "askSingapore"],
-  UAE: ["dubai", "UAE"],
-  "South Korea": ["korea", "Living_in_Korea"],
-  Ireland: ["ireland", "Dublin"],
-  "New Zealand": ["newzealand"],
-};
-
-// Reddit OAuth token cache
-let redditToken: { token: string; expires: number } | null = null;
-
-async function getRedditAccessToken(): Promise<string | null> {
-  // Check if we have a valid cached token
-  if (redditToken && redditToken.expires > Date.now()) {
-    return redditToken.token;
-  }
-
-  const clientId = process.env.REDDIT_CLIENT_ID;
-  const clientSecret = process.env.REDDIT_CLIENT_SECRET;
-
-  if (!clientId || !clientSecret) {
-    console.log("Reddit credentials not configured");
-    return null;
-  }
-
+// Scrape a subreddit using Firecrawl
+async function scrapeSubreddit(subreddit: SubredditInfo): Promise<FeedItem[]> {
   try {
-    const auth = Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
+    // Use the /new endpoint to get recent posts
+    const url = subreddit.url.replace(/\/$/, "") + "/new/";
 
-    const response = await fetch("https://www.reddit.com/api/v1/access_token", {
-      method: "POST",
-      headers: {
-        "Authorization": `Basic ${auth}`,
-        "Content-Type": "application/x-www-form-urlencoded",
-        "User-Agent": "TRIBE:v1.0.0 (by /u/tribe_migration_app)",
-      },
-      body: "grant_type=client_credentials",
+    console.log(`Scraping ${url}...`);
+
+    const result = await firecrawl.scrapeUrl(url, {
+      formats: ["markdown", "html"],
+      onlyMainContent: true, // Focus on main content, skip navigation
+      waitFor: 2000, // Wait for dynamic content to load
     });
 
-    if (!response.ok) {
-      console.error("Failed to get Reddit token:", response.status);
-      return null;
+    if (!result.success || !result.markdown) {
+      console.log(`Failed to scrape ${subreddit.name}: No content`);
+      return [];
     }
 
-    const data = await response.json();
-    redditToken = {
-      token: data.access_token,
-      expires: Date.now() + (data.expires_in - 60) * 1000, // Refresh 1 min early
-    };
+    const posts = parseRedditPosts(result.markdown, subreddit.name);
+    console.log(`Found ${posts.length} posts from r/${subreddit.name}`);
 
-    return redditToken.token;
+    return posts;
   } catch (e) {
-    console.error("Reddit OAuth error:", e);
-    return null;
+    console.error(`Error scraping r/${subreddit.name}:`, e);
+    return [];
   }
 }
 
-// Fetch recent posts from a subreddit using OAuth
-async function fetchSubredditPosts(
-  subreddit: string,
-  limit: number = 10
-): Promise<RedditPost[]> {
-  const results: RedditPost[] = [];
-
+// Scrape an expat forum using Firecrawl
+async function scrapeExpatForum(forum: { name: string; url: string }, countryName: string): Promise<FeedItem[]> {
   try {
-    const token = await getRedditAccessToken();
+    console.log(`Scraping forum ${forum.name}...`);
 
-    // If no OAuth, return empty (will use sample data)
-    if (!token) {
-      return results;
+    const result = await firecrawl.scrapeUrl(forum.url, {
+      formats: ["markdown", "html"],
+      onlyMainContent: true,
+      waitFor: 2000,
+    });
+
+    if (!result.success || !result.markdown) {
+      console.log(`Failed to scrape ${forum.name}: No content`);
+      return [];
     }
 
-    const headers: Record<string, string> = {
-      "User-Agent": "TRIBE:v1.0.0 (by /u/tribe_migration_app)",
-      "Authorization": `Bearer ${token}`,
-    };
+    // Parse forum posts (similar structure to Reddit parsing)
+    const posts: FeedItem[] = [];
+    const lines = result.markdown.split("\n");
 
-    const url = `https://oauth.reddit.com/r/${subreddit}/new?limit=${limit}`;
-    const response = await fetch(url, { headers });
+    for (const line of lines) {
+      const linkMatch = line.match(/\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/);
+      if (linkMatch) {
+        const title = linkMatch[1];
+        const url = linkMatch[2];
 
-    if (!response.ok) {
-      console.log(`Reddit returned ${response.status} for r/${subreddit}`);
-      return results;
-    }
+        // Filter for relevant topics (contains country name or migration keywords)
+        const titleLower = title.toLowerCase();
+        const countryLower = countryName.toLowerCase();
 
-    const data = await response.json();
-
-    if (data.data?.children) {
-      for (const child of data.data.children) {
-        const post = child.data;
-        if (post.title) {
-          results.push({
-            title: post.title,
-            selftext: post.selftext || "",
-            author: post.author,
-            permalink: post.permalink,
-            score: post.score,
-            num_comments: post.num_comments,
-            created_utc: post.created_utc,
-            subreddit: post.subreddit,
+        if (
+          titleLower.includes(countryLower) ||
+          titleLower.includes("visa") ||
+          titleLower.includes("move") ||
+          titleLower.includes("relocat") ||
+          titleLower.includes("expat") ||
+          titleLower.includes("immigrat")
+        ) {
+          const alert = detectAlert(title, "");
+          posts.push({
+            source: "forum",
+            title,
+            snippet: "",
+            url,
+            ...alert,
           });
         }
       }
     }
+
+    console.log(`Found ${posts.length} relevant forum posts from ${forum.name}`);
+    return posts.slice(0, 5); // Limit forum posts
   } catch (e) {
-    console.error(`Error fetching r/${subreddit}:`, e);
+    console.error(`Error scraping forum ${forum.name}:`, e);
+    return [];
   }
-
-  return results;
-}
-
-// Filter posts relevant to a migration corridor
-function filterRelevantPosts(
-  posts: RedditPost[],
-  origin: string,
-  destination: string
-): RedditPost[] {
-  const originLower = origin.toLowerCase();
-  const destLower = destination.toLowerCase();
-
-  // Keywords that make a post relevant
-  const keywords = [
-    "visa", "move", "moving", "relocate", "relocating", "immigration",
-    "expat", "working", "job", "apartment", "housing", "cost of living",
-    "experience", "advice", "help", "question", "tips"
-  ];
-
-  return posts.filter((post) => {
-    const text = (post.title + " " + post.selftext).toLowerCase();
-
-    // Check if post mentions the destination or origin
-    const mentionsDestination = text.includes(destLower) ||
-      text.includes(destination.split(" ")[0].toLowerCase());
-    const mentionsOrigin = text.includes(originLower) ||
-      text.includes(origin.split(" ")[0].toLowerCase());
-
-    // Check if post has relevant keywords
-    const hasKeyword = keywords.some((kw) => text.includes(kw));
-
-    // For destination-specific subreddits, any post with keywords is relevant
-    // For general subreddits, needs to mention destination
-    return hasKeyword || mentionsDestination || mentionsOrigin;
-  });
-}
-
-async function fetchRedditPosts(
-  subreddits: string[],
-  origin: string,
-  destination: string
-): Promise<RedditPost[]> {
-  const allPosts: RedditPost[] = [];
-
-  // Fetch from multiple subreddits in parallel
-  const fetchPromises = subreddits.slice(0, 5).map(async (subreddit) => {
-    await new Promise((r) => setTimeout(r, Math.random() * 200)); // Stagger requests
-    return fetchSubredditPosts(subreddit, 15);
-  });
-
-  const results = await Promise.all(fetchPromises);
-
-  for (const posts of results) {
-    allPosts.push(...posts);
-  }
-
-  // Filter for relevant posts
-  const relevantPosts = filterRelevantPosts(allPosts, origin, destination);
-
-  console.log(`Fetched ${allPosts.length} total posts, ${relevantPosts.length} relevant`);
-
-  // If we have relevant posts, return those; otherwise return recent posts
-  return relevantPosts.length > 0 ? relevantPosts : allPosts.slice(0, 10);
 }
 
 export async function GET(req: NextRequest) {
@@ -360,9 +333,11 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  // Convert country codes to full names for Reddit search
+  // Convert country codes to full names
   const origin = getCountryName(originCode);
   const destination = getCountryName(destinationCode);
+
+  console.log(`Corridor feed request: ${origin} (${originCode}) → ${destination} (${destinationCode})`);
 
   try {
     // Check if we need to refresh (use original codes for cache key)
@@ -391,49 +366,81 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    // Build subreddit list - prioritize destination-specific subreddits
-    const countrySubreddits = COUNTRY_SUBREDDITS[destination] || [];
-    const subreddits = [...countrySubreddits, ...MIGRATION_SUBREDDITS];
+    // Get subreddits for destination country
+    const countrySubreddits = getSubredditsForCountry(destinationCode);
+    const globalSubreddits = getGlobalSubreddits();
+    const expatForums = getExpatForums(destinationCode);
 
-    console.log(`Fetching posts for ${origin} → ${destination} from subreddits:`, subreddits.slice(0, 5));
+    console.log(`Found ${countrySubreddits.length} country subreddits, ${globalSubreddits.length} global subreddits, ${expatForums.length} forums`);
 
-    // Fetch from Reddit (new approach: fetch recent posts and filter)
-    const allPosts = await fetchRedditPosts(subreddits, origin, destination);
+    // Collect all feed items
+    let allItems: FeedItem[] = [];
 
-    console.log(`Got ${allPosts.length} posts from Reddit`);
+    // Check if Firecrawl API key is configured
+    if (!process.env.FIRECRAWL_API_KEY) {
+      console.log("Firecrawl API key not configured, returning cached data");
+
+      // Return cached data if available
+      const cachedFeed = await convex.query(api.corridorFeed.getCorridorFeed, {
+        origin: originCode,
+        destination: destinationCode,
+        limit: 15,
+      });
+
+      const stats = await convex.query(api.corridorFeed.getCorridorStats, {
+        origin: originCode,
+        destination: destinationCode,
+      });
+
+      return NextResponse.json({
+        items: cachedFeed,
+        stats,
+        cached: true,
+        message: "Firecrawl API key not configured",
+      });
+    }
+
+    // Scrape country-specific subreddits (limit to 2 to stay within rate limits)
+    const subredditsToScrape = countrySubreddits.slice(0, 2);
+
+    for (const subreddit of subredditsToScrape) {
+      const posts = await scrapeSubreddit(subreddit);
+      allItems.push(...posts);
+
+      // Small delay between requests
+      await new Promise((r) => setTimeout(r, 500));
+    }
+
+    // Scrape one global migration subreddit (IWantOut is most relevant)
+    const iwantout = globalSubreddits.find((s) => s.name === "IWantOut");
+    if (iwantout) {
+      const posts = await scrapeSubreddit(iwantout);
+      // Filter for posts mentioning destination
+      const relevantPosts = posts.filter((post) => {
+        const text = (post.title + " " + post.snippet).toLowerCase();
+        return text.includes(destination.toLowerCase()) || text.includes(destinationCode.toLowerCase());
+      });
+      allItems.push(...relevantPosts.slice(0, 5));
+    }
+
+    // Scrape expat forums (limit to 1)
+    if (expatForums.length > 0) {
+      const forumPosts = await scrapeExpatForum(expatForums[0], destination);
+      allItems.push(...forumPosts);
+    }
+
+    console.log(`Total items collected: ${allItems.length}`);
 
     // Deduplicate by URL
     const seenUrls = new Set<string>();
-    const uniquePosts = allPosts.filter((post) => {
-      const url = `https://reddit.com${post.permalink}`;
-      if (seenUrls.has(url)) return false;
-      seenUrls.add(url);
+    const uniqueItems = allItems.filter((item) => {
+      if (seenUrls.has(item.url)) return false;
+      seenUrls.add(item.url);
       return true;
     });
 
-    // Sort by score and recency
-    uniquePosts.sort((a, b) => {
-      // Prioritize recent high-engagement posts
-      const aScore = a.score + a.num_comments * 2;
-      const bScore = b.score + b.num_comments * 2;
-      return bScore - aScore;
-    });
-
-    // Convert to feed items
-    const feedItems: FeedItem[] = uniquePosts.slice(0, 15).map((post) => {
-      const alert = detectAlert(post.title, post.selftext);
-      return {
-        source: "reddit" as const,
-        title: post.title,
-        snippet: post.selftext.slice(0, 200) + (post.selftext.length > 200 ? "..." : ""),
-        url: `https://reddit.com${post.permalink}`,
-        author: post.author,
-        subreddit: post.subreddit,
-        upvotes: post.score,
-        comments: post.num_comments,
-        ...alert,
-      };
-    });
+    // Take top 15 items
+    const feedItems = uniqueItems.slice(0, 15);
 
     // Save to Convex (use codes for storage)
     for (const item of feedItems) {

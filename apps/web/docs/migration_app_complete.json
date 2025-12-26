@@ -1,0 +1,2811 @@
+{
+  "version": "1.0",
+  "lastUpdated": "2025-12-26",
+  "description": "Comprehensive migration and expat app data including countries, Reddit communities, and scrapable forums",
+  "regions": [
+    {
+      "name": "Asia",
+      "countries": [
+        {
+          "country": "Afghanistan",
+          "isoCode": "AF",
+          "subreddits": [
+            {
+              "name": "afghanistan",
+              "url": "https://www.reddit.com/r/afghanistan/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Armenia",
+          "isoCode": "AM",
+          "subreddits": [
+            {
+              "name": "armenia",
+              "url": "https://www.reddit.com/r/armenia/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Azerbaijan",
+          "isoCode": "AZ",
+          "subreddits": [
+            {
+              "name": "azerbaijan",
+              "url": "https://www.reddit.com/r/azerbaijan/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Bahrain",
+          "isoCode": "BH",
+          "subreddits": [
+            {
+              "name": "bahrain",
+              "url": "https://www.reddit.com/r/bahrain/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Bangladesh",
+          "isoCode": "BD",
+          "subreddits": [
+            {
+              "name": "bangladesh",
+              "url": "https://www.reddit.com/r/bangladesh/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Bhutan",
+          "isoCode": "BT",
+          "subreddits": [
+            {
+              "name": "bhutan",
+              "url": "https://www.reddit.com/r/bhutan/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Brunei",
+          "isoCode": "BN",
+          "subreddits": [
+            {
+              "name": "brunei",
+              "url": "https://www.reddit.com/r/brunei/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Cambodia",
+          "isoCode": "KH",
+          "subreddits": [
+            {
+              "name": "cambodia",
+              "url": "https://www.reddit.com/r/cambodia/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "China",
+          "isoCode": "CN",
+          "subreddits": [
+            {
+              "name": "China",
+              "url": "https://www.reddit.com/r/China/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Georgia",
+          "isoCode": "GE",
+          "subreddits": [
+            {
+              "name": "Abkhazia",
+              "url": "https://www.reddit.com/r/Abkhazia/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "India",
+          "isoCode": "IN",
+          "subreddits": [
+            {
+              "name": "india",
+              "url": "https://www.reddit.com/r/india/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Indonesia",
+          "isoCode": "ID",
+          "subreddits": [
+            {
+              "name": "indonesia",
+              "url": "https://www.reddit.com/r/indonesia/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Iran",
+          "isoCode": "IR",
+          "subreddits": [
+            {
+              "name": "iran",
+              "url": "https://www.reddit.com/r/iran/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Iraq",
+          "isoCode": "IQ",
+          "subreddits": [
+            {
+              "name": "iraq",
+              "url": "https://www.reddit.com/r/iraq/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            },
+            {
+              "name": "kurdistan",
+              "url": "https://www.reddit.com/r/kurdistan/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Israel",
+          "isoCode": "IL",
+          "subreddits": [
+            {
+              "name": "Israel",
+              "url": "https://www.reddit.com/r/Israel/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Japan",
+          "isoCode": "JP",
+          "subreddits": [
+            {
+              "name": "japan",
+              "url": "https://www.reddit.com/r/japan/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Jordan",
+          "isoCode": "JO",
+          "subreddits": [
+            {
+              "name": "jordan",
+              "url": "https://www.reddit.com/r/jordan/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Kazakhstan",
+          "isoCode": "KZ",
+          "subreddits": [
+            {
+              "name": "Kazakhstan",
+              "url": "https://www.reddit.com/r/Kazakhstan/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Kuwait",
+          "isoCode": "KW",
+          "subreddits": [
+            {
+              "name": "Kuwait",
+              "url": "https://www.reddit.com/r/Kuwait/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Kyrgyzstan",
+          "isoCode": "KG",
+          "subreddits": [
+            {
+              "name": "Kyrgyzstan",
+              "url": "https://www.reddit.com/r/Kyrgyzstan/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Laos",
+          "isoCode": "LA",
+          "subreddits": [
+            {
+              "name": "laos",
+              "url": "https://www.reddit.com/r/laos/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Lebanon",
+          "isoCode": "LB",
+          "subreddits": [
+            {
+              "name": "lebanon",
+              "url": "https://www.reddit.com/r/lebanon/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Malaysia",
+          "isoCode": "MY",
+          "subreddits": [
+            {
+              "name": "malaysia",
+              "url": "https://www.reddit.com/r/malaysia/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Maldives",
+          "isoCode": "MV",
+          "subreddits": [
+            {
+              "name": "maldives",
+              "url": "https://www.reddit.com/r/maldives/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Mongolia",
+          "isoCode": "MN",
+          "subreddits": [
+            {
+              "name": "mongolia",
+              "url": "https://www.reddit.com/r/mongolia/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Myanmar",
+          "isoCode": "MM",
+          "subreddits": [
+            {
+              "name": "burma",
+              "url": "https://www.reddit.com/r/burma/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Nepal",
+          "isoCode": "NP",
+          "subreddits": [
+            {
+              "name": "nepal",
+              "url": "https://www.reddit.com/r/nepal/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "North Korea",
+          "isoCode": "KP",
+          "subreddits": [
+            {
+              "name": "northkorea",
+              "url": "https://www.reddit.com/r/northkorea/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Oman",
+          "isoCode": "OM",
+          "subreddits": [
+            {
+              "name": "oman",
+              "url": "https://www.reddit.com/r/oman/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Pakistan",
+          "isoCode": "PK",
+          "subreddits": [
+            {
+              "name": "pakistan",
+              "url": "https://www.reddit.com/r/pakistan/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Palestine",
+          "isoCode": "PS",
+          "subreddits": [
+            {
+              "name": "palestine",
+              "url": "https://www.reddit.com/r/palestine/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Philippines",
+          "isoCode": "PH",
+          "subreddits": [
+            {
+              "name": "philippines",
+              "url": "https://www.reddit.com/r/philippines/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Qatar",
+          "isoCode": "QA",
+          "subreddits": [
+            {
+              "name": "qatar",
+              "url": "https://www.reddit.com/r/qatar/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Saudi Arabia",
+          "isoCode": "SA",
+          "subreddits": [
+            {
+              "name": "saudiarabia",
+              "url": "https://www.reddit.com/r/saudiarabia/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Singapore",
+          "isoCode": "SG",
+          "subreddits": [
+            {
+              "name": "singapore",
+              "url": "https://www.reddit.com/r/singapore/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "South Korea",
+          "isoCode": "KR",
+          "subreddits": [
+            {
+              "name": "hanguk",
+              "url": "https://www.reddit.com/r/hanguk/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            },
+            {
+              "name": "southkorea",
+              "url": "https://www.reddit.com/r/southkorea/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            },
+            {
+              "name": "korea",
+              "url": "https://www.reddit.com/r/korea/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Sri Lanka",
+          "isoCode": "LK",
+          "subreddits": [
+            {
+              "name": "srilanka",
+              "url": "https://www.reddit.com/r/srilanka/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Syria",
+          "isoCode": "SY",
+          "subreddits": [
+            {
+              "name": "Syria",
+              "url": "https://www.reddit.com/r/Syria/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Taiwan",
+          "isoCode": "TW",
+          "subreddits": [
+            {
+              "name": "taiwan",
+              "url": "https://www.reddit.com/r/taiwan/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Tajikistan",
+          "isoCode": "TJ",
+          "subreddits": [
+            {
+              "name": "tajikistan",
+              "url": "https://www.reddit.com/r/tajikistan/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Thailand",
+          "isoCode": "TH",
+          "subreddits": [
+            {
+              "name": "thailand",
+              "url": "https://www.reddit.com/r/thailand/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Timor-Leste",
+          "isoCode": "TL",
+          "subreddits": [
+            {
+              "name": "Timor",
+              "url": "https://www.reddit.com/r/Timor/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            },
+            {
+              "name": "timorleste",
+              "url": "https://www.reddit.com/r/timorleste/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            },
+            {
+              "name": "EastTimor",
+              "url": "https://www.reddit.com/r/EastTimor/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "United Arab Emirates",
+          "isoCode": "AE",
+          "subreddits": [
+            {
+              "name": "uae",
+              "url": "https://www.reddit.com/r/uae/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Uzbekistan",
+          "isoCode": "UZ",
+          "subreddits": [
+            {
+              "name": "uzbekistan",
+              "url": "https://www.reddit.com/r/uzbekistan/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Vietnam",
+          "isoCode": "VN",
+          "subreddits": [
+            {
+              "name": "vietnam",
+              "url": "https://www.reddit.com/r/vietnam/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Yemen",
+          "isoCode": "YE",
+          "subreddits": [
+            {
+              "name": "Yemen",
+              "url": "https://www.reddit.com/r/Yemen/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Europe",
+      "countries": [
+        {
+          "country": "Albania",
+          "isoCode": "AL",
+          "subreddits": [
+            {
+              "name": "albania",
+              "url": "https://www.reddit.com/r/albania/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Andorra",
+          "isoCode": "AD",
+          "subreddits": [
+            {
+              "name": "andorra",
+              "url": "https://www.reddit.com/r/andorra/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Austria",
+          "isoCode": "AT",
+          "subreddits": [
+            {
+              "name": "austria",
+              "url": "https://www.reddit.com/r/austria/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Belarus",
+          "isoCode": "BY",
+          "subreddits": [
+            {
+              "name": "belarus",
+              "url": "https://www.reddit.com/r/belarus/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Belgium",
+          "isoCode": "BE",
+          "subreddits": [
+            {
+              "name": "belgium",
+              "url": "https://www.reddit.com/r/belgium/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Bosnia and Herzegovina",
+          "isoCode": "BA",
+          "subreddits": [
+            {
+              "name": "bosnia",
+              "url": "https://www.reddit.com/r/bosnia/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            },
+            {
+              "name": "bih",
+              "url": "https://www.reddit.com/r/bih/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Bulgaria",
+          "isoCode": "BG",
+          "subreddits": [
+            {
+              "name": "bulgaria",
+              "url": "https://www.reddit.com/r/bulgaria/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Croatia",
+          "isoCode": "HR",
+          "subreddits": [
+            {
+              "name": "croatia",
+              "url": "https://www.reddit.com/r/croatia/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Cyprus",
+          "isoCode": "CY",
+          "subreddits": [
+            {
+              "name": "cyprus",
+              "url": "https://www.reddit.com/r/cyprus/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Czech Republic",
+          "isoCode": "CZ",
+          "subreddits": [
+            {
+              "name": "czech",
+              "url": "https://www.reddit.com/r/czech/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Denmark",
+          "isoCode": "DK",
+          "subreddits": [
+            {
+              "name": "Denmark",
+              "url": "https://www.reddit.com/r/Denmark/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Estonia",
+          "isoCode": "EE",
+          "subreddits": [
+            {
+              "name": "Eesti",
+              "url": "https://www.reddit.com/r/Eesti/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Faroe Islands",
+          "isoCode": "FO",
+          "subreddits": [
+            {
+              "name": "FaroeIslands",
+              "url": "https://www.reddit.com/r/FaroeIslands/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Finland",
+          "isoCode": "FI",
+          "subreddits": [
+            {
+              "name": "Finland",
+              "url": "https://www.reddit.com/r/Finland/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "France",
+          "isoCode": "FR",
+          "subreddits": [
+            {
+              "name": "france",
+              "url": "https://www.reddit.com/r/france/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Germany",
+          "isoCode": "DE",
+          "subreddits": [
+            {
+              "name": "de",
+              "url": "https://www.reddit.com/r/de/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            },
+            {
+              "name": "germany",
+              "url": "https://www.reddit.com/r/germany/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Gibraltar",
+          "isoCode": "GI",
+          "subreddits": [
+            {
+              "name": "gibraltar",
+              "url": "https://www.reddit.com/r/gibraltar/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Greece",
+          "isoCode": "GR",
+          "subreddits": [
+            {
+              "name": "greece",
+              "url": "https://www.reddit.com/r/greece/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Greenland",
+          "isoCode": "GL",
+          "subreddits": [
+            {
+              "name": "greenland",
+              "url": "https://www.reddit.com/r/greenland/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Hungary",
+          "isoCode": "HU",
+          "subreddits": [
+            {
+              "name": "hungary",
+              "url": "https://www.reddit.com/r/hungary/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Iceland",
+          "isoCode": "IS",
+          "subreddits": [
+            {
+              "name": "iceland",
+              "url": "https://www.reddit.com/r/iceland/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Ireland",
+          "isoCode": "IE",
+          "subreddits": [
+            {
+              "name": "ireland",
+              "url": "https://www.reddit.com/r/ireland/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Italy",
+          "isoCode": "IT",
+          "subreddits": [
+            {
+              "name": "italy",
+              "url": "https://www.reddit.com/r/italy/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            },
+            {
+              "name": "italia",
+              "url": "https://www.reddit.com/r/italia/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Kosovo",
+          "isoCode": "XK",
+          "subreddits": [
+            {
+              "name": "kosovo",
+              "url": "https://www.reddit.com/r/kosovo/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Latvia",
+          "isoCode": "LV",
+          "subreddits": [
+            {
+              "name": "latvia",
+              "url": "https://www.reddit.com/r/latvia/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Liechtenstein",
+          "isoCode": "LI",
+          "subreddits": [
+            {
+              "name": "liechtenstein",
+              "url": "https://www.reddit.com/r/liechtenstein/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Lithuania",
+          "isoCode": "LT",
+          "subreddits": [
+            {
+              "name": "lithuania",
+              "url": "https://www.reddit.com/r/lithuania/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Luxembourg",
+          "isoCode": "LU",
+          "subreddits": [
+            {
+              "name": "luxembourg",
+              "url": "https://www.reddit.com/r/luxembourg/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Malta",
+          "isoCode": "MT",
+          "subreddits": [
+            {
+              "name": "malta",
+              "url": "https://www.reddit.com/r/malta/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Moldova",
+          "isoCode": "MD",
+          "subreddits": [
+            {
+              "name": "moldova",
+              "url": "https://www.reddit.com/r/moldova/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            },
+            {
+              "name": "Transnistria",
+              "url": "https://www.reddit.com/r/Transnistria/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            },
+            {
+              "name": "transdniestria",
+              "url": "https://www.reddit.com/r/transdniestria/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Monaco",
+          "isoCode": "MC",
+          "subreddits": [
+            {
+              "name": "Monaco",
+              "url": "https://www.reddit.com/r/Monaco/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Montenegro",
+          "isoCode": "ME",
+          "subreddits": [
+            {
+              "name": "montenegro",
+              "url": "https://www.reddit.com/r/montenegro/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Netherlands",
+          "isoCode": "NL",
+          "subreddits": [
+            {
+              "name": "thenetherlands",
+              "url": "https://www.reddit.com/r/thenetherlands/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            },
+            {
+              "name": "nederlands",
+              "url": "https://www.reddit.com/r/nederlands/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "North Macedonia",
+          "isoCode": "MK",
+          "subreddits": [
+            {
+              "name": "macedonia",
+              "url": "https://www.reddit.com/r/macedonia/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Norway",
+          "isoCode": "NO",
+          "subreddits": [
+            {
+              "name": "norge",
+              "url": "https://www.reddit.com/r/norge/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            },
+            {
+              "name": "norway",
+              "url": "https://www.reddit.com/r/norway/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Poland",
+          "isoCode": "PL",
+          "subreddits": [
+            {
+              "name": "Polska",
+              "url": "https://www.reddit.com/r/Polska/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            },
+            {
+              "name": "poland",
+              "url": "https://www.reddit.com/r/poland/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Portugal",
+          "isoCode": "PT",
+          "subreddits": [
+            {
+              "name": "portugal",
+              "url": "https://www.reddit.com/r/portugal/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Romania",
+          "isoCode": "RO",
+          "subreddits": [
+            {
+              "name": "romania",
+              "url": "https://www.reddit.com/r/romania/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            },
+            {
+              "name": "roumania",
+              "url": "https://www.reddit.com/r/roumania/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Russia",
+          "isoCode": "RU",
+          "subreddits": [
+            {
+              "name": "rossiya",
+              "url": "https://www.reddit.com/r/rossiya/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            },
+            {
+              "name": "russia",
+              "url": "https://www.reddit.com/r/russia/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "San Marino",
+          "isoCode": "SM",
+          "subreddits": [
+            {
+              "name": "San_Marino",
+              "url": "https://www.reddit.com/r/San_Marino/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Serbia",
+          "isoCode": "RS",
+          "subreddits": [
+            {
+              "name": "serbia",
+              "url": "https://www.reddit.com/r/serbia/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            },
+            {
+              "name": "srbija",
+              "url": "https://www.reddit.com/r/srbija/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Slovakia",
+          "isoCode": "SK",
+          "subreddits": [
+            {
+              "name": "slovakia",
+              "url": "https://www.reddit.com/r/slovakia/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Slovenia",
+          "isoCode": "SI",
+          "subreddits": [
+            {
+              "name": "slovenia",
+              "url": "https://www.reddit.com/r/slovenia/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Spain",
+          "isoCode": "ES",
+          "subreddits": [
+            {
+              "name": "spain",
+              "url": "https://www.reddit.com/r/spain/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            },
+            {
+              "name": "espana",
+              "url": "https://www.reddit.com/r/espana/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Sweden",
+          "isoCode": "SE",
+          "subreddits": [
+            {
+              "name": "sweden",
+              "url": "https://www.reddit.com/r/sweden/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            },
+            {
+              "name": "schweden",
+              "url": "https://www.reddit.com/r/schweden/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Switzerland",
+          "isoCode": "CH",
+          "subreddits": [
+            {
+              "name": "switzerland",
+              "url": "https://www.reddit.com/r/switzerland/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            },
+            {
+              "name": "suisse",
+              "url": "https://www.reddit.com/r/suisse/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Turkey",
+          "isoCode": "TR",
+          "subreddits": [
+            {
+              "name": "turkey",
+              "url": "https://www.reddit.com/r/turkey/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            },
+            {
+              "name": "Turkiye",
+              "url": "https://www.reddit.com/r/Turkiye/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Ukraine",
+          "isoCode": "UA",
+          "subreddits": [
+            {
+              "name": "ukraine",
+              "url": "https://www.reddit.com/r/ukraine/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            },
+            {
+              "name": "ukraina",
+              "url": "https://www.reddit.com/r/ukraina/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "United Kingdom",
+          "isoCode": "GB",
+          "subreddits": [
+            {
+              "name": "unitedkingdom",
+              "url": "https://www.reddit.com/r/unitedkingdom/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            },
+            {
+              "name": "Britain",
+              "url": "https://www.reddit.com/r/Britain/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            },
+            {
+              "name": "TheBritishIsles",
+              "url": "https://www.reddit.com/r/TheBritishIsles/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Vatican City",
+          "isoCode": "VA",
+          "subreddits": [
+            {
+              "name": "vatican",
+              "url": "https://www.reddit.com/r/vatican/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "North America",
+      "countries": [
+        {
+          "country": "Bahamas",
+          "isoCode": "BS",
+          "subreddits": [
+            {
+              "name": "bahamas",
+              "url": "https://www.reddit.com/r/bahamas/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Canada",
+          "isoCode": "CA",
+          "subreddits": [
+            {
+              "name": "canada",
+              "url": "https://www.reddit.com/r/canada/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            },
+            {
+              "name": "onguardforthee",
+              "url": "https://www.reddit.com/r/onguardforthee/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Costa Rica",
+          "isoCode": "CR",
+          "subreddits": [
+            {
+              "name": "costarica",
+              "url": "https://www.reddit.com/r/costarica/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Cuba",
+          "isoCode": "CU",
+          "subreddits": [
+            {
+              "name": "cuba",
+              "url": "https://www.reddit.com/r/cuba/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "El Salvador",
+          "isoCode": "SV",
+          "subreddits": [
+            {
+              "name": "ElSalvador",
+              "url": "https://www.reddit.com/r/ElSalvador/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Haiti",
+          "isoCode": "HT",
+          "subreddits": [
+            {
+              "name": "haiti",
+              "url": "https://www.reddit.com/r/haiti/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Mexico",
+          "isoCode": "MX",
+          "subreddits": [
+            {
+              "name": "mexico",
+              "url": "https://www.reddit.com/r/mexico/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Nicaragua",
+          "isoCode": "NI",
+          "subreddits": [
+            {
+              "name": "Nicaragua",
+              "url": "https://www.reddit.com/r/Nicaragua/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Panama",
+          "isoCode": "PA",
+          "subreddits": [
+            {
+              "name": "Panama",
+              "url": "https://www.reddit.com/r/Panama/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Puerto Rico",
+          "isoCode": "PR",
+          "subreddits": [
+            {
+              "name": "PuertoRico",
+              "url": "https://www.reddit.com/r/PuertoRico/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "United States",
+          "isoCode": "US",
+          "subreddits": [
+            {
+              "name": "usa",
+              "url": "https://www.reddit.com/r/usa/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "South America",
+      "countries": [
+        {
+          "country": "Argentina",
+          "isoCode": "AR",
+          "subreddits": [
+            {
+              "name": "argentina",
+              "url": "https://www.reddit.com/r/argentina/",
+              "type": "country_general",
+              "language": "English/Spanish",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Bolivia",
+          "isoCode": "BO",
+          "subreddits": [
+            {
+              "name": "BOLIVIA",
+              "url": "https://www.reddit.com/r/BOLIVIA/",
+              "type": "country_general",
+              "language": "English/Spanish",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Brazil",
+          "isoCode": "BR",
+          "subreddits": [
+            {
+              "name": "brasil",
+              "url": "https://www.reddit.com/r/brasil/",
+              "type": "country_general",
+              "language": "English/Portuguese",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Chile",
+          "isoCode": "CL",
+          "subreddits": [
+            {
+              "name": "chile",
+              "url": "https://www.reddit.com/r/chile/",
+              "type": "country_general",
+              "language": "English/Spanish",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Colombia",
+          "isoCode": "CO",
+          "subreddits": [
+            {
+              "name": "colombia",
+              "url": "https://www.reddit.com/r/colombia/",
+              "type": "country_general",
+              "language": "English/Spanish",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Ecuador",
+          "isoCode": "EC",
+          "subreddits": [
+            {
+              "name": "ecuador",
+              "url": "https://www.reddit.com/r/ecuador/",
+              "type": "country_general",
+              "language": "English/Spanish",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Guyana",
+          "isoCode": "GY",
+          "subreddits": [
+            {
+              "name": "guyana",
+              "url": "https://www.reddit.com/r/guyana/",
+              "type": "country_general",
+              "language": "English/Spanish",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Paraguay",
+          "isoCode": "PY",
+          "subreddits": [
+            {
+              "name": "paraguay",
+              "url": "https://www.reddit.com/r/paraguay/",
+              "type": "country_general",
+              "language": "English/Spanish",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Peru",
+          "isoCode": "PE",
+          "subreddits": [
+            {
+              "name": "PERU",
+              "url": "https://www.reddit.com/r/PERU/",
+              "type": "country_general",
+              "language": "English/Spanish",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Suriname",
+          "isoCode": "SR",
+          "subreddits": [
+            {
+              "name": "suriname",
+              "url": "https://www.reddit.com/r/suriname/",
+              "type": "country_general",
+              "language": "English/Spanish",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Uruguay",
+          "isoCode": "UY",
+          "subreddits": [
+            {
+              "name": "uruguay",
+              "url": "https://www.reddit.com/r/uruguay/",
+              "type": "country_general",
+              "language": "English/Spanish",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Venezuela",
+          "isoCode": "VE",
+          "subreddits": [
+            {
+              "name": "vzla",
+              "url": "https://www.reddit.com/r/vzla/",
+              "type": "country_general",
+              "language": "English/Spanish",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Africa",
+      "countries": [
+        {
+          "country": "Algeria",
+          "isoCode": "DZ",
+          "subreddits": [
+            {
+              "name": "algeria",
+              "url": "https://www.reddit.com/r/algeria/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Angola",
+          "isoCode": "AO",
+          "subreddits": [
+            {
+              "name": "Angola",
+              "url": "https://www.reddit.com/r/Angola/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Burundi",
+          "isoCode": "BI",
+          "subreddits": [
+            {
+              "name": "Burundi",
+              "url": "https://www.reddit.com/r/Burundi/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Cameroon",
+          "isoCode": "CM",
+          "subreddits": [
+            {
+              "name": "Cameroon",
+              "url": "https://www.reddit.com/r/Cameroon/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Cape Verde",
+          "isoCode": "CV",
+          "subreddits": [
+            {
+              "name": "CapeVerde",
+              "url": "https://www.reddit.com/r/CapeVerde/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Central African Republic",
+          "isoCode": "CF",
+          "subreddits": [
+            {
+              "name": "CAR_",
+              "url": "https://www.reddit.com/r/CAR_/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Congo",
+          "isoCode": "CG",
+          "subreddits": [
+            {
+              "name": "Congo",
+              "url": "https://www.reddit.com/r/Congo/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Djibouti",
+          "isoCode": "DJ",
+          "subreddits": [
+            {
+              "name": "Djibouti",
+              "url": "https://www.reddit.com/r/Djibouti/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Egypt",
+          "isoCode": "EG",
+          "subreddits": [
+            {
+              "name": "Egypt",
+              "url": "https://www.reddit.com/r/Egypt/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Eritrea",
+          "isoCode": "ER",
+          "subreddits": [
+            {
+              "name": "Eritrea",
+              "url": "https://www.reddit.com/r/Eritrea/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Eswatini",
+          "isoCode": "SZ",
+          "subreddits": [
+            {
+              "name": "Swaziland",
+              "url": "https://www.reddit.com/r/Swaziland/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Ethiopia",
+          "isoCode": "ET",
+          "subreddits": [
+            {
+              "name": "Ethiopia",
+              "url": "https://www.reddit.com/r/Ethiopia/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Gabon",
+          "isoCode": "GA",
+          "subreddits": [
+            {
+              "name": "GABON",
+              "url": "https://www.reddit.com/r/GABON/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Gambia",
+          "isoCode": "GM",
+          "subreddits": [
+            {
+              "name": "Gambia",
+              "url": "https://www.reddit.com/r/Gambia/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Ghana",
+          "isoCode": "GH",
+          "subreddits": [
+            {
+              "name": "ghana",
+              "url": "https://www.reddit.com/r/ghana/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Ivory Coast",
+          "isoCode": "CI",
+          "subreddits": [
+            {
+              "name": "IvoryCoast",
+              "url": "https://www.reddit.com/r/IvoryCoast/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Kenya",
+          "isoCode": "KE",
+          "subreddits": [
+            {
+              "name": "Kenya",
+              "url": "https://www.reddit.com/r/Kenya/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Lesotho",
+          "isoCode": "LS",
+          "subreddits": [
+            {
+              "name": "Lesotho",
+              "url": "https://www.reddit.com/r/Lesotho/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Liberia",
+          "isoCode": "LR",
+          "subreddits": [
+            {
+              "name": "Liberia",
+              "url": "https://www.reddit.com/r/Liberia/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Libya",
+          "isoCode": "LY",
+          "subreddits": [
+            {
+              "name": "Libya",
+              "url": "https://www.reddit.com/r/Libya/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Madagascar",
+          "isoCode": "MG",
+          "subreddits": [
+            {
+              "name": "Madagascar",
+              "url": "https://www.reddit.com/r/Madagascar/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Malawi",
+          "isoCode": "MW",
+          "subreddits": [
+            {
+              "name": "Malawi",
+              "url": "https://www.reddit.com/r/Malawi/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Mali",
+          "isoCode": "ML",
+          "subreddits": [
+            {
+              "name": "Mali",
+              "url": "https://www.reddit.com/r/Mali/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Mauritania",
+          "isoCode": "MR",
+          "subreddits": [
+            {
+              "name": "Mauritania",
+              "url": "https://www.reddit.com/r/Mauritania/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Morocco",
+          "isoCode": "MA",
+          "subreddits": [
+            {
+              "name": "Morocco",
+              "url": "https://www.reddit.com/r/Morocco/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Mozambique",
+          "isoCode": "MZ",
+          "subreddits": [
+            {
+              "name": "Mozambique",
+              "url": "https://www.reddit.com/r/Mozambique/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Namibia",
+          "isoCode": "NA",
+          "subreddits": [
+            {
+              "name": "Namibia",
+              "url": "https://www.reddit.com/r/Namibia/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Niger",
+          "isoCode": "NE",
+          "subreddits": [
+            {
+              "name": "Niger",
+              "url": "https://www.reddit.com/r/Niger/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Nigeria",
+          "isoCode": "NG",
+          "subreddits": [
+            {
+              "name": "Nigeria",
+              "url": "https://www.reddit.com/r/Nigeria/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            },
+            {
+              "name": "Biafra",
+              "url": "https://www.reddit.com/r/Biafra/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Republic of Congo",
+          "isoCode": "CG",
+          "subreddits": [
+            {
+              "name": "RepublicofCongo",
+              "url": "https://www.reddit.com/r/RepublicofCongo/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Rwanda",
+          "isoCode": "RW",
+          "subreddits": [
+            {
+              "name": "Rwanda",
+              "url": "https://www.reddit.com/r/Rwanda/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Senegal",
+          "isoCode": "SN",
+          "subreddits": [
+            {
+              "name": "Senegal",
+              "url": "https://www.reddit.com/r/Senegal/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Sierra Leone",
+          "isoCode": "SL",
+          "subreddits": [
+            {
+              "name": "SierraLeone",
+              "url": "https://www.reddit.com/r/SierraLeone/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Somalia",
+          "isoCode": "SO",
+          "subreddits": [
+            {
+              "name": "Somalia",
+              "url": "https://www.reddit.com/r/Somalia/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Somaliland",
+          "isoCode": "SO",
+          "subreddits": [
+            {
+              "name": "Somaliland",
+              "url": "https://www.reddit.com/r/Somaliland/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "South Africa",
+          "isoCode": "ZA",
+          "subreddits": [
+            {
+              "name": "southafrica",
+              "url": "https://www.reddit.com/r/southafrica/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "South Sudan",
+          "isoCode": "SS",
+          "subreddits": [
+            {
+              "name": "SouthSudan",
+              "url": "https://www.reddit.com/r/SouthSudan/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Sudan",
+          "isoCode": "SD",
+          "subreddits": [
+            {
+              "name": "Sudan",
+              "url": "https://www.reddit.com/r/Sudan/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Tanzania",
+          "isoCode": "TZ",
+          "subreddits": [
+            {
+              "name": "tanzania",
+              "url": "https://www.reddit.com/r/tanzania/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Togo",
+          "isoCode": "TG",
+          "subreddits": [
+            {
+              "name": "Togo",
+              "url": "https://www.reddit.com/r/Togo/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Tunisia",
+          "isoCode": "TN",
+          "subreddits": [
+            {
+              "name": "Tunisia",
+              "url": "https://www.reddit.com/r/Tunisia/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Uganda",
+          "isoCode": "UG",
+          "subreddits": [
+            {
+              "name": "Uganda",
+              "url": "https://www.reddit.com/r/Uganda/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Western Sahara",
+          "isoCode": "EH",
+          "subreddits": [
+            {
+              "name": "WesternSahara",
+              "url": "https://www.reddit.com/r/WesternSahara/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Zambia",
+          "isoCode": "ZM",
+          "subreddits": [
+            {
+              "name": "Zambia",
+              "url": "https://www.reddit.com/r/Zambia/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Zimbabwe",
+          "isoCode": "ZW",
+          "subreddits": [
+            {
+              "name": "Zimbabwe",
+              "url": "https://www.reddit.com/r/Zimbabwe/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Oceania",
+      "countries": [
+        {
+          "country": "American Samoa",
+          "isoCode": "AS",
+          "subreddits": [
+            {
+              "name": "AmericanSamoa",
+              "url": "https://www.reddit.com/r/AmericanSamoa/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Australia",
+          "isoCode": "AU",
+          "subreddits": [
+            {
+              "name": "australia",
+              "url": "https://www.reddit.com/r/australia/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Cook Islands",
+          "isoCode": "CK",
+          "subreddits": [
+            {
+              "name": "CookIslands",
+              "url": "https://www.reddit.com/r/CookIslands/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Fiji",
+          "isoCode": "FJ",
+          "subreddits": [
+            {
+              "name": "Fijian",
+              "url": "https://www.reddit.com/r/Fijian/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            },
+            {
+              "name": "Rotuman",
+              "url": "https://www.reddit.com/r/Rotuman/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "French Polynesia",
+          "isoCode": "PF",
+          "subreddits": [
+            {
+              "name": "Tahiti",
+              "url": "https://www.reddit.com/r/Tahiti/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Indonesia",
+          "isoCode": "ID",
+          "subreddits": [
+            {
+              "name": "westpapua",
+              "url": "https://www.reddit.com/r/westpapua/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "New Zealand",
+          "isoCode": "NZ",
+          "subreddits": [
+            {
+              "name": "newzealand",
+              "url": "https://www.reddit.com/r/newzealand/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Niue",
+          "isoCode": "NU",
+          "subreddits": [
+            {
+              "name": "Niue",
+              "url": "https://www.reddit.com/r/Niue/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Papua New Guinea",
+          "isoCode": "PG",
+          "subreddits": [
+            {
+              "name": "PNG",
+              "url": "https://www.reddit.com/r/PNG/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Samoa",
+          "isoCode": "WS",
+          "subreddits": [
+            {
+              "name": "Samoa",
+              "url": "https://www.reddit.com/r/Samoa/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Solomon Islands",
+          "isoCode": "SB",
+          "subreddits": [
+            {
+              "name": "Solomon_Islands",
+              "url": "https://www.reddit.com/r/Solomon_Islands/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        },
+        {
+          "country": "Tonga",
+          "isoCode": "TO",
+          "subreddits": [
+            {
+              "name": "Tonga",
+              "url": "https://www.reddit.com/r/Tonga/",
+              "type": "country_general",
+              "language": "English",
+              "notes": "Country subreddit with discussions on living, working, and migrating."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "global_migration_subreddits": [
+    {
+      "name": "IWantOut",
+      "url": "https://www.reddit.com/r/IWantOut/",
+      "type": "global_migration",
+      "language": "English",
+      "notes": "People planning to emigrate from their home country; useful for early-stage research."
+    },
+    {
+      "name": "expat",
+      "url": "https://www.reddit.com/r/expat/",
+      "type": "global_migration",
+      "language": "English",
+      "notes": "General expat life questions from all over the world."
+    },
+    {
+      "name": "digitalnomad",
+      "url": "https://www.reddit.com/r/digitalnomad/",
+      "type": "global_migration",
+      "language": "English",
+      "notes": "Remote workers moving between countries, often sharing visa and cost-of-living info."
+    },
+    {
+      "name": "immigration",
+      "url": "https://www.reddit.com/r/immigration/",
+      "type": "global_migration",
+      "language": "English",
+      "notes": "General immigration discussions and advice."
+    },
+    {
+      "name": "expats",
+      "url": "https://www.reddit.com/r/expats/",
+      "type": "global_migration",
+      "language": "English",
+      "notes": "Expat community sharing experiences and advice."
+    }
+  ],
+  "migration_forums": [
+    {
+      "name": "Expat Forum",
+      "url": "https://www.expatforum.com/",
+      "type": "general_forum",
+      "language": "English",
+      "scrapable": true,
+      "notes": "Large expat community (474K+ members) with country-specific sections for visa, residency, and living abroad discussions.",
+      "sections": [
+        {
+          "name": "Europe",
+          "url": "https://www.expatforum.com/forums/europe.13/"
+        },
+        {
+          "name": "Asia",
+          "url": "https://www.expatforum.com/forums/asia.15/"
+        },
+        {
+          "name": "Americas",
+          "url": "https://www.expatforum.com/forums/americas.14/"
+        },
+        {
+          "name": "Middle East",
+          "url": "https://www.expatforum.com/forums/middle-east.16/"
+        },
+        {
+          "name": "Africa",
+          "url": "https://www.expatforum.com/forums/africa.17/"
+        },
+        {
+          "name": "Oceania",
+          "url": "https://www.expatforum.com/forums/oceania.18/"
+        }
+      ]
+    },
+    {
+      "name": "Expat Exchange",
+      "url": "https://www.expatexchange.com/",
+      "type": "general_forum",
+      "language": "English",
+      "scrapable": true,
+      "notes": "Comprehensive expat resource with country forums, city guides, and moving abroad advice."
+    },
+    {
+      "name": "InterNations",
+      "url": "https://www.internations.org/",
+      "type": "community_network",
+      "language": "Multiple",
+      "scrapable": false,
+      "notes": "Global expat network in 420 cities; requires membership for full access."
+    },
+    {
+      "name": "CanadaVisa Forum",
+      "url": "https://www.canadavisa.com/canada-immigration-discussion-board/",
+      "type": "country_specific",
+      "country": "Canada",
+      "isoCode": "CA",
+      "language": "English",
+      "scrapable": true,
+      "notes": "Dedicated Canadian immigration forum covering Express Entry, PNP, work permits, and citizenship.",
+      "sections": [
+        {
+          "name": "Express Entry",
+          "url": "https://www.canadavisa.com/canada-immigration-discussion-board/forums/express-entry-expression-of-interest.54/"
+        },
+        {
+          "name": "Provincial Nominee Programs",
+          "url": "https://www.canadavisa.com/canada-immigration-discussion-board/forums/provincial-nominee-program.6/"
+        },
+        {
+          "name": "Work Permits",
+          "url": "https://www.canadavisa.com/canada-immigration-discussion-board/forums/work-permits.7/"
+        }
+      ]
+    },
+    {
+      "name": "Immigration Boards UK",
+      "url": "https://www.immigrationboards.com/",
+      "type": "country_specific",
+      "country": "United Kingdom",
+      "isoCode": "GB",
+      "language": "English",
+      "scrapable": true,
+      "notes": "UK immigration forum covering visas, ILR, citizenship, and European immigration topics."
+    },
+    {
+      "name": "Australia Forum",
+      "url": "https://www.australiaforum.com/",
+      "type": "country_specific",
+      "country": "Australia",
+      "isoCode": "AU",
+      "language": "English",
+      "scrapable": true,
+      "notes": "Australian expat and immigration forum with sections on skilled migration, partner visas, and living in Australia.",
+      "sections": [
+        {
+          "name": "Skilled Migration",
+          "url": "https://www.australiaforum.com/forums/skilled-and-work-application.52/"
+        },
+        {
+          "name": "Partner Visas",
+          "url": "https://www.australiaforum.com/forums/partner-visa-application.53/"
+        }
+      ]
+    },
+    {
+      "name": "ImmiHelp Forum",
+      "url": "https://www.immihelp.com/forum/",
+      "type": "general_forum",
+      "language": "English",
+      "scrapable": true,
+      "notes": "Immigration forum covering multiple countries including US, Canada, UK, Schengen, and Asia."
+    },
+    {
+      "name": "Immigration.com Forums",
+      "url": "https://forums.immigration.com/",
+      "type": "country_specific",
+      "country": "United States",
+      "isoCode": "US",
+      "language": "English",
+      "scrapable": true,
+      "notes": "US immigration forum with legal advice from immigration attorneys; covers green cards, work visas, citizenship."
+    },
+    {
+      "name": "Germany Handbook Forum",
+      "url": "https://handbookgermany.de/en/forum/",
+      "type": "country_specific",
+      "country": "Germany",
+      "isoCode": "DE",
+      "language": "English/German",
+      "scrapable": true,
+      "notes": "Forum for people living in Germany covering visas, work permits, integration, and daily life."
+    },
+    {
+      "name": "Expats Portugal Forum",
+      "url": "https://expatsportugal.com/new-forum/",
+      "type": "country_specific",
+      "country": "Portugal",
+      "isoCode": "PT",
+      "language": "English",
+      "scrapable": true,
+      "notes": "Portugal expat community discussing D7 visas, Golden Visa, NHR tax regime, and living in Portugal."
+    },
+    {
+      "name": "Spain Expat Forum",
+      "url": "https://www.expatforum.com/forums/spain-expat-forum-for-expats-living-in-spain.11/",
+      "type": "country_specific",
+      "country": "Spain",
+      "isoCode": "ES",
+      "language": "English",
+      "scrapable": true,
+      "notes": "Spain-specific section of Expat Forum covering visas, residency, healthcare, and regional living."
+    },
+    {
+      "name": "France Forum",
+      "url": "https://www.expatforum.com/forums/france-expat-forum-for-expats-living-in-france.9/",
+      "type": "country_specific",
+      "country": "France",
+      "isoCode": "FR",
+      "language": "English",
+      "scrapable": true,
+      "notes": "France expat discussions on visas, work permits, healthcare, and French bureaucracy."
+    },
+    {
+      "name": "Italy Forum",
+      "url": "https://www.expatforum.com/forums/italy-expat-forum-for-expats-living-in-italy.10/",
+      "type": "country_specific",
+      "country": "Italy",
+      "isoCode": "IT",
+      "language": "English",
+      "scrapable": true,
+      "notes": "Italian expat community discussing visas, permesso di soggiorno, and Italian lifestyle."
+    },
+    {
+      "name": "Netherlands Expat Forum",
+      "url": "https://www.expatforum.com/forums/netherlands-expat-forum-for-expats-living-in-the-netherlands.23/",
+      "type": "country_specific",
+      "country": "Netherlands",
+      "isoCode": "NL",
+      "language": "English",
+      "scrapable": true,
+      "notes": "Dutch expat forum covering 30% ruling, highly skilled migrant visa, and living in the Netherlands."
+    },
+    {
+      "name": "Dubai Forum",
+      "url": "https://www.expatforum.com/forums/dubai-expat-forum-for-expats-living-in-dubai.19/",
+      "type": "country_specific",
+      "country": "United Arab Emirates",
+      "isoCode": "AE",
+      "language": "English",
+      "scrapable": true,
+      "notes": "UAE/Dubai expat community discussing work visas, employment, housing, and Middle East life."
+    },
+    {
+      "name": "Singapore Expats Forum",
+      "url": "https://www.singaporeexpats.com/forum/",
+      "type": "country_specific",
+      "country": "Singapore",
+      "isoCode": "SG",
+      "language": "English",
+      "scrapable": true,
+      "notes": "Singapore expat forum covering employment passes, PR, housing, education, and living in Singapore."
+    },
+    {
+      "name": "Thailand Visa Forum",
+      "url": "https://www.thaivisa.com/forum/",
+      "type": "country_specific",
+      "country": "Thailand",
+      "isoCode": "TH",
+      "language": "English",
+      "scrapable": true,
+      "notes": "Thailand visa and expat forum covering retirement visas, work permits, and living in Thailand."
+    },
+    {
+      "name": "Japan Forum",
+      "url": "https://www.expatforum.com/forums/japan-expat-forum-for-expats-living-in-japan.12/",
+      "type": "country_specific",
+      "country": "Japan",
+      "isoCode": "JP",
+      "language": "English",
+      "scrapable": true,
+      "notes": "Japan expat discussions on work visas, teaching English, permanent residency, and Japanese culture."
+    },
+    {
+      "name": "Mexico Forum",
+      "url": "https://www.expatforum.com/forums/mexico-expat-forum-for-expats-living-in-mexico.8/",
+      "type": "country_specific",
+      "country": "Mexico",
+      "isoCode": "MX",
+      "language": "English",
+      "scrapable": true,
+      "notes": "Mexico expat community discussing temporary/permanent residency, living costs, and safety."
+    },
+    {
+      "name": "New Zealand Forum",
+      "url": "https://www.expatforum.com/forums/new-zealand-expat-forum-for-expats-living-in-new-zealand.7/",
+      "type": "country_specific",
+      "country": "New Zealand",
+      "isoCode": "NZ",
+      "language": "English",
+      "scrapable": true,
+      "notes": "New Zealand expat forum covering skilled migrant visas, work visas, and living in NZ."
+    }
+  ],
+  "firecrawl_scraping_guide": {
+    "recommended_strategy": "Use Firecrawl to scrape forum threads and posts for migration insights",
+    "rate_limiting": "Respect forum rate limits and robots.txt policies",
+    "data_extraction_focus": [
+      "Visa application processes and timelines",
+      "Cost of living comparisons",
+      "Job market insights and salary ranges",
+      "Housing and accommodation advice",
+      "Healthcare system experiences",
+      "Integration and cultural adaptation tips",
+      "Tax and legal requirements",
+      "Education system information",
+      "Common pitfalls and warnings"
+    ],
+    "update_frequency": "Weekly scraping recommended for active forums",
+    "content_types": [
+      "Forum threads and discussions",
+      "User experiences and testimonials",
+      "FAQ sections",
+      "Sticky posts and guides",
+      "Recent news and policy updates"
+    ]
+  }
+}

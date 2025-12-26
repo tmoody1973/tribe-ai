@@ -234,30 +234,35 @@ function parseRedditPosts(markdown: string, subredditName: string): FeedItem[] {
 }
 
 // Scrape a subreddit using Firecrawl
-async function scrapeSubreddit(subreddit: SubredditInfo): Promise<FeedItem[]> {
+async function scrapeSubreddit(subreddit: SubredditInfo, debugLog?: (msg: string) => void): Promise<FeedItem[]> {
+  const log = debugLog || console.log;
+
   try {
     // Use the /new endpoint to get recent posts
     const url = subreddit.url.replace(/\/$/, "") + "/new/";
 
-    console.log(`Scraping ${url}...`);
+    log(`Scraping ${url}...`);
 
     const result = await firecrawl.scrape(url, {
-      formats: ["markdown", "html"],
-      onlyMainContent: true, // Focus on main content, skip navigation
-      waitFor: 2000, // Wait for dynamic content to load
+      formats: ["markdown"],
+      onlyMainContent: false, // Get full page content for better parsing
+      waitFor: 1000,
     });
 
     if (!result.markdown) {
-      console.log(`Failed to scrape ${subreddit.name}: No content`);
+      log(`Failed to scrape ${subreddit.name}: No markdown returned`);
       return [];
     }
 
+    log(`Scraped ${result.markdown.length} chars from r/${subreddit.name}`);
+
     const posts = parseRedditPosts(result.markdown, subreddit.name);
-    console.log(`Found ${posts.length} posts from r/${subreddit.name}`);
+    log(`Found ${posts.length} posts from r/${subreddit.name}`);
 
     return posts;
   } catch (e) {
-    console.error(`Error scraping r/${subreddit.name}:`, e);
+    const error = e as Error;
+    log(`Error scraping r/${subreddit.name}: ${error.message}`);
     return [];
   }
 }
@@ -411,7 +416,7 @@ export async function GET(req: NextRequest) {
     const subredditsToScrape = countrySubreddits.slice(0, 2);
 
     for (const subreddit of subredditsToScrape) {
-      const posts = await scrapeSubreddit(subreddit);
+      const posts = await scrapeSubreddit(subreddit, log);
       allItems.push(...posts);
 
       // Small delay between requests
@@ -421,7 +426,7 @@ export async function GET(req: NextRequest) {
     // Scrape one global migration subreddit (IWantOut is most relevant)
     const iwantout = globalSubreddits.find((s) => s.name === "IWantOut");
     if (iwantout) {
-      const posts = await scrapeSubreddit(iwantout);
+      const posts = await scrapeSubreddit(iwantout, log);
       // Filter for posts mentioning destination
       const relevantPosts = posts.filter((post) => {
         const text = (post.title + " " + post.snippet).toLowerCase();

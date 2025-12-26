@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "convex/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useLocale } from "next-intl";
 import { useEffect } from "react";
 import { api } from "@/convex/_generated/api";
@@ -11,13 +11,16 @@ export default function OnboardingPage() {
   const profile = useQuery(api.users.getProfile);
   const router = useRouter();
   const locale = useLocale();
+  const searchParams = useSearchParams();
+  const isAddingNewJourney = searchParams.get("newJourney") === "true";
 
   useEffect(() => {
     // If user has already completed onboarding, redirect to dashboard
-    if (profile?.onboardingComplete) {
+    // UNLESS they're adding a new journey
+    if (profile?.onboardingComplete && !isAddingNewJourney) {
       router.push(`/${locale}/dashboard`);
     }
-  }, [profile, router, locale]);
+  }, [profile, router, locale, isAddingNewJourney]);
 
   // Loading state
   if (profile === undefined) {
@@ -30,8 +33,8 @@ export default function OnboardingPage() {
     );
   }
 
-  // If already onboarded, show loading while redirecting
-  if (profile?.onboardingComplete) {
+  // If already onboarded and NOT adding new journey, show loading while redirecting
+  if (profile?.onboardingComplete && !isAddingNewJourney) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="border-4 border-black bg-white p-8 shadow-brutal">
@@ -43,7 +46,7 @@ export default function OnboardingPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4">
-      <OnboardingWizard />
+      <OnboardingWizard isAddingNewJourney={isAddingNewJourney} />
     </div>
   );
 }

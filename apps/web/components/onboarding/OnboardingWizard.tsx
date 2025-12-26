@@ -13,7 +13,8 @@ import type { MigrationStage } from "@/lib/constants/stages";
 
 type Step = "origin" | "destination" | "stage" | "visa" | "culture";
 
-const steps: Step[] = ["origin", "destination", "stage", "visa", "culture"];
+const fullSteps: Step[] = ["origin", "destination", "stage", "visa", "culture"];
+const newJourneySteps: Step[] = ["origin", "destination", "stage", "visa"]; // Skip culture for new journeys
 
 interface InterviewState {
   questionNumber: number;
@@ -27,7 +28,11 @@ interface Message {
   content: string;
 }
 
-export function OnboardingWizard() {
+interface OnboardingWizardProps {
+  isAddingNewJourney?: boolean;
+}
+
+export function OnboardingWizard({ isAddingNewJourney = false }: OnboardingWizardProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({
     originCountry: "",
@@ -46,6 +51,7 @@ export function OnboardingWizard() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const completeOnboarding = useMutation(api.users.completeOnboarding);
+  const createJourney = useMutation(api.corridors.createJourney);
   const startInterview = useAction(api.cultural.interview.startInterview);
   const continueInterview = useAction(api.cultural.interview.continueInterview);
   const culturalProfile = useQuery(api.cultural.profile.getProfile);
@@ -54,6 +60,8 @@ export function OnboardingWizard() {
   const t = useTranslations("onboarding");
   const tCultural = useTranslations("cultural");
 
+  // Use different steps based on whether adding new journey
+  const steps = isAddingNewJourney ? newJourneySteps : fullSteps;
   const step = steps[currentStep];
 
   // Auto-scroll messages
@@ -102,12 +110,23 @@ export function OnboardingWizard() {
 
     setIsSubmitting(true);
     try {
-      await completeOnboarding({
-        originCountry: formData.originCountry,
-        destinationCountry: formData.destinationCountry,
-        stage: formData.stage,
-        visaType: formData.visaType || undefined,
-      });
+      if (isAddingNewJourney) {
+        // Create a new journey for existing user
+        await createJourney({
+          origin: formData.originCountry,
+          destination: formData.destinationCountry,
+          stage: formData.stage,
+          name: `${formData.originCountry} to ${formData.destinationCountry}`,
+        });
+      } else {
+        // First time onboarding
+        await completeOnboarding({
+          originCountry: formData.originCountry,
+          destinationCountry: formData.destinationCountry,
+          stage: formData.stage,
+          visaType: formData.visaType || undefined,
+        });
+      }
       router.push(`/${locale}/dashboard`);
     } catch (error) {
       console.error("Failed to complete onboarding:", error);
@@ -353,8 +372,12 @@ export function OnboardingWizard() {
     <div className="max-w-lg mx-auto">
       <div className="border-4 border-black bg-white p-6 shadow-brutal">
         <div className="text-center mb-8">
-          <h1 className="font-head text-3xl mb-2">{t("title")}</h1>
-          <p className="text-gray-600">{t("subtitle")}</p>
+          <h1 className="font-head text-3xl mb-2">
+            {isAddingNewJourney ? "Add New Journey" : t("title")}
+          </h1>
+          <p className="text-gray-600">
+            {isAddingNewJourney ? "Set up another migration corridor" : t("subtitle")}
+          </p>
         </div>
 
         <div className="mb-8">
@@ -406,8 +429,22 @@ export function OnboardingWizard() {
                 {isSubmitting ? t("buttons.completing") : t("buttons.complete")}
               </button>
             ) : null
-          ) : currentStep === steps.length - 2 ? (
-            // Visa step (before culture) - show Next
+          ) : isAddingNewJourney && step === "visa" ? (
+            // For new journeys, visa is the last step - show Complete
+            <button
+              type="button"
+              onClick={handleComplete}
+              disabled={isSubmitting}
+              className={`border-4 border-black px-6 py-2 font-bold transition-all ${
+                isSubmitting
+                  ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                  : "bg-black text-white shadow-brutal hover:shadow-none hover:translate-y-0.5"
+              }`}
+            >
+              {isSubmitting ? t("buttons.completing") : "Create Journey"}
+            </button>
+          ) : currentStep === steps.length - 2 && !isAddingNewJourney ? (
+            // Visa step (before culture) for regular onboarding - show Next
             <button
               type="button"
               onClick={handleNext}

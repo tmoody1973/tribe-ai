@@ -52,7 +52,7 @@ export function CorridorHeader({ corridor }: CorridorHeaderProps) {
         {/* Journey Switcher + Corridor Route */}
         <div className="flex items-center gap-4 flex-wrap">
           {/* Journey Switcher Dropdown */}
-          <JourneySwitcher onAddJourney={() => router.push(`/${locale}/onboarding`)} />
+          <JourneySwitcher onAddJourney={() => router.push(`/${locale}/onboarding?newJourney=true`)} />
 
           {/* Current Journey Display */}
           <div className="flex items-center gap-3">

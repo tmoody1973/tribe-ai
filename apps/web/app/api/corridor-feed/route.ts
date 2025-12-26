@@ -4,6 +4,71 @@ import { api } from "@/convex/_generated/api";
 
 const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 
+// Convert country codes to full names for Reddit search
+function getCountryName(code: string): string {
+  const countryNames: Record<string, string> = {
+    US: "United States",
+    JP: "Japan",
+    DE: "Germany",
+    GB: "United Kingdom",
+    UK: "United Kingdom",
+    CA: "Canada",
+    AU: "Australia",
+    FR: "France",
+    IT: "Italy",
+    ES: "Spain",
+    PT: "Portugal",
+    NL: "Netherlands",
+    BE: "Belgium",
+    CH: "Switzerland",
+    AT: "Austria",
+    SE: "Sweden",
+    NO: "Norway",
+    DK: "Denmark",
+    FI: "Finland",
+    IE: "Ireland",
+    NZ: "New Zealand",
+    SG: "Singapore",
+    HK: "Hong Kong",
+    KR: "South Korea",
+    CN: "China",
+    IN: "India",
+    BR: "Brazil",
+    MX: "Mexico",
+    AR: "Argentina",
+    CL: "Chile",
+    CO: "Colombia",
+    PE: "Peru",
+    ZA: "South Africa",
+    NG: "Nigeria",
+    KE: "Kenya",
+    GH: "Ghana",
+    EG: "Egypt",
+    MA: "Morocco",
+    AE: "United Arab Emirates",
+    SA: "Saudi Arabia",
+    IL: "Israel",
+    TR: "Turkey",
+    RU: "Russia",
+    PL: "Poland",
+    CZ: "Czech Republic",
+    HU: "Hungary",
+    RO: "Romania",
+    GR: "Greece",
+    TH: "Thailand",
+    VN: "Vietnam",
+    PH: "Philippines",
+    MY: "Malaysia",
+    ID: "Indonesia",
+    TW: "Taiwan",
+  };
+
+  // If it's already a full name (more than 3 characters), return as-is
+  if (code.length > 3) return code;
+
+  return countryNames[code.toUpperCase()] || code;
+}
+
 interface RedditPost {
   title: string;
   selftext: string;
@@ -167,35 +232,39 @@ async function fetchRedditPosts(
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const origin = searchParams.get("origin");
-  const destination = searchParams.get("destination");
+  const originCode = searchParams.get("origin");
+  const destinationCode = searchParams.get("destination");
   const forceRefresh = searchParams.get("refresh") === "true";
 
-  if (!origin || !destination) {
+  if (!originCode || !destinationCode) {
     return NextResponse.json(
       { error: "Origin and destination required" },
       { status: 400 }
     );
   }
 
+  // Convert country codes to full names for Reddit search
+  const origin = getCountryName(originCode);
+  const destination = getCountryName(destinationCode);
+
   try {
-    // Check if we need to refresh
+    // Check if we need to refresh (use original codes for cache key)
     const needsRefresh = forceRefresh || await convex.query(api.corridorFeed.needsRefresh, {
-      origin,
-      destination,
+      origin: originCode,
+      destination: destinationCode,
     });
 
     if (!needsRefresh) {
       // Return cached feed
       const cachedFeed = await convex.query(api.corridorFeed.getCorridorFeed, {
-        origin,
-        destination,
+        origin: originCode,
+        destination: destinationCode,
         limit: 15,
       });
 
       const stats = await convex.query(api.corridorFeed.getCorridorStats, {
-        origin,
-        destination,
+        origin: originCode,
+        destination: destinationCode,
       });
 
       return NextResponse.json({
@@ -253,12 +322,12 @@ export async function GET(req: NextRequest) {
       };
     });
 
-    // Save to Convex
+    // Save to Convex (use codes for storage)
     for (const item of feedItems) {
       try {
         await convex.mutation(api.corridorFeed.saveFeedItem, {
-          origin,
-          destination,
+          origin: originCode,
+          destination: destinationCode,
           ...item,
         });
       } catch (e) {
@@ -266,10 +335,10 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    // Get stats
+    // Get stats (use codes)
     const stats = await convex.query(api.corridorFeed.getCorridorStats, {
-      origin,
-      destination,
+      origin: originCode,
+      destination: destinationCode,
     });
 
     return NextResponse.json({
@@ -281,17 +350,17 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     console.error("Corridor feed error:", error);
 
-    // Return cached data on error
+    // Return cached data on error (use codes)
     try {
       const cachedFeed = await convex.query(api.corridorFeed.getCorridorFeed, {
-        origin,
-        destination,
+        origin: originCode,
+        destination: destinationCode,
         limit: 15,
       });
 
       const stats = await convex.query(api.corridorFeed.getCorridorStats, {
-        origin,
-        destination,
+        origin: originCode,
+        destination: destinationCode,
       });
 
       return NextResponse.json({

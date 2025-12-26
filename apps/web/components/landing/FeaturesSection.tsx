@@ -8,7 +8,11 @@ import {
   Languages,
   MessageSquare,
   FileCheck,
-  Lightbulb
+  Lightbulb,
+  Mic,
+  FolderLock,
+  LayoutGrid,
+  Calculator,
 } from "lucide-react";
 
 interface Feature {
@@ -17,6 +21,7 @@ interface Feature {
   description: string;
   color: string;
   bgColor: string;
+  badge?: string;
 }
 
 const features: Feature[] = [
@@ -28,11 +33,28 @@ const features: Feature[] = [
     bgColor: "bg-blue-100 border-l-blue-500",
   },
   {
-    icon: <Users className="w-6 h-6" />,
-    title: "Real Community Wisdom",
-    description: "Advice from people who've actually made the move, not just official guides.",
-    color: "text-green-600",
-    bgColor: "bg-green-100 border-l-green-500",
+    icon: <LayoutGrid className="w-6 h-6" />,
+    title: "Kanban Task Board",
+    description: "Drag-and-drop task management. Track your migration to-dos like a pro.",
+    color: "text-cyan-600",
+    bgColor: "bg-cyan-100 border-l-cyan-500",
+    badge: "New",
+  },
+  {
+    icon: <FolderLock className="w-6 h-6" />,
+    title: "Document Vault",
+    description: "Securely store passports, visas, and important docs. Access anywhere.",
+    color: "text-amber-600",
+    bgColor: "bg-amber-100 border-l-amber-500",
+    badge: "New",
+  },
+  {
+    icon: <Mic className="w-6 h-6" />,
+    title: "Voice Chat",
+    description: "Talk to TRIBE in your language. Ask questions, get spoken answers.",
+    color: "text-pink-600",
+    bgColor: "bg-pink-100 border-l-pink-500",
+    badge: "New",
   },
   {
     icon: <Shield className="w-6 h-6" />,
@@ -49,6 +71,14 @@ const features: Feature[] = [
     bgColor: "bg-yellow-100 border-l-yellow-500",
   },
   {
+    icon: <Calculator className="w-6 h-6" />,
+    title: "True Cost Calculator",
+    description: "Compare rent, groceries, and transport costs between countries. Know before you go.",
+    color: "text-emerald-600",
+    bgColor: "bg-emerald-100 border-l-emerald-500",
+    badge: "New",
+  },
+  {
     icon: <Languages className="w-6 h-6" />,
     title: "9 Languages",
     description: "English, Spanish, Portuguese, French, German, Hindi, Korean, Tagalog, Yoruba.",
@@ -57,24 +87,33 @@ const features: Feature[] = [
   },
   {
     icon: <MessageSquare className="w-6 h-6" />,
-    title: "Ask TRIBE Anything",
-    description: "Got a specific question? Our AI assistant knows your corridor inside out.",
-    color: "text-cyan-600",
-    bgColor: "bg-cyan-100 border-l-cyan-500",
+    title: "AI Step Assistant",
+    description: "Get personalized help on every protocol step. Your AI migration expert.",
+    color: "text-indigo-600",
+    bgColor: "bg-indigo-100 border-l-indigo-500",
+    badge: "New",
   },
   {
     icon: <FileCheck className="w-6 h-6" />,
-    title: "Step-by-Step Protocols",
-    description: "Not just what to do, but in what order. Prioritized checklists you can trust.",
+    title: "Document Checklists",
+    description: "AI-generated lists of required documents for each step. Never miss a paper.",
     color: "text-orange-600",
     bgColor: "bg-orange-100 border-l-orange-500",
+    badge: "New",
+  },
+  {
+    icon: <Users className="w-6 h-6" />,
+    title: "Real Community Wisdom",
+    description: "Advice from people who've actually made the move, not just official guides.",
+    color: "text-green-600",
+    bgColor: "bg-green-100 border-l-green-500",
   },
   {
     icon: <Zap className="w-6 h-6" />,
     title: "Always Up-to-Date",
     description: "Immigration rules change. We keep researching so your info stays fresh.",
-    color: "text-pink-600",
-    bgColor: "bg-pink-100 border-l-pink-500",
+    color: "text-rose-600",
+    bgColor: "bg-rose-100 border-l-rose-500",
   },
 ];
 
@@ -94,7 +133,7 @@ export function FeaturesSection({ title, subtitle }: FeaturesSectionProps) {
         </div>
 
         {/* Features grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-7xl mx-auto">
           {features.map((feature, i) => (
             <div
               key={i}
@@ -106,12 +145,19 @@ export function FeaturesSection({ title, subtitle }: FeaturesSectionProps) {
                 hover:translate-x-[2px] hover:translate-y-[2px]
                 transition-all duration-200
                 group
+                relative
               `}
             >
+              {/* New badge */}
+              {feature.badge && (
+                <div className="absolute -top-2 -right-2 bg-gradient-to-r from-green-400 to-emerald-500 text-white text-xs font-bold px-2 py-1 border-2 border-black shadow-[2px_2px_0_0_#000] rotate-3">
+                  {feature.badge}
+                </div>
+              )}
               <div className={`
                 w-12 h-12 rounded-lg flex items-center justify-center
                 bg-white border-2 border-black mb-4
-                group-hover:rotate-6 transition-transform
+                group-hover:rotate-6 group-hover:scale-110 transition-transform
                 ${feature.color}
               `}>
                 {feature.icon}

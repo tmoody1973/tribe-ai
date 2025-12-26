@@ -2,6 +2,8 @@ import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 import { HeroSection } from "@/components/landing/HeroSection";
 import { HowItWorksSection } from "@/components/landing/HowItWorksSection";
 import { FeaturesSection } from "@/components/landing/FeaturesSection";
+import { PowerToolsSection } from "@/components/landing/PowerToolsSection";
+import { DashboardPreviewSection } from "@/components/landing/DashboardPreviewSection";
 import { WhoIsItForSection } from "@/components/landing/WhoIsItForSection";
 import { CorridorsMapSection } from "@/components/landing/CorridorsMapSection";
 import { CTASection } from "@/components/landing/CTASection";
@@ -56,6 +58,19 @@ export default function Home() {
       <FeaturesSection
         title={t("features.title")}
         subtitle={t("features.subtitle")}
+      />
+
+      {/* Dashboard Preview */}
+      <DashboardPreviewSection
+        title={t("dashboardPreview.title")}
+        subtitle={t("dashboardPreview.subtitle")}
+        ctaText={t("dashboardPreview.cta")}
+      />
+
+      {/* Power Tools */}
+      <PowerToolsSection
+        title={t("powerTools.title")}
+        subtitle={t("powerTools.subtitle")}
       />
 
       {/* Who Is It For */}

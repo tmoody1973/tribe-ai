@@ -33,6 +33,15 @@
       "title": "Everything You Need",
       "subtitle": "We've thought of the questions you haven't even asked yet"
     },
+    "powerTools": {
+      "title": "Your Migration Toolkit",
+      "subtitle": "Powerful tools built specifically for migrants — all in one dashboard"
+    },
+    "dashboardPreview": {
+      "title": "Your Personal Migration Dashboard",
+      "subtitle": "Everything you need to track, plan, and execute your move — in one beautiful interface",
+      "cta": "Get Your Dashboard"
+    },
     "whoIsItFor": {
       "title": "Who Is TRIBE For?",
       "subtitle": "Whether you're dreaming, planning, moving, or settling — we've got your back"
@@ -180,6 +189,8 @@
     "saveProtocol": "Save to My Protocols",
     "unsaveProtocol": "Remove from saved",
     "restoreProtocol": "Restore to active",
+    "addToBoard": "Add to Task Board",
+    "onBoard": "On Task Board",
     "categories": {
       "visa": "Visa",
       "finance": "Finance",

@@ -12,6 +12,7 @@ Moving to a new country is overwhelming. Migrants face:
 - **Outdated guidance**: Immigration policies change constantly
 - **Generic advice**: One-size-fits-all information that doesn't account for specific corridors (e.g., Nigeria to Germany vs. Philippines to Canada)
 - **Language barriers**: Critical information often only available in the destination country's language
+- **Cultural shock**: No preparation for the cultural differences they'll encounter
 - **Stage-specific needs**: Someone just dreaming about moving needs different help than someone actively relocating
 
 ## The Solution
@@ -20,6 +21,7 @@ TRIBE creates personalized **Migration Protocols** - curated, prioritized action
 
 - Your origin and destination countries (migration corridor)
 - Your current stage in the journey (Dreaming, Planning, Preparing, Relocating, Settling)
+- Your cultural background and values
 - Real experiences from people who've made the same journey
 - Up-to-date official requirements and regulations
 
@@ -28,22 +30,50 @@ TRIBE creates personalized **Migration Protocols** - curated, prioritized action
 ### Core Features
 
 - **Migration Protocols**: AI-generated step-by-step guides organized by category (Visa, Finance, Housing, Employment, Legal, Health, Social)
+- **Multi-Journey Support**: Track up to 5 different migration corridors simultaneously (e.g., planning moves to both Germany and Canada)
 - **Stage-Based Journey**: Progress through 5 migration stages with protocols that adapt as you advance
 - **Protocol Archive**: Automatic archiving when you change stages, preserving your journey history
 - **Save for Later**: Bookmark important protocols with personal notes for future reference
-- **Migration Corridor Intelligence**: Specific guidance for your exact origin-destination pair
+- **Protocol Refresh**: Force-refresh protocols when your destination changes to get updated guidance
 
 ### AI-Powered Assistance
 
 - **Ask TRIBE Chat**: Natural language Q&A about immigration, visas, and cultural adaptation
 - **Voice Chat**: Multilingual voice conversations powered by Google Gemini Live API
+- **AI Step Assistant**: Get detailed AI-powered walkthroughs for any protocol step
 - **Smart Tools**: Generate document checklists, get step-by-step breakdowns, search government sources
-- **Contextual Understanding**: AI that knows your corridor, stage, and progress
+- **Cultural Decoder**: AI explains cultural misunderstandings from both perspectives
+- **Contextual Understanding**: AI that knows your corridor, stage, cultural profile, and progress
+
+### Cultural Intelligence
+
+- **Cultural Interview**: AI-guided 10-question interview during onboarding to understand your background
+- **Cultural Profile**: Captures communication style, family structure, time orientation, values, and traditions
+- **Cultural Bridge**: AI-powered comparison showing cultural dimensions between origin and destination
+- **Culturally-Aware Chat**: All AI responses tailored to your cultural context
+
+### Document Management
+
+- **Document Vault**: Secure storage for all your migration documents
+- **Smart Categories**: Organize by type (Passport, Visa, Identity, Education, Employment, Financial, Medical, Legal)
+- **Expiry Tracking**: Set expiry dates and get alerts for documents that need renewal
+- **Quick Access**: Search, filter, preview, and download documents
+
+### Dashboard Widgets
+
+- **Journey Map**: Interactive Mapbox visualization of your migration corridor
+- **Journey Switcher**: Easily switch between multiple migration journeys
+- **Quick Stats**: Visa requirements, language, currency, and timezone at a glance
+- **Visa Eligibility Quiz**: AI-powered assessment of your visa options
+- **True Cost Calculator**: Compare cost of living between origin and destination
+- **Salary Reality Check**: Understand what salaries really mean in your destination
+- **First 48 Hours Guide**: Critical tasks for your first days after arrival
+- **Emergency Info Card**: Important contacts and resources for emergencies
+- **Country Info Card**: Key facts about your destination country
 
 ### Personalization
 
 - **9 Languages Supported**: English, Yoruba, Hindi, Portuguese, Tagalog, Korean, German, French, Spanish
-- **Cultural Profiles**: AI-guided interview to understand your cultural background
 - **Auto-Speak**: Optional text-to-speech for AI responses in your language
 
 ### Progress Tracking
@@ -51,6 +81,7 @@ TRIBE creates personalized **Migration Protocols** - curated, prioritized action
 - **Journey Stats**: Overall completion rate across all stages
 - **Active/Archived/Saved Views**: Different perspectives on your protocols
 - **Protocol Status**: Track not started, in progress, completed, or blocked items
+- **Multi-Journey Progress**: See completion percentage for each journey
 
 ## Tech Stack
 
@@ -63,7 +94,7 @@ TRIBE creates personalized **Migration Protocols** - curated, prioritized action
 - **Mapbox GL** - Interactive corridor maps
 
 ### Backend & Database
-- **Convex** - Real-time backend with reactive queries
+- **Convex** - Real-time backend with reactive queries and file storage
 - **Clerk** - Authentication and user management
 
 ### AI & ML
@@ -82,31 +113,43 @@ TRIBE creates personalized **Migration Protocols** - curated, prioritized action
 ```
 apps/web/
 ├── app/
-│   └── [locale]/
-│       ├── (dashboard)/
-│       │   ├── chat/          # Ask TRIBE chat interface
-│       │   ├── dashboard/     # Main protocol dashboard
-│       │   └── briefing/      # Audio briefings
-│       ├── onboarding/        # User onboarding flow
-│       ├── settings/          # User settings
-│       └── page.tsx           # Landing page
+│   ├── [locale]/
+│   │   ├── (dashboard)/
+│   │   │   ├── chat/              # Ask TRIBE chat interface
+│   │   │   ├── dashboard/         # Main protocol dashboard
+│   │   │   ├── settings/          # User settings
+│   │   │   └── cultural/          # Cultural profile page
+│   │   ├── onboarding/            # User onboarding flow (5 steps)
+│   │   └── page.tsx               # Landing page
+│   └── api/
+│       ├── chat/                  # CopilotKit chat endpoint
+│       ├── voice/                 # Gemini Live voice API
+│       ├── cultural-bridge/       # Cultural comparison API
+│       └── step-assistant/        # Protocol step AI assistant
 ├── components/
-│   ├── chat/                  # Chat and voice components
-│   ├── dashboard/             # Dashboard widgets
-│   ├── landing/               # Landing page sections
-│   ├── layout/                # Header, Footer, Navigation
-│   ├── onboarding/            # Country/Stage selectors
-│   └── protocol/              # Protocol cards, tabs, archive views
-├── convex/                    # Convex backend functions
-│   ├── schema.ts              # Database schema
-│   ├── protocols.ts           # Protocol CRUD
-│   ├── protocolArchive.ts     # Archive & save functionality
-│   ├── corridors.ts           # Corridor management
-│   └── users.ts               # User management
+│   ├── chat/                      # Chat and voice components
+│   ├── corridor/                  # Corridor header, stats
+│   ├── cultural/                  # Cultural profile components
+│   ├── dashboard/                 # Dashboard widgets
+│   ├── documents/                 # Document vault
+│   ├── landing/                   # Landing page sections
+│   ├── layout/                    # Header, Footer, Navigation
+│   ├── onboarding/                # Country/Stage/Cultural selectors
+│   └── protocol/                  # Protocol cards, tabs, archive views
+├── convex/                        # Convex backend functions
+│   ├── schema.ts                  # Database schema
+│   ├── protocols.ts               # Protocol CRUD
+│   ├── protocolArchive.ts         # Archive & save functionality
+│   ├── corridors.ts               # Multi-journey management
+│   ├── users.ts                   # User management
+│   ├── userDocuments.ts           # Document vault storage
+│   └── cultural/                  # Cultural profile & interview
+├── hooks/                         # Custom React hooks
+│   └── useMigrationTools.tsx      # CopilotKit tool definitions
 ├── lib/
-│   ├── constants/             # Countries, stages, coordinates
-│   └── utils/                 # Utility functions
-└── messages/                  # i18n translation files
+│   ├── constants/                 # Countries, stages, coordinates
+│   └── utils/                     # Utility functions
+└── messages/                      # i18n translation files (9 locales)
 ```
 
 ## Getting Started
@@ -135,7 +178,7 @@ CLERK_SECRET_KEY=sk_...
 # Google AI
 GOOGLE_GENERATIVE_AI_API_KEY=your-key
 
-# Mapbox (optional, for corridor maps)
+# Mapbox (for corridor maps)
 NEXT_PUBLIC_MAPBOX_TOKEN=pk...
 
 # Tavily (for web search)
@@ -146,7 +189,7 @@ TAVILY_API_KEY=tvly-...
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/tribe-ai.git
+git clone https://github.com/tmoody1973/tribe-ai.git
 cd tribe-ai
 
 # Install dependencies
@@ -166,16 +209,24 @@ Open [http://localhost:3000](http://localhost:3000) to see the app.
 The app is configured for deployment on Vercel:
 
 ```bash
-# Deploy to Vercel
-npx vercel --prod
-
 # Deploy Convex to production
 npx convex deploy
+
+# Deploy to Vercel
+npx vercel --prod
 ```
 
-## Migration Stages
+## User Journey
 
-TRIBE guides users through 5 stages:
+### Onboarding (5 Steps)
+
+1. **Origin Country** - Where are you from?
+2. **Destination Country** - Where are you going?
+3. **Migration Stage** - What stage are you at?
+4. **Visa Type** (optional) - What visa are you pursuing?
+5. **Cultural Profile** (optional) - AI-guided interview about your background
+
+### Migration Stages
 
 | Stage | Description |
 |-------|-------------|
@@ -185,9 +236,7 @@ TRIBE guides users through 5 stages:
 | **Relocating** | Actively in the process of moving |
 | **Settling** | Adapting to life in the new country |
 
-## Protocol Categories
-
-Protocols are organized into 7 categories:
+### Protocol Categories
 
 | Category | Icon | Description |
 |----------|------|-------------|
@@ -198,6 +247,32 @@ Protocols are organized into 7 categories:
 | Legal | ⚖️ | Legal requirements and rights |
 | Health | 🏥 | Healthcare and insurance |
 | Social | 👥 | Community and cultural adaptation |
+
+## Recent Updates
+
+### v1.2.0 - Cultural Intelligence & Multi-Journey
+- Added Cultural Interview to onboarding (AI-guided 10 questions)
+- Cultural Bridge showing origin↔destination cultural dimensions
+- Multi-Journey support (track up to 5 corridors)
+- Journey Switcher dropdown for easy switching
+- Document Vault for secure document storage
+- Protocol force-refresh when destination changes
+
+### v1.1.0 - Dashboard Widgets
+- Journey Map with Mapbox visualization
+- Visa Eligibility Quiz
+- True Cost Calculator
+- Salary Reality Check
+- First 48 Hours Guide
+- Emergency Info Card
+- AI Step Assistant for protocol walkthroughs
+
+### v1.0.0 - Initial Release
+- Migration Protocols with AI research
+- Stage-based journey progression
+- Ask TRIBE chat with voice support
+- 9-language support
+- Protocol archive and save functionality
 
 ## Contributing
 
@@ -216,3 +291,5 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ---
 
 **TRIBE** - *Real advice from real migrants, organized into protocols you can actually follow.*
+
+[Live Demo](https://tribe-ai.vercel.app) | [GitHub](https://github.com/tmoody1973/tribe-ai)

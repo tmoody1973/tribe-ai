@@ -8,11 +8,15 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { CountrySelector } from "@/components/onboarding/CountrySelector";
 import { StageSelector } from "@/components/onboarding/StageSelector";
+import { StageTransitionModal } from "@/components/protocol/StageTransitionModal";
 import { getCountryByCode } from "@/lib/constants/countries";
 import type { MigrationStage } from "@/lib/constants/stages";
 
+type Stage = "dreaming" | "planning" | "preparing" | "relocating" | "settling";
+
 export default function SettingsPage() {
   const profile = useQuery(api.users.getProfile);
+  const corridor = useQuery(api.corridors.getActiveCorridor);
   const updateProfile = useMutation(api.users.updateProfile);
   const t = useTranslations("settings");
   const tOnboarding = useTranslations("onboarding");
@@ -25,6 +29,8 @@ export default function SettingsPage() {
     visaType: "",
   });
   const [isSaving, setIsSaving] = useState(false);
+  const [showStageTransition, setShowStageTransition] = useState(false);
+  const [pendingStage, setPendingStage] = useState<Stage | null>(null);
 
   useEffect(() => {
     if (profile) {
@@ -38,6 +44,13 @@ export default function SettingsPage() {
   }, [profile]);
 
   const handleSave = async (field: string) => {
+    // Special handling for stage changes - show transition modal
+    if (field === "stage" && editValues.stage && editValues.stage !== profile?.stage) {
+      setPendingStage(editValues.stage as Stage);
+      setShowStageTransition(true);
+      return;
+    }
+
     setIsSaving(true);
     try {
       const updates: Record<string, string | undefined> = {};
@@ -50,6 +63,23 @@ export default function SettingsPage() {
       setIsEditing(null);
     } catch (error) {
       console.error("Failed to save:", error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // Handle stage transition confirmation (after archiving is done)
+  const handleStageTransitionConfirm = async () => {
+    if (!pendingStage) return;
+
+    setIsSaving(true);
+    try {
+      await updateProfile({ stage: pendingStage });
+      setIsEditing(null);
+      setShowStageTransition(false);
+      setPendingStage(null);
+    } catch (error) {
+      console.error("Failed to update stage:", error);
     } finally {
       setIsSaving(false);
     }
@@ -293,6 +323,21 @@ export default function SettingsPage() {
         </div>
       </main>
       <Footer />
+
+      {/* Stage Transition Modal */}
+      {corridor && pendingStage && profile?.stage && (
+        <StageTransitionModal
+          isOpen={showStageTransition}
+          onClose={() => {
+            setShowStageTransition(false);
+            setPendingStage(null);
+          }}
+          currentStage={profile.stage as Stage}
+          newStage={pendingStage}
+          corridorId={corridor._id}
+          onConfirm={handleStageTransitionConfirm}
+        />
+      )}
     </div>
   );
 }

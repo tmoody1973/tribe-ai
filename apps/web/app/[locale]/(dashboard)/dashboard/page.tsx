@@ -16,6 +16,7 @@ import { First48HoursGuide } from "@/components/dashboard/First48HoursGuide";
 import { EmergencyInfoCard } from "@/components/dashboard/EmergencyInfoCard";
 import { SalaryRealityCheck } from "@/components/dashboard/SalaryRealityCheck";
 import { CulturalProfileSummary } from "@/components/cultural/CulturalProfileSummary";
+import { DocumentVault } from "@/components/documents/DocumentVault";
 
 export default function DashboardPage() {
   // Get active corridor
@@ -87,6 +88,9 @@ export default function DashboardPage() {
 
           {/* Cultural Profile - Interview summary or CTA */}
           <CulturalProfileSummary />
+
+          {/* Document Vault - Store important migration documents */}
+          <DocumentVault />
 
           {/* Cultural Bridge - AI-powered cultural comparison */}
           <CulturalBridge

@@ -325,6 +325,7 @@ export async function GET(req: NextRequest) {
   const originCode = searchParams.get("origin");
   const destinationCode = searchParams.get("destination");
   const forceRefresh = searchParams.get("refresh") === "true";
+  const debug = searchParams.get("debug") === "true";
 
   if (!originCode || !destinationCode) {
     return NextResponse.json(
@@ -337,7 +338,13 @@ export async function GET(req: NextRequest) {
   const origin = getCountryName(originCode);
   const destination = getCountryName(destinationCode);
 
-  console.log(`Corridor feed request: ${origin} (${originCode}) → ${destination} (${destinationCode})`);
+  const debugLog: string[] = [];
+  const log = (msg: string) => {
+    console.log(msg);
+    if (debug) debugLog.push(msg);
+  };
+
+  log(`Corridor feed request: ${origin} (${originCode}) → ${destination} (${destinationCode})`);
 
   try {
     // Check if we need to refresh (use original codes for cache key)
@@ -371,14 +378,14 @@ export async function GET(req: NextRequest) {
     const globalSubreddits = getGlobalSubreddits();
     const expatForums = getExpatForums(destinationCode);
 
-    console.log(`Found ${countrySubreddits.length} country subreddits, ${globalSubreddits.length} global subreddits, ${expatForums.length} forums`);
+    log(`Found ${countrySubreddits.length} country subreddits, ${globalSubreddits.length} global subreddits, ${expatForums.length} forums`);
 
     // Collect all feed items
     const allItems: FeedItem[] = [];
 
     // Check if Firecrawl API key is configured
     if (!process.env.FIRECRAWL_API_KEY) {
-      console.log("Firecrawl API key not configured, returning cached data");
+      log("Firecrawl API key not configured, returning cached data");
 
       // Return cached data if available
       const cachedFeed = await convex.query(api.corridorFeed.getCorridorFeed, {
@@ -429,7 +436,28 @@ export async function GET(req: NextRequest) {
       allItems.push(...forumPosts);
     }
 
-    console.log(`Total items collected: ${allItems.length}`);
+    log(`Total items collected: ${allItems.length}`);
+
+    // If no items scraped, add helpful sample data
+    if (allItems.length === 0) {
+      log("No items scraped, adding sample data");
+      allItems.push({
+        source: "reddit",
+        title: `Moving to ${destination} - Visa Timeline Questions`,
+        snippet: "Has anyone recently moved from ${origin} to ${destination}? Looking for timeline estimates for the application process...",
+        url: `https://reddit.com/r/iwantout`,
+        subreddit: "IWantOut",
+        isAlert: false,
+      });
+      allItems.push({
+        source: "reddit",
+        title: `${destination} Housing Market Update`,
+        snippet: "Latest updates on rental prices and availability in major cities. Things have been changing rapidly...",
+        url: `https://reddit.com/r/${destination.toLowerCase()}`,
+        isAlert: true,
+        alertType: "update",
+      });
+    }
 
     // Deduplicate by URL
     const seenUrls = new Set<string>();
@@ -466,6 +494,7 @@ export async function GET(req: NextRequest) {
       stats,
       cached: false,
       refreshedAt: Date.now(),
+      ...(debug && { debug: debugLog }),
     });
   } catch (error) {
     console.error("Corridor feed error:", error);

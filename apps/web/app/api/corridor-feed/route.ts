@@ -233,44 +233,63 @@ function parseRedditPosts(markdown: string, subredditName: string): FeedItem[] {
   return posts;
 }
 
-// Scrape a subreddit using Firecrawl
-async function scrapeSubreddit(subreddit: SubredditInfo, debugLog?: (msg: string) => void): Promise<FeedItem[]> {
+// Fetch Reddit posts using their free JSON API (no auth needed!)
+async function fetchRedditPosts(subreddit: SubredditInfo, debugLog?: (msg: string) => void): Promise<FeedItem[]> {
   const log = debugLog || console.log;
 
   try {
-    // Use the /new endpoint to get recent posts
-    const url = subreddit.url.replace(/\/$/, "") + "/new/";
+    const url = `https://www.reddit.com/r/${subreddit.name}/new.json?limit=15`;
+    log(`Fetching ${url}...`);
 
-    log(`Scraping ${url}...`);
-
-    const result = await firecrawl.scrape(url, {
-      formats: ["markdown"],
-      onlyMainContent: false, // Get full page content for better parsing
-      waitFor: 1000,
+    const response = await fetch(url, {
+      headers: {
+        "User-Agent": "TRIBE Migration App/1.0",
+      },
     });
 
-    if (!result.markdown) {
-      log(`Failed to scrape ${subreddit.name}: No markdown returned`);
+    if (!response.ok) {
+      log(`Reddit API error for r/${subreddit.name}: ${response.status}`);
       return [];
     }
 
-    log(`Scraped ${result.markdown.length} chars from r/${subreddit.name}`);
+    const data = await response.json();
+    const posts: FeedItem[] = [];
 
-    const posts = parseRedditPosts(result.markdown, subreddit.name);
+    if (data?.data?.children) {
+      for (const child of data.data.children) {
+        const post = child.data;
+        if (!post.title) continue;
+
+        const alert = detectAlert(post.title, post.selftext || "");
+        posts.push({
+          source: "reddit",
+          title: post.title,
+          snippet: (post.selftext || "").slice(0, 200),
+          url: `https://reddit.com${post.permalink}`,
+          author: post.author,
+          subreddit: subreddit.name,
+          upvotes: post.ups,
+          comments: post.num_comments,
+          ...alert,
+        });
+      }
+    }
+
     log(`Found ${posts.length} posts from r/${subreddit.name}`);
-
     return posts;
   } catch (e) {
     const error = e as Error;
-    log(`Error scraping r/${subreddit.name}: ${error.message}`);
+    log(`Error fetching r/${subreddit.name}: ${error.message}`);
     return [];
   }
 }
 
 // Scrape an expat forum using Firecrawl
-async function scrapeExpatForum(forum: { name: string; url: string }, countryName: string): Promise<FeedItem[]> {
+async function scrapeExpatForum(forum: { name: string; url: string }, countryName: string, debugLog?: (msg: string) => void): Promise<FeedItem[]> {
+  const log = debugLog || console.log;
+
   try {
-    console.log(`Scraping forum ${forum.name}...`);
+    log(`Scraping forum ${forum.name}...`);
 
     const result = await firecrawl.scrape(forum.url, {
       formats: ["markdown", "html"],
@@ -279,9 +298,11 @@ async function scrapeExpatForum(forum: { name: string; url: string }, countryNam
     });
 
     if (!result.markdown) {
-      console.log(`Failed to scrape ${forum.name}: No content`);
+      log(`Failed to scrape ${forum.name}: No content`);
       return [];
     }
+
+    log(`Scraped ${result.markdown.length} chars from ${forum.name}`);
 
     // Parse forum posts (similar structure to Reddit parsing)
     const posts: FeedItem[] = [];
@@ -317,10 +338,11 @@ async function scrapeExpatForum(forum: { name: string; url: string }, countryNam
       }
     }
 
-    console.log(`Found ${posts.length} relevant forum posts from ${forum.name}`);
+    log(`Found ${posts.length} relevant forum posts from ${forum.name}`);
     return posts.slice(0, 5); // Limit forum posts
   } catch (e) {
-    console.error(`Error scraping forum ${forum.name}:`, e);
+    const error = e as Error;
+    log(`Error scraping forum ${forum.name}: ${error.message}`);
     return [];
   }
 }
@@ -388,45 +410,27 @@ export async function GET(req: NextRequest) {
     // Collect all feed items
     const allItems: FeedItem[] = [];
 
-    // Check if Firecrawl API key is configured
+    // Note: Firecrawl is optional - we use Reddit's free JSON API for Reddit posts
+    // Firecrawl is only needed for forum scraping
     if (!process.env.FIRECRAWL_API_KEY) {
-      log("Firecrawl API key not configured, returning cached data");
-
-      // Return cached data if available
-      const cachedFeed = await convex.query(api.corridorFeed.getCorridorFeed, {
-        origin: originCode,
-        destination: destinationCode,
-        limit: 15,
-      });
-
-      const stats = await convex.query(api.corridorFeed.getCorridorStats, {
-        origin: originCode,
-        destination: destinationCode,
-      });
-
-      return NextResponse.json({
-        items: cachedFeed,
-        stats,
-        cached: true,
-        message: "Firecrawl API key not configured",
-      });
+      log("Firecrawl API key not configured - skipping forum scraping");
     }
 
-    // Scrape country-specific subreddits (limit to 2 to stay within rate limits)
-    const subredditsToScrape = countrySubreddits.slice(0, 2);
+    // Fetch Reddit posts using free JSON API (limit to 2 subreddits)
+    const subredditsToFetch = countrySubreddits.slice(0, 2);
 
-    for (const subreddit of subredditsToScrape) {
-      const posts = await scrapeSubreddit(subreddit, log);
+    for (const subreddit of subredditsToFetch) {
+      const posts = await fetchRedditPosts(subreddit, log);
       allItems.push(...posts);
 
       // Small delay between requests
-      await new Promise((r) => setTimeout(r, 500));
+      await new Promise((r) => setTimeout(r, 300));
     }
 
-    // Scrape one global migration subreddit (IWantOut is most relevant)
+    // Fetch from global migration subreddit (IWantOut is most relevant)
     const iwantout = globalSubreddits.find((s) => s.name === "IWantOut");
     if (iwantout) {
-      const posts = await scrapeSubreddit(iwantout, log);
+      const posts = await fetchRedditPosts(iwantout, log);
       // Filter for posts mentioning destination
       const relevantPosts = posts.filter((post) => {
         const text = (post.title + " " + post.snippet).toLowerCase();
@@ -435,10 +439,12 @@ export async function GET(req: NextRequest) {
       allItems.push(...relevantPosts.slice(0, 5));
     }
 
-    // Scrape expat forums (limit to 1)
-    if (expatForums.length > 0) {
-      const forumPosts = await scrapeExpatForum(expatForums[0], destination);
+    // Scrape expat forums using Firecrawl (limit to 1)
+    if (expatForums.length > 0 && process.env.FIRECRAWL_API_KEY) {
+      const forumPosts = await scrapeExpatForum(expatForums[0], destination, log);
       allItems.push(...forumPosts);
+    } else if (expatForums.length > 0) {
+      log("Skipping forum scraping - Firecrawl API key not configured");
     }
 
     log(`Total items collected: ${allItems.length}`);

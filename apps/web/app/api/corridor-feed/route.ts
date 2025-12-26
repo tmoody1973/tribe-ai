@@ -180,7 +180,13 @@ async function fetchRedditPosts(subreddit: SubredditInfo, debugLog?: (msg: strin
 
     const response = await fetch(url, {
       headers: {
-        "User-Agent": "TRIBE Migration App/1.0",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+        "Accept": "application/json",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "DNT": "1",
+        "Connection": "keep-alive",
+        "Upgrade-Insecure-Requests": "1",
       },
     });
 

@@ -414,6 +414,50 @@ export default defineSchema({
     .index("by_protocol_step", ["protocolStepId"])
     .index("by_category", ["corridorId", "category"]),
 
+  // Emergency info cache for destination countries
+  emergencyInfo: defineTable({
+    origin: v.string(), // Origin country (for embassy lookup)
+    destination: v.string(), // Destination country
+    // Emergency numbers
+    emergencyNumber: v.string(),
+    policeNumber: v.string(),
+    ambulanceNumber: v.string(),
+    fireNumber: v.string(),
+    // Embassy/Consulate info (specific to origin country)
+    embassy: v.object({
+      name: v.string(),
+      phone: v.string(),
+      address: v.string(),
+      email: v.string(),
+      website: v.optional(v.string()),
+      hours: v.optional(v.string()),
+    }),
+    // Emergency phrases in local language
+    phrases: v.array(
+      v.object({
+        phrase: v.string(), // In local language
+        meaning: v.string(), // English meaning
+        pronunciation: v.optional(v.string()), // Phonetic guide
+      })
+    ),
+    // Healthcare info
+    healthcareInfo: v.string(),
+    healthcareEmergency: v.optional(v.string()), // ER/hospital info
+    // Support hotlines
+    migrantHelpline: v.optional(v.string()),
+    mentalHealthHotline: v.optional(v.string()),
+    domesticViolenceHotline: v.optional(v.string()),
+    // Additional resources
+    localEmergencyApp: v.optional(v.string()), // e.g., "112 app" in EU
+    insuranceInfo: v.optional(v.string()),
+    // Metadata
+    lastResearchedAt: v.number(),
+    sourceUrls: v.optional(v.array(v.string())),
+    confidence: v.optional(v.string()), // high, medium, low
+  })
+    .index("by_corridor", ["origin", "destination"])
+    .index("by_destination", ["destination"]),
+
   // Translation cache for dynamic content
   translations: defineTable({
     hash: v.string(), // SHA256 hash of content + target locale

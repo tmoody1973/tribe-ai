@@ -259,17 +259,48 @@ export const updateProfile = mutation({
 
     // Sync corridor if origin/destination/stage changed
     if (args.originCountry || args.destinationCountry || args.stage) {
-      const corridor = await ctx.db
+      // Get the PRIMARY corridor (not just first)
+      const corridors = await ctx.db
         .query("corridors")
         .withIndex("by_user", (q) => q.eq("userId", user._id))
-        .first();
+        .collect();
 
-      const corridorUpdates: Record<string, unknown> = { updatedAt: now };
-      if (args.originCountry) corridorUpdates.origin = args.originCountry;
-      if (args.destinationCountry) corridorUpdates.destination = args.destinationCountry;
-      if (args.stage) corridorUpdates.stage = args.stage;
+      const corridor = corridors.find((c) => c.isPrimary) || corridors[0];
 
       if (corridor) {
+        const corridorUpdates: Record<string, unknown> = { updatedAt: now };
+
+        // Check if origin or destination actually changed
+        const originChanged = args.originCountry && args.originCountry !== corridor.origin;
+        const destChanged = args.destinationCountry && args.destinationCountry !== corridor.destination;
+
+        if (originChanged || destChanged) {
+          // Origin or destination changed - archive old protocols and mark for new research
+          const protocols = await ctx.db
+            .query("protocols")
+            .withIndex("by_corridor", (q) => q.eq("corridorId", corridor._id))
+            .filter((q) => q.neq(q.field("archived"), true))
+            .collect();
+
+          // Archive all existing protocols
+          for (const protocol of protocols) {
+            await ctx.db.patch(protocol._id, {
+              archived: true,
+              archivedAt: now,
+              archivedReason: "corridor_change",
+            });
+          }
+
+          // Mark corridor as stale to trigger new research
+          corridorUpdates.researchStatus = "stale";
+          corridorUpdates.lastResearchedAt = undefined;
+          corridorUpdates.protocolCount = 0;
+        }
+
+        if (args.originCountry) corridorUpdates.origin = args.originCountry;
+        if (args.destinationCountry) corridorUpdates.destination = args.destinationCountry;
+        if (args.stage) corridorUpdates.stage = args.stage;
+
         await ctx.db.patch(corridor._id, corridorUpdates);
       }
     }

@@ -170,69 +170,6 @@ function detectAlert(title: string, content: string): { isAlert: boolean; alertT
   return { isAlert: false };
 }
 
-// Parse Reddit posts from scraped markdown content
-function parseRedditPosts(markdown: string, subredditName: string): FeedItem[] {
-  const posts: FeedItem[] = [];
-
-  // Reddit pages have posts in various formats, look for common patterns
-  // Posts often appear as links with titles
-  const lines = markdown.split("\n");
-
-  let currentTitle = "";
-  let currentUrl = "";
-  let currentSnippet = "";
-
-  for (const line of lines) {
-    // Match markdown links that look like posts: [title](url)
-    const linkMatch = line.match(/\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/);
-    if (linkMatch) {
-      const title = linkMatch[1];
-      const url = linkMatch[2];
-
-      // Skip navigation links, user profiles, etc.
-      if (
-        url.includes("/comments/") ||
-        (url.includes("/r/") && !url.includes("/user/") && !url.includes("/wiki/"))
-      ) {
-        // If we have a previous post, save it
-        if (currentTitle && currentUrl) {
-          const alert = detectAlert(currentTitle, currentSnippet);
-          posts.push({
-            source: "reddit",
-            title: currentTitle,
-            snippet: currentSnippet.slice(0, 200),
-            url: currentUrl,
-            subreddit: subredditName,
-            ...alert,
-          });
-        }
-
-        currentTitle = title;
-        currentUrl = url.startsWith("http") ? url : `https://reddit.com${url}`;
-        currentSnippet = "";
-      }
-    } else if (currentTitle && line.trim() && !line.startsWith("#") && !line.startsWith("[")) {
-      // Collect text as snippet for the current post
-      currentSnippet += line.trim() + " ";
-    }
-  }
-
-  // Don't forget the last post
-  if (currentTitle && currentUrl) {
-    const alert = detectAlert(currentTitle, currentSnippet);
-    posts.push({
-      source: "reddit",
-      title: currentTitle,
-      snippet: currentSnippet.slice(0, 200),
-      url: currentUrl,
-      subreddit: subredditName,
-      ...alert,
-    });
-  }
-
-  return posts;
-}
-
 // Fetch Reddit posts using their free JSON API (no auth needed!)
 async function fetchRedditPosts(subreddit: SubredditInfo, debugLog?: (msg: string) => void): Promise<FeedItem[]> {
   const log = debugLog || console.log;

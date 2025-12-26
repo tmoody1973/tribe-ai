@@ -568,8 +568,6 @@ export function getDocumentChecklist(
   destinationCountry: string,
   purpose: "work" | "study" | "family" | "retirement"
 ): DocumentChecklistResult {
-  const destLower = destinationCountry.toLowerCase().replace(/\s+/g, "-");
-
   const baseDocuments = [
     {
       category: "Identity & Travel",
@@ -798,7 +796,7 @@ export interface JobSearchResult {
 
 export function getJobSearchResources(
   destinationCountry: string,
-  industry?: string
+  _industry?: string
 ): JobSearchResult {
   const destLower = destinationCountry.toLowerCase().replace(/\s+/g, "-");
   const destEncoded = encodeURIComponent(destinationCountry);

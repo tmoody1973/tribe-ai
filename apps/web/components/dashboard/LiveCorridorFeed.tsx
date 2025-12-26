@@ -6,7 +6,6 @@ import { api } from "@/convex/_generated/api";
 import {
   Radio,
   Users,
-  TrendingUp,
   ExternalLink,
   RefreshCw,
   AlertTriangle,

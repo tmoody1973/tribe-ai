@@ -183,30 +183,36 @@ const COUNTRY_SUBREDDITS: Record<string, string[]> = {
   "New Zealand": ["newzealand"],
 };
 
-async function fetchRedditPosts(
-  query: string,
-  subreddits: string[],
-  limit: number = 5
+// Fetch recent posts from a subreddit (more reliable than search)
+async function fetchSubredditPosts(
+  subreddit: string,
+  limit: number = 10
 ): Promise<RedditPost[]> {
   const results: RedditPost[] = [];
 
-  for (const subreddit of subreddits.slice(0, 3)) {
-    try {
-      const url = `https://www.reddit.com/r/${subreddit}/search.json?q=${encodeURIComponent(query)}&restrict_sr=1&limit=${limit}&sort=new&t=month`;
+  try {
+    // Fetch "new" posts which is more reliable than search
+    const url = `https://www.reddit.com/r/${subreddit}/new.json?limit=${limit}`;
 
-      const response = await fetch(url, {
-        headers: {
-          "User-Agent": "TRIBE/1.0 (Diaspora Intelligence Network)",
-        },
-      });
+    const response = await fetch(url, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
+        "Accept": "application/json",
+      },
+      next: { revalidate: 300 }, // Cache for 5 minutes
+    });
 
-      if (!response.ok) continue;
+    if (!response.ok) {
+      console.log(`Reddit returned ${response.status} for r/${subreddit}`);
+      return results;
+    }
 
-      const data = await response.json();
+    const data = await response.json();
 
-      if (data.data?.children) {
-        for (const child of data.data.children) {
-          const post = child.data;
+    if (data.data?.children) {
+      for (const child of data.data.children) {
+        const post = child.data;
+        if (post.title) {
           results.push({
             title: post.title,
             selftext: post.selftext || "",
@@ -219,15 +225,74 @@ async function fetchRedditPosts(
           });
         }
       }
-
-      // Rate limiting
-      await new Promise((r) => setTimeout(r, 100));
-    } catch (e) {
-      console.error(`Error fetching r/${subreddit}:`, e);
     }
+  } catch (e) {
+    console.error(`Error fetching r/${subreddit}:`, e);
   }
 
   return results;
+}
+
+// Filter posts relevant to a migration corridor
+function filterRelevantPosts(
+  posts: RedditPost[],
+  origin: string,
+  destination: string
+): RedditPost[] {
+  const originLower = origin.toLowerCase();
+  const destLower = destination.toLowerCase();
+
+  // Keywords that make a post relevant
+  const keywords = [
+    "visa", "move", "moving", "relocate", "relocating", "immigration",
+    "expat", "working", "job", "apartment", "housing", "cost of living",
+    "experience", "advice", "help", "question", "tips"
+  ];
+
+  return posts.filter((post) => {
+    const text = (post.title + " " + post.selftext).toLowerCase();
+
+    // Check if post mentions the destination or origin
+    const mentionsDestination = text.includes(destLower) ||
+      text.includes(destination.split(" ")[0].toLowerCase());
+    const mentionsOrigin = text.includes(originLower) ||
+      text.includes(origin.split(" ")[0].toLowerCase());
+
+    // Check if post has relevant keywords
+    const hasKeyword = keywords.some((kw) => text.includes(kw));
+
+    // For destination-specific subreddits, any post with keywords is relevant
+    // For general subreddits, needs to mention destination
+    return hasKeyword || mentionsDestination || mentionsOrigin;
+  });
+}
+
+async function fetchRedditPosts(
+  subreddits: string[],
+  origin: string,
+  destination: string
+): Promise<RedditPost[]> {
+  const allPosts: RedditPost[] = [];
+
+  // Fetch from multiple subreddits in parallel
+  const fetchPromises = subreddits.slice(0, 5).map(async (subreddit) => {
+    await new Promise((r) => setTimeout(r, Math.random() * 200)); // Stagger requests
+    return fetchSubredditPosts(subreddit, 15);
+  });
+
+  const results = await Promise.all(fetchPromises);
+
+  for (const posts of results) {
+    allPosts.push(...posts);
+  }
+
+  // Filter for relevant posts
+  const relevantPosts = filterRelevantPosts(allPosts, origin, destination);
+
+  console.log(`Fetched ${allPosts.length} total posts, ${relevantPosts.length} relevant`);
+
+  // If we have relevant posts, return those; otherwise return recent posts
+  return relevantPosts.length > 0 ? relevantPosts : allPosts.slice(0, 10);
 }
 
 export async function GET(req: NextRequest) {
@@ -274,20 +339,16 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    // Build subreddit list
+    // Build subreddit list - prioritize destination-specific subreddits
     const countrySubreddits = COUNTRY_SUBREDDITS[destination] || [];
-    const subreddits = [...MIGRATION_SUBREDDITS, ...countrySubreddits];
+    const subreddits = [...countrySubreddits, ...MIGRATION_SUBREDDITS];
 
-    // Build queries
-    const queries = buildSearchQueries(origin, destination);
+    console.log(`Fetching posts for ${origin} → ${destination} from subreddits:`, subreddits.slice(0, 5));
 
-    // Fetch from Reddit
-    const allPosts: RedditPost[] = [];
+    // Fetch from Reddit (new approach: fetch recent posts and filter)
+    const allPosts = await fetchRedditPosts(subreddits, origin, destination);
 
-    for (const query of queries.slice(0, 2)) {
-      const posts = await fetchRedditPosts(query, subreddits, 5);
-      allPosts.push(...posts);
-    }
+    console.log(`Got ${allPosts.length} posts from Reddit`);
 
     // Deduplicate by URL
     const seenUrls = new Set<string>();

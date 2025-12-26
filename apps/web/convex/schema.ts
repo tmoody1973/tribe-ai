@@ -414,6 +414,46 @@ export default defineSchema({
     .index("by_protocol_step", ["protocolStepId"])
     .index("by_category", ["corridorId", "category"]),
 
+  // Live corridor feed - real-time updates from Reddit, forums, news
+  corridorFeed: defineTable({
+    origin: v.string(),
+    destination: v.string(),
+    source: v.union(
+      v.literal("reddit"),
+      v.literal("forum"),
+      v.literal("news"),
+      v.literal("official")
+    ),
+    title: v.string(),
+    snippet: v.string(),
+    url: v.string(),
+    author: v.optional(v.string()),
+    subreddit: v.optional(v.string()),
+    upvotes: v.optional(v.number()),
+    comments: v.optional(v.number()),
+    isAlert: v.optional(v.boolean()),
+    alertType: v.optional(
+      v.union(v.literal("opportunity"), v.literal("warning"), v.literal("update"))
+    ),
+    timestamp: v.number(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_corridor", ["origin", "destination"])
+    .index("by_url", ["url"])
+    .index("by_timestamp", ["timestamp"]),
+
+  // Corridor statistics - migrant counts, success rates
+  corridorStats: defineTable({
+    origin: v.string(),
+    destination: v.string(),
+    activeUsers: v.number(),
+    successfulMoves: v.number(),
+    avgTimeToMove: v.optional(v.string()),
+    lastUpdated: v.number(),
+  })
+    .index("by_corridor", ["origin", "destination"]),
+
   // Emergency info cache for destination countries
   emergencyInfo: defineTable({
     origin: v.string(), // Origin country (for embassy lookup)

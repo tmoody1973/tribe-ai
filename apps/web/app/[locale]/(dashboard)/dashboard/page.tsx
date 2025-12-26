@@ -19,6 +19,7 @@ import { SalaryRealityCheck } from "@/components/dashboard/SalaryRealityCheck";
 import { CulturalProfileSummary } from "@/components/cultural/CulturalProfileSummary";
 import { DocumentVaultSummary } from "@/components/documents/DocumentVaultSummary";
 import { TaskBoardSummary } from "@/components/taskboard/TaskBoardSummary";
+import { LiveCorridorFeed } from "@/components/dashboard/LiveCorridorFeed";
 
 export default function DashboardPage() {
   // Get active corridor
@@ -67,6 +68,12 @@ export default function DashboardPage() {
 
         {/* Journey Map */}
         <JourneyMap
+          origin={corridor.origin}
+          destination={corridor.destination}
+        />
+
+        {/* Live Corridor Feed - Real-time community updates */}
+        <LiveCorridorFeed
           origin={corridor.origin}
           destination={corridor.destination}
         />

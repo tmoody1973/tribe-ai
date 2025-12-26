@@ -9,6 +9,10 @@ import {
   getHealthcareInfo,
   decodeCulturalSituation,
   getCulturalTips,
+  getDocumentChecklist,
+  getBankingGuide,
+  getLanguageResources,
+  getJobSearchResources,
   type HousingSearchResult,
   type CostComparisonResult,
   type ExpatCommunityResult,
@@ -16,8 +20,12 @@ import {
   type HealthcareInfoResult,
   type CulturalDecoderResult,
   type CulturalTipsResult,
+  type DocumentChecklistResult,
+  type BankingGuideResult,
+  type LanguageResourcesResult,
+  type JobSearchResult,
 } from "@/lib/tools/migrationTools";
-import { ExternalLink, Home, DollarSign, Users, FileText, Heart, Loader2, Globe2, Lightbulb, MessageCircle, ArrowRight } from "lucide-react";
+import { ExternalLink, Home, DollarSign, Users, FileText, Heart, Loader2, Globe2, Lightbulb, MessageCircle, ArrowRight, CheckCircle2, Building2, BookOpen, Briefcase, AlertCircle } from "lucide-react";
 
 export function useMigrationTools() {
   // Housing Search Tool with Generative UI
@@ -619,6 +627,362 @@ export function useMigrationTools() {
         destinationCountry,
         category as "workplace" | "social" | "dining" | "daily_life" | "relationships"
       );
+    },
+  });
+
+  // Document Checklist Tool with Generative UI
+  useCopilotAction({
+    name: "getDocumentChecklist",
+    description: `Get a comprehensive document checklist for migrating to a new country.
+      Use when users ask about documents needed for moving, visa paperwork, or what to prepare before relocating.`,
+    parameters: [
+      {
+        name: "destinationCountry",
+        type: "string",
+        description: "Country relocating to",
+        required: true,
+      },
+      {
+        name: "purpose",
+        type: "string",
+        description: "Purpose of migration: 'work', 'study', 'family', or 'retirement'",
+        required: false,
+      },
+    ],
+    render: ({ status, args, result }) => {
+      if (status === "inProgress") {
+        return (
+          <div className="flex items-center gap-2 p-4 bg-indigo-50 border-2 border-black">
+            <Loader2 className="animate-spin" size={20} />
+            <span className="font-bold">Preparing document checklist for {args.destinationCountry}...</span>
+          </div>
+        );
+      }
+
+      const data = result as DocumentChecklistResult;
+      if (!data) return <></>;
+
+      const urgencyColors = {
+        essential: "bg-red-100 text-red-700 border-red-300",
+        important: "bg-yellow-100 text-yellow-700 border-yellow-300",
+        recommended: "bg-green-100 text-green-700 border-green-300",
+      };
+
+      return (
+        <div className="border-4 border-black bg-white shadow-[4px_4px_0_0_#000] my-2">
+          <div className="bg-indigo-500 text-white p-3 border-b-4 border-black flex items-center gap-2">
+            <CheckCircle2 size={20} />
+            <span className="font-bold">Document Checklist: {args.destinationCountry}</span>
+          </div>
+          <div className="p-4 space-y-4 max-h-96 overflow-y-auto">
+            {data.checklist.map((category, i) => (
+              <div key={i} className="border-2 border-gray-200">
+                <div className="bg-gray-100 px-3 py-2 font-bold text-sm">{category.category}</div>
+                <div className="p-2 space-y-2">
+                  {category.items.map((item, j) => (
+                    <div key={j} className="flex items-start gap-2 p-2 bg-white">
+                      <span className={`text-xs px-2 py-0.5 border rounded ${urgencyColors[item.urgency]}`}>
+                        {item.urgency}
+                      </span>
+                      <div className="flex-1">
+                        <p className="font-medium text-sm">{item.document}</p>
+                        <p className="text-xs text-gray-600">{item.description}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="p-3 bg-gray-50 border-t-2 border-gray-200 flex flex-wrap gap-2">
+            {data.resources.map((resource, i) => (
+              <a
+                key={i}
+                href={resource.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 px-2 py-1 bg-white border-2 border-gray-300 text-sm hover:bg-gray-50"
+              >
+                {resource.name}
+                <ExternalLink size={12} />
+              </a>
+            ))}
+          </div>
+        </div>
+      );
+    },
+    handler: async ({ destinationCountry, purpose }) => {
+      return getDocumentChecklist(
+        destinationCountry,
+        (purpose as "work" | "study" | "family" | "retirement") || "work"
+      );
+    },
+  });
+
+  // Banking Guide Tool with Generative UI
+  useCopilotAction({
+    name: "getBankingGuide",
+    description: `Get a guide for setting up banking in a new country.
+      Use when users ask about opening a bank account abroad, money transfers, or financial setup when relocating.`,
+    parameters: [
+      {
+        name: "destinationCountry",
+        type: "string",
+        description: "Country relocating to",
+        required: true,
+      },
+    ],
+    render: ({ status, args, result }) => {
+      if (status === "inProgress") {
+        return (
+          <div className="flex items-center gap-2 p-4 bg-emerald-50 border-2 border-black">
+            <Loader2 className="animate-spin" size={20} />
+            <span className="font-bold">Finding banking options in {args.destinationCountry}...</span>
+          </div>
+        );
+      }
+
+      const data = result as BankingGuideResult;
+      if (!data) return <></>;
+
+      return (
+        <div className="border-4 border-black bg-white shadow-[4px_4px_0_0_#000] my-2">
+          <div className="bg-emerald-500 text-white p-3 border-b-4 border-black flex items-center gap-2">
+            <Building2 size={20} />
+            <span className="font-bold">Banking in {args.destinationCountry}</span>
+          </div>
+
+          {/* Steps */}
+          <div className="p-4 border-b-2 border-gray-200">
+            <p className="font-bold text-sm mb-2">Setup Steps:</p>
+            <ol className="space-y-2">
+              {data.steps.map((step, i) => (
+                <li key={i} className="flex items-start gap-2 text-sm">
+                  <span className="w-5 h-5 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">
+                    {i + 1}
+                  </span>
+                  <div>
+                    <span className="font-medium">{step.step}</span>
+                    <span className="text-gray-500"> - {step.details}</span>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+
+          {/* Banks */}
+          <div className="p-4 space-y-2">
+            <p className="font-bold text-sm mb-2">Recommended Banks:</p>
+            {data.banks.slice(0, 5).map((bank, i) => (
+              <a
+                key={i}
+                href={bank.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-between p-3 border-2 border-gray-200 hover:bg-gray-50 transition-colors group"
+              >
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold">{bank.name}</span>
+                    <span className="text-xs px-1.5 py-0.5 bg-gray-100 text-gray-600 rounded">{bank.type}</span>
+                  </div>
+                  <p className="text-xs text-gray-500">{bank.bestFor}</p>
+                </div>
+                <ExternalLink size={16} className="text-gray-400 group-hover:text-emerald-500" />
+              </a>
+            ))}
+          </div>
+
+          {/* Tips */}
+          <div className="p-3 bg-yellow-50 border-t-2 border-yellow-200">
+            <p className="font-bold text-sm mb-2">Tips:</p>
+            <ul className="text-sm space-y-1">
+              {data.tips.slice(0, 3).map((tip, i) => (
+                <li key={i} className="flex items-start gap-2">
+                  <Lightbulb size={14} className="text-yellow-600 mt-0.5 flex-shrink-0" />
+                  {tip}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      );
+    },
+    handler: async ({ destinationCountry }) => {
+      return getBankingGuide(destinationCountry);
+    },
+  });
+
+  // Language Resources Tool with Generative UI
+  useCopilotAction({
+    name: "getLanguageResources",
+    description: `Get language learning resources for the destination country.
+      Use when users ask about learning the local language, language courses, or how to communicate in their new country.`,
+    parameters: [
+      {
+        name: "destinationCountry",
+        type: "string",
+        description: "Country relocating to",
+        required: true,
+      },
+    ],
+    render: ({ status, args, result }) => {
+      if (status === "inProgress") {
+        return (
+          <div className="flex items-center gap-2 p-4 bg-violet-50 border-2 border-black">
+            <Loader2 className="animate-spin" size={20} />
+            <span className="font-bold">Finding language resources for {args.destinationCountry}...</span>
+          </div>
+        );
+      }
+
+      const data = result as LanguageResourcesResult;
+      if (!data) return <></>;
+
+      const typeIcons: Record<string, string> = {
+        app: "📱",
+        course: "📚",
+        community: "👥",
+        media: "🎬",
+      };
+
+      return (
+        <div className="border-4 border-black bg-white shadow-[4px_4px_0_0_#000] my-2">
+          <div className="bg-violet-500 text-white p-3 border-b-4 border-black flex items-center gap-2">
+            <BookOpen size={20} />
+            <span className="font-bold">Learn {data.language}</span>
+          </div>
+
+          <div className="p-4 space-y-2">
+            {data.resources.map((resource, i) => (
+              <a
+                key={i}
+                href={resource.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-between p-3 border-2 border-gray-200 hover:bg-gray-50 transition-colors group"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-xl">{typeIcons[resource.type]}</span>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold">{resource.name}</span>
+                      {resource.free && (
+                        <span className="text-xs px-1.5 py-0.5 bg-green-100 text-green-700 rounded">Free</span>
+                      )}
+                    </div>
+                    <p className="text-xs text-gray-500">{resource.bestFor}</p>
+                  </div>
+                </div>
+                <ExternalLink size={16} className="text-gray-400 group-hover:text-violet-500" />
+              </a>
+            ))}
+          </div>
+
+          <div className="p-3 bg-violet-50 border-t-2 border-violet-200">
+            <p className="font-bold text-sm mb-2">Learning Tips:</p>
+            <ul className="text-sm space-y-1">
+              {data.tips.slice(0, 4).map((tip, i) => (
+                <li key={i} className="flex items-start gap-2">
+                  <span className="text-violet-600">•</span>
+                  {tip}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      );
+    },
+    handler: async ({ destinationCountry }) => {
+      return getLanguageResources(destinationCountry);
+    },
+  });
+
+  // Job Search Tool with Generative UI
+  useCopilotAction({
+    name: "getJobSearchResources",
+    description: `Get job search platforms and resources for finding work in a destination country.
+      Use when users ask about finding jobs abroad, employment opportunities, or how to get hired in their new country.`,
+    parameters: [
+      {
+        name: "destinationCountry",
+        type: "string",
+        description: "Country looking for jobs in",
+        required: true,
+      },
+      {
+        name: "industry",
+        type: "string",
+        description: "Industry or field (e.g., 'tech', 'healthcare', 'finance')",
+        required: false,
+      },
+    ],
+    render: ({ status, args, result }) => {
+      if (status === "inProgress") {
+        return (
+          <div className="flex items-center gap-2 p-4 bg-sky-50 border-2 border-black">
+            <Loader2 className="animate-spin" size={20} />
+            <span className="font-bold">Finding job platforms in {args.destinationCountry}...</span>
+          </div>
+        );
+      }
+
+      const data = result as JobSearchResult;
+      if (!data) return <></>;
+
+      const typeColors: Record<string, string> = {
+        general: "bg-gray-100 text-gray-700",
+        expat: "bg-blue-100 text-blue-700",
+        tech: "bg-purple-100 text-purple-700",
+        remote: "bg-green-100 text-green-700",
+      };
+
+      return (
+        <div className="border-4 border-black bg-white shadow-[4px_4px_0_0_#000] my-2">
+          <div className="bg-sky-500 text-white p-3 border-b-4 border-black flex items-center gap-2">
+            <Briefcase size={20} />
+            <span className="font-bold">Jobs in {args.destinationCountry}</span>
+          </div>
+
+          <div className="p-4 space-y-2 max-h-80 overflow-y-auto">
+            {data.platforms.map((platform, i) => (
+              <a
+                key={i}
+                href={platform.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-between p-3 border-2 border-gray-200 hover:bg-gray-50 transition-colors group"
+              >
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold">{platform.name}</span>
+                    <span className={`text-xs px-1.5 py-0.5 rounded ${typeColors[platform.type]}`}>
+                      {platform.type}
+                    </span>
+                  </div>
+                  <p className="text-xs text-gray-500">{platform.description}</p>
+                </div>
+                <ExternalLink size={16} className="text-gray-400 group-hover:text-sky-500" />
+              </a>
+            ))}
+          </div>
+
+          <div className="p-3 bg-sky-50 border-t-2 border-sky-200">
+            <p className="font-bold text-sm mb-2">Job Search Tips:</p>
+            <ul className="text-sm space-y-1">
+              {data.tips.slice(0, 4).map((tip, i) => (
+                <li key={i} className="flex items-start gap-2">
+                  <AlertCircle size={12} className="text-sky-600 mt-1 flex-shrink-0" />
+                  {tip}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      );
+    },
+    handler: async ({ destinationCountry, industry }) => {
+      return getJobSearchResources(destinationCountry, industry);
     },
   });
 }

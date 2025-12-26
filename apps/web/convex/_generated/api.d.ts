@@ -27,6 +27,7 @@ import type * as briefingsQueries from "../briefingsQueries.js";
 import type * as cache from "../cache.js";
 import type * as chat from "../chat.js";
 import type * as corridorData from "../corridorData.js";
+import type * as corridorFeed from "../corridorFeed.js";
 import type * as corridors from "../corridors.js";
 import type * as crons from "../crons.js";
 import type * as cultural_interview from "../cultural/interview.js";
@@ -78,6 +79,7 @@ declare const fullApi: ApiFromModules<{
   cache: typeof cache;
   chat: typeof chat;
   corridorData: typeof corridorData;
+  corridorFeed: typeof corridorFeed;
   corridors: typeof corridors;
   crons: typeof crons;
   "cultural/interview": typeof cultural_interview;

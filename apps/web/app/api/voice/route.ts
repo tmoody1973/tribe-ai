@@ -120,8 +120,24 @@ Format your response as:
 
   } catch (error) {
     console.error("Voice API error:", error);
+
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    const isRateLimit = errorMessage.includes("429") || errorMessage.includes("quota") || errorMessage.includes("rate");
+
+    if (isRateLimit) {
+      return NextResponse.json({
+        text: "I'm experiencing high demand right now. Please try again in a moment, or type your question instead.",
+        transcription: "Audio received",
+        detectedLanguage: "en",
+        isFallback: true,
+      });
+    }
+
     return NextResponse.json(
-      { error: "Failed to process voice input" },
+      {
+        error: "Failed to process voice input",
+        details: process.env.NODE_ENV === "development" ? errorMessage : undefined
+      },
       { status: 500 }
     );
   }

@@ -275,6 +275,27 @@ export default defineSchema({
     updatedAt: v.number(),
   }).index("by_user", ["userId"]),
 
+  // Document checklists for protocol steps
+  documentChecklists: defineTable({
+    protocolId: v.id("protocols"),
+    corridorId: v.id("corridors"),
+    userId: v.id("users"),
+    documents: v.array(
+      v.object({
+        id: v.string(),
+        name: v.string(),
+        description: v.optional(v.string()),
+        required: v.boolean(),
+        completed: v.boolean(),
+        completedAt: v.optional(v.number()),
+      })
+    ),
+    generatedAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_protocol", ["protocolId"])
+    .index("by_user_corridor", ["userId", "corridorId"]),
+
   // Translation cache for dynamic content
   translations: defineTable({
     hash: v.string(), // SHA256 hash of content + target locale

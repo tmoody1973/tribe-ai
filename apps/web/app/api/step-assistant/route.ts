@@ -68,19 +68,25 @@ async function searchRelevantContent(
 }
 
 export async function POST(req: NextRequest) {
+  let stepContext: StepContext | undefined;
+  let corridorId: string | undefined;
+  let userQuestion: string | undefined;
+  let language = "en";
+
   try {
     const body = await req.json();
-    const {
-      stepContext,
-      corridorId,
-      userQuestion,
-      language = "en"
-    }: {
-      stepContext: StepContext;
-      corridorId: string;
-      userQuestion?: string;
-      language?: string;
-    } = body;
+    stepContext = body.stepContext;
+    corridorId = body.corridorId;
+    userQuestion = body.userQuestion;
+    language = body.language || "en";
+
+    // Validate required fields
+    if (!stepContext || !corridorId) {
+      return NextResponse.json(
+        { error: "Missing required fields: stepContext and corridorId" },
+        { status: 400 }
+      );
+    }
 
     // Build search query from step context
     const searchQuery = userQuestion
@@ -152,8 +158,27 @@ RESPONSE FORMAT:
 
   } catch (error) {
     console.error("Step assistant error:", error);
+
+    // Provide a helpful fallback response instead of just an error
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    const isRateLimit = errorMessage.includes("429") || errorMessage.includes("quota") || errorMessage.includes("rate");
+
+    // If it's a rate limit or other API error, provide a helpful fallback response
+    if (isRateLimit) {
+      return NextResponse.json({
+        response: `## ${stepContext?.stepTitle || "Current Step"}\n\n${stepContext?.stepDescription || "No description available."}\n\n**Note:** Our AI assistant is temporarily busy. Here's what you need to know:\n\n- Review any warnings or tips shown on the step card\n- Check the community knowledge section for real experiences\n- Feel free to ask again in a moment\n\n*AI temporarily unavailable due to high demand.*`,
+        hasRagContent: false,
+        sourcesCount: 0,
+        sources: [],
+        isFallback: true,
+      });
+    }
+
     return NextResponse.json(
-      { error: "Failed to get step guidance" },
+      {
+        error: "Failed to get step guidance",
+        details: process.env.NODE_ENV === "development" ? errorMessage : undefined
+      },
       { status: 500 }
     );
   }

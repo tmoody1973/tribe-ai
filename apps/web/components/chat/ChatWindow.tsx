@@ -13,7 +13,9 @@ import { VoiceInputButton } from "./VoiceInputButton";
 import { TranscriptionPreview } from "./TranscriptionPreview";
 import { SpeakingIndicator } from "./SpeakingIndicator";
 import { VoiceChat } from "./VoiceChat";
+import { SuggestedQuestions } from "./SuggestedQuestions";
 import { useVoiceResponse } from "@/hooks/useVoiceResponse";
+import { useMigrationTools } from "@/hooks/useMigrationTools";
 import "@copilotkit/react-ui/styles.css";
 
 interface ChatWindowProps {
@@ -44,6 +46,9 @@ export function ChatWindow({ corridorId }: ChatWindowProps) {
 
   // Voice response TTS hook
   const { speakingMessageId, isLoading: isTTSLoading, speak, stop } = useVoiceResponse();
+
+  // Register migration tools with CopilotKit
+  useMigrationTools();
 
   // Get user's language for STT/TTS
   const userLanguage = profile?.language ?? "en";
@@ -152,6 +157,24 @@ export function ChatWindow({ corridorId }: ChatWindowProps) {
     setIsVoiceMode(false);
   }, []);
 
+  // Handle suggested question selection
+  const handleSelectQuestion = useCallback(
+    async (question: string) => {
+      await appendMessage(
+        new TextMessage({
+          role: MessageRole.User,
+          content: question,
+        })
+      );
+    },
+    [appendMessage]
+  );
+
+  // Get current protocol (first in-progress or not-started)
+  const currentProtocol = protocols?.find(
+    (p) => p.status === "in_progress" || p.status === "not_started"
+  );
+
   // Get dynamic welcome message
   const getWelcomeMessage = () => {
     if (corridor) {
@@ -195,26 +218,31 @@ export function ChatWindow({ corridorId }: ChatWindowProps) {
         <CopilotChat
           instructions={`You are TRIBE's Migration Intelligence Advisor, helping users navigate international relocation.
 
+YOU HAVE TOOLS - USE THEM! When users ask about these topics, ALWAYS use the corresponding tool:
+- Housing/apartments/accommodation → use searchTemporaryHousing
+- Cost of living/expenses/budgeting → use compareCostOfLiving
+- Expat communities/making friends/meetups → use findExpatCommunities
+- Visas/work permits/legal requirements → use checkVisaResources
+- Healthcare/insurance/medical care → use getHealthcareInfo
+
 IMPORTANT RULES:
-1. Always respond in the user's preferred language when specified
+1. ALWAYS use tools when they're relevant - don't just say "search online"
 2. Be concise but actionable - users need practical guidance
-3. Admit when information is not available rather than guessing
-4. Never invent facts
-5. Flag potentially outdated information with warnings
-6. Prioritize practical, actionable advice
+3. Present tool results in a helpful, formatted way
+4. Respond in the user's preferred language when specified
 
 CONTEXT:
-You have access to read-only information about the user's migration corridor (origin/destination) and any saved protocol steps. Use this context to provide personalized guidance.
+You have access to the user's migration corridor (origin/destination) and any saved protocol steps. Use this context to provide personalized guidance.
 
 DO NOT:
-- Attempt to modify any state or checklist data
-- Make up visa processing times or costs
+- Say "I can't help with that" when you have a tool for it
+- Make up visa processing times or costs without using tools
 - Provide legal advice
 
 RESPONSE FORMAT:
-- Start with a direct answer to the question
-- Provide supporting details
-- End with actionable next steps if applicable`}
+- Use tools first to get real, actionable links
+- Present results clearly with clickable links
+- Add helpful context around the tool results`}
           labels={{
             title: "",
             initial: getWelcomeMessage(),
@@ -226,6 +254,17 @@ RESPONSE FORMAT:
           className="h-full"
         />
       </div>
+
+      {/* Suggested Questions */}
+      {corridor && visibleMessages && visibleMessages.length < 3 && (
+        <SuggestedQuestions
+          origin={corridor.origin}
+          destination={corridor.destination}
+          stage={corridor.stage}
+          currentProtocol={currentProtocol}
+          onSelectQuestion={handleSelectQuestion}
+        />
+      )}
 
       {/* Voice Input Section */}
       {isVoiceMode && transcription ? (

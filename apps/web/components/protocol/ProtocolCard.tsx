@@ -9,6 +9,7 @@ import { CommunityVerifiedBadge } from "./CommunityVerifiedBadge";
 import { Confetti } from "./Confetti";
 import { useTranslatedProtocol } from "@/hooks/useTranslatedProtocol";
 import { StepAssistant } from "./StepAssistant";
+import { DocumentChecklist } from "./DocumentChecklist";
 
 type Category = "visa" | "finance" | "housing" | "employment" | "legal" | "health" | "social";
 type Priority = "critical" | "high" | "medium" | "low";
@@ -37,6 +38,8 @@ interface Protocol {
 interface ProtocolCardProps {
   protocol: Protocol;
   corridorId: Id<"corridors">;
+  corridorOrigin?: string;
+  corridorDestination?: string;
   isCurrent: boolean;
   isCompleted?: boolean;
   onComplete?: (protocolId: Id<"protocols">) => void;
@@ -74,6 +77,8 @@ const priorityColors: Record<Priority, string> = {
 export function ProtocolCard({
   protocol: originalProtocol,
   corridorId,
+  corridorOrigin,
+  corridorDestination,
   isCurrent,
   isCompleted: isCompletedProp,
   onComplete,
@@ -246,6 +251,19 @@ export function ProtocolCard({
               hacks={protocol.hacks}
             />
           </div>
+
+          {/* Document Checklist */}
+          {corridorOrigin && corridorDestination && (
+            <DocumentChecklist
+              protocolId={protocol._id}
+              corridorId={corridorId}
+              stepTitle={protocol.title}
+              stepDescription={protocol.description}
+              stepCategory={protocol.category}
+              corridorOrigin={corridorOrigin}
+              corridorDestination={corridorDestination}
+            />
+          )}
         </div>
       )}
     </div>

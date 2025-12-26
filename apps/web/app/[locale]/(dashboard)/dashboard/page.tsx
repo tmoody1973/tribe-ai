@@ -7,6 +7,12 @@ import { QuickStats } from "@/components/corridor/QuickStats";
 import { ProtocolList } from "@/components/protocol/ProtocolList";
 import { DashboardSkeleton } from "@/components/corridor/DashboardSkeleton";
 import { EmptyState } from "@/components/corridor/EmptyState";
+import { JourneyMap } from "@/components/dashboard/JourneyMap";
+import { VisaEligibilityQuiz } from "@/components/dashboard/VisaEligibilityQuiz";
+import { TrueCostCalculator } from "@/components/dashboard/TrueCostCalculator";
+import { First48HoursGuide } from "@/components/dashboard/First48HoursGuide";
+import { EmergencyInfoCard } from "@/components/dashboard/EmergencyInfoCard";
+import { SalaryRealityCheck } from "@/components/dashboard/SalaryRealityCheck";
 
 export default function DashboardPage() {
   // Get active corridor
@@ -42,6 +48,12 @@ export default function DashboardPage() {
     <div className="space-y-6">
       <CorridorHeader corridor={corridor} />
 
+      {/* Journey Map */}
+      <JourneyMap
+        origin={corridor.origin}
+        destination={corridor.destination}
+      />
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="md:col-span-2">
           {hasNoProtocols ? (
@@ -60,6 +72,22 @@ export default function DashboardPage() {
 
         <div className="space-y-6">
           <QuickStats corridorId={corridor._id} />
+
+          {/* Migrant Tools */}
+          <VisaEligibilityQuiz
+            destination={corridor.destination}
+            origin={corridor.origin}
+          />
+          <TrueCostCalculator
+            destination={corridor.destination}
+            origin={corridor.origin}
+          />
+          <SalaryRealityCheck destination={corridor.destination} />
+          <First48HoursGuide destination={corridor.destination} />
+          <EmergencyInfoCard
+            destination={corridor.destination}
+            origin={corridor.origin}
+          />
         </div>
       </div>
     </div>

@@ -117,6 +117,8 @@ export function ProtocolList({ protocols, corridorId }: ProtocolListProps) {
               key={protocol._id}
               protocol={protocol}
               corridorId={corridorId}
+              corridorOrigin={corridor?.origin}
+              corridorDestination={corridor?.destination}
               isCurrent={protocol._id === currentProtocol?._id}
               isCompleted={completedIds.has(protocol._id)}
               onComplete={handleComplete}

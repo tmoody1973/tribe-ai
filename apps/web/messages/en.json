@@ -302,7 +302,12 @@
       "listen": "Listen",
       "stop": "Stop",
       "listenToResponse": "Listen to the last response",
-      "stopListening": "Stop listening"
+      "stopListening": "Stop listening",
+      "startVoiceChat": "Start Voice Chat",
+      "endVoiceChat": "End Voice Chat",
+      "voiceChatActive": "Voice chat is active",
+      "processingAudio": "Processing audio...",
+      "audioError": "Audio processing failed. Please try again."
     }
   },
   "cultural": {

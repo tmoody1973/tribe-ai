@@ -57,17 +57,6 @@ const categoryConfig: Record<
   other: { label: "Other", icon: "other", color: "bg-gray-100 text-gray-700" },
 };
 
-const categoryEmojis: Record<DocumentCategory, string> = {
-  passport: "passport_control",
-  visa: "page_facing_up",
-  identity: "identification_card",
-  education: "graduation_cap",
-  employment: "briefcase",
-  financial: "money_bag",
-  medical: "hospital",
-  legal: "balance_scale",
-  other: "file_folder",
-};
 
 export function DocumentVault() {
   const [activeCategory, setActiveCategory] = useState<DocumentCategory | "all">("all");

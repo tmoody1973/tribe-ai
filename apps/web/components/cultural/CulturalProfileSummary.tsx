@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useTranslations } from "next-intl";
@@ -9,8 +10,10 @@ import {
   Clock,
   Edit3,
   Loader2,
+  Share2,
 } from "lucide-react";
 import Link from "next/link";
+import { CulturalCard } from "./CulturalCard";
 
 interface DimensionDisplayProps {
   icon: React.ReactNode;
@@ -57,9 +60,52 @@ function TagList({ title, items, colorClass }: TagListProps) {
   );
 }
 
+interface CulturalCardData {
+  originCulture: string;
+  greetingCustoms: string;
+  communicationTips: string[];
+  foodTraditions: string;
+  importantHolidays: string[];
+  whatToKnow: string;
+}
+
 export function CulturalProfileSummary() {
   const t = useTranslations("cultural");
   const profile = useQuery(api.cultural.profile.getProfile);
+  const [showCard, setShowCard] = useState(false);
+  const [cardData, setCardData] = useState<CulturalCardData | null>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  const handleGenerateCard = async () => {
+    if (!profile) return;
+
+    setIsGenerating(true);
+    try {
+      const response = await fetch("/api/generate-cultural-card", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          originCulture: profile.originCulture,
+          communicationStyle: profile.communicationStyle,
+          familyStructure: profile.familyStructure,
+          timeOrientation: profile.timeOrientation,
+          values: profile.values,
+          foodDietary: profile.foodDietary,
+          celebrations: profile.celebrations,
+        }),
+      });
+
+      if (!response.ok) throw new Error("Failed to generate card");
+
+      const data = await response.json();
+      setCardData(data);
+      setShowCard(true);
+    } catch (error) {
+      console.error("Error generating cultural card:", error);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   // Loading state
   if (profile === undefined) {
@@ -102,13 +148,28 @@ export function CulturalProfileSummary() {
             <h3 className="font-head text-xl text-black">{t("yourCulturalProfile")}</h3>
             <p className="text-sm text-black/70">{profile.originCulture}</p>
           </div>
-          <Link
-            href="/cultural/profile"
-            className="p-2 bg-white/50 hover:bg-white/70 border-2 border-black transition-colors"
-            title={t("editProfile")}
-          >
-            <Edit3 size={18} />
-          </Link>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleGenerateCard}
+              disabled={isGenerating}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-white/70 hover:bg-white border-2 border-black transition-colors text-sm font-bold disabled:opacity-50"
+              title={t("generateCard")}
+            >
+              {isGenerating ? (
+                <Loader2 size={16} className="animate-spin" />
+              ) : (
+                <Share2 size={16} />
+              )}
+              <span className="hidden sm:inline">{t("shareCard")}</span>
+            </button>
+            <Link
+              href="/cultural/profile"
+              className="p-2 bg-white/50 hover:bg-white/70 border-2 border-black transition-colors"
+              title={t("editProfile")}
+            >
+              <Edit3 size={18} />
+            </Link>
+          </div>
         </div>
       </div>
 
@@ -165,6 +226,17 @@ export function CulturalProfileSummary() {
           {t("lastUpdated")}: {new Date(profile.updatedAt).toLocaleDateString()}
         </p>
       </div>
+
+      {/* Cultural Card Modal */}
+      {showCard && cardData && (
+        <CulturalCard
+          data={cardData}
+          onClose={() => {
+            setShowCard(false);
+            setCardData(null);
+          }}
+        />
+      )}
     </div>
   );
 }

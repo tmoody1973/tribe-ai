@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "cost-of-living": {
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "https://mcp.rapidapi.com",
+        "--header",
+        "x-api-host: cost-of-living-and-prices.p.rapidapi.com",
+        "--header",
+        "x-api-key: 94bd6255cemshf02b5c2af7c0c6ep1d606ajsn6c7e7d35ca45"
+      ]
+    }
+  }
+}

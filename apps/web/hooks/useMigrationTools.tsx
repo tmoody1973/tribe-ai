@@ -7,13 +7,17 @@ import {
   findExpatCommunities,
   checkVisaResources,
   getHealthcareInfo,
+  decodeCulturalSituation,
+  getCulturalTips,
   type HousingSearchResult,
   type CostComparisonResult,
   type ExpatCommunityResult,
   type VisaResourcesResult,
   type HealthcareInfoResult,
+  type CulturalDecoderResult,
+  type CulturalTipsResult,
 } from "@/lib/tools/migrationTools";
-import { ExternalLink, Home, DollarSign, Users, FileText, Heart, Loader2 } from "lucide-react";
+import { ExternalLink, Home, DollarSign, Users, FileText, Heart, Loader2, Globe2, Lightbulb, MessageCircle, ArrowRight } from "lucide-react";
 
 export function useMigrationTools() {
   // Housing Search Tool with Generative UI
@@ -407,6 +411,213 @@ export function useMigrationTools() {
       return getHealthcareInfo(
         destinationCountry,
         (stayDuration as "short_term" | "long_term" | "permanent") || "long_term"
+      );
+    },
+  });
+
+  // Cultural Decoder Tool with Generative UI
+  useCopilotAction({
+    name: "decodeCulturalSituation",
+    description: `Help users understand confusing cultural situations by explaining perspectives from both their origin culture and destination culture.
+      Use when users describe awkward social interactions, misunderstandings, or ask "why do people here...?" questions.
+      This tool provides bi-directional cultural intelligence.`,
+    parameters: [
+      {
+        name: "situation",
+        type: "string",
+        description: "The cultural situation or interaction the user wants to understand",
+        required: true,
+      },
+      {
+        name: "originCountry",
+        type: "string",
+        description: "User's country of origin",
+        required: true,
+      },
+      {
+        name: "destinationCountry",
+        type: "string",
+        description: "Country where the situation occurred",
+        required: true,
+      },
+    ],
+    render: ({ status, args, result }) => {
+      if (status === "inProgress") {
+        return (
+          <div className="flex items-center gap-2 p-4 bg-amber-50 border-2 border-black">
+            <Loader2 className="animate-spin" size={20} />
+            <span className="font-bold">Analyzing cultural context...</span>
+          </div>
+        );
+      }
+
+      const data = result as CulturalDecoderResult;
+      if (!data) return <></>;
+
+      return (
+        <div className="border-4 border-black bg-white shadow-[4px_4px_0_0_#000] my-2">
+          <div className="bg-gradient-to-r from-amber-400 to-orange-400 text-black p-3 border-b-4 border-black flex items-center gap-2">
+            <Globe2 size={20} />
+            <span className="font-bold">Cultural Bridge</span>
+          </div>
+
+          {/* Two Perspectives */}
+          <div className="grid md:grid-cols-2 gap-0 border-b-2 border-gray-200">
+            {/* Origin Perspective */}
+            <div className="p-4 bg-blue-50 border-r-2 border-gray-200">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-lg">🏠</span>
+                <span className="font-bold text-blue-800">Your Cultural Lens</span>
+              </div>
+              <p className="text-sm text-blue-900">{data.originPerspective.interpretation}</p>
+              <p className="text-xs text-blue-700 mt-2 italic">{data.originPerspective.culturalContext}</p>
+            </div>
+
+            {/* Destination Perspective */}
+            <div className="p-4 bg-green-50">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-lg">🌍</span>
+                <span className="font-bold text-green-800">Local Perspective</span>
+              </div>
+              <p className="text-sm text-green-900">{data.destinationPerspective.interpretation}</p>
+              <p className="text-xs text-green-700 mt-2 italic">{data.destinationPerspective.culturalContext}</p>
+            </div>
+          </div>
+
+          {/* Bridging Advice */}
+          <div className="p-4 border-b-2 border-gray-200">
+            <div className="flex items-center gap-2 mb-3">
+              <Lightbulb size={18} className="text-yellow-600" />
+              <span className="font-bold">Bridging the Gap</span>
+            </div>
+            <ul className="space-y-2">
+              {data.bridgingAdvice.slice(0, 3).map((advice, i) => (
+                <li key={i} className="flex items-start gap-2 text-sm">
+                  <ArrowRight size={14} className="text-yellow-600 mt-1 flex-shrink-0" />
+                  <span>{advice}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Recovery Phrases */}
+          <div className="p-4 bg-purple-50">
+            <div className="flex items-center gap-2 mb-3">
+              <MessageCircle size={18} className="text-purple-600" />
+              <span className="font-bold text-purple-800">Helpful Phrases</span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {data.recoveryPhrases.slice(0, 3).map((phrase, i) => (
+                <span key={i} className="px-3 py-1 bg-white border-2 border-purple-300 text-sm text-purple-800 rounded">
+                  "{phrase}"
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    },
+    handler: async ({ situation, originCountry, destinationCountry }) => {
+      return decodeCulturalSituation(situation, originCountry, destinationCountry);
+    },
+  });
+
+  // Cultural Tips Tool with Generative UI
+  useCopilotAction({
+    name: "getCulturalTips",
+    description: `Get practical cultural tips for specific life situations in a destination country.
+      Use when users ask about workplace culture, social norms, dining etiquette, daily life, or relationships.
+      Provides actionable tips with context on "why" things are done differently.`,
+    parameters: [
+      {
+        name: "destinationCountry",
+        type: "string",
+        description: "The country to get cultural tips for",
+        required: true,
+      },
+      {
+        name: "category",
+        type: "string",
+        description: "Category of tips: 'workplace', 'social', 'dining', 'daily_life', or 'relationships'",
+        required: true,
+      },
+    ],
+    render: ({ status, args, result }) => {
+      if (status === "inProgress") {
+        return (
+          <div className="flex items-center gap-2 p-4 bg-cyan-50 border-2 border-black">
+            <Loader2 className="animate-spin" size={20} />
+            <span className="font-bold">Finding cultural insights for {args.category}...</span>
+          </div>
+        );
+      }
+
+      const data = result as CulturalTipsResult;
+      if (!data) return <></>;
+
+      const categoryEmojis: Record<string, string> = {
+        workplace: "💼",
+        social: "🤝",
+        dining: "🍽️",
+        daily_life: "🏙️",
+        relationships: "❤️",
+      };
+
+      const categoryColors: Record<string, string> = {
+        workplace: "bg-blue-500",
+        social: "bg-purple-500",
+        dining: "bg-orange-500",
+        daily_life: "bg-green-500",
+        relationships: "bg-pink-500",
+      };
+
+      return (
+        <div className="border-4 border-black bg-white shadow-[4px_4px_0_0_#000] my-2">
+          <div className={`${categoryColors[args.category] || "bg-cyan-500"} text-white p-3 border-b-4 border-black flex items-center gap-2`}>
+            <span className="text-xl">{categoryEmojis[args.category] || "🌍"}</span>
+            <span className="font-bold capitalize">{data.category.replace("_", " ")} Tips for {args.destinationCountry}</span>
+          </div>
+
+          <div className="p-4 space-y-4">
+            {data.tips.map((tip, i) => (
+              <div key={i} className="p-3 bg-gray-50 border-2 border-gray-200">
+                <p className="font-bold text-gray-800">{tip.tip}</p>
+                <p className="text-sm text-gray-600 mt-1">
+                  <span className="font-medium">Why:</span> {tip.why}
+                </p>
+                {tip.doInstead && (
+                  <p className="text-sm text-green-700 mt-1">
+                    <span className="font-medium">Instead:</span> {tip.doInstead}
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <div className="p-3 bg-gray-100 border-t-2 border-gray-200">
+            <p className="text-xs text-gray-500 font-medium mb-2">Learn more:</p>
+            <div className="flex flex-wrap gap-2">
+              {data.resources.map((resource, i) => (
+                <a
+                  key={i}
+                  href={resource.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 px-2 py-1 bg-white border-2 border-gray-300 text-sm hover:bg-gray-50 transition-colors"
+                >
+                  {resource.name}
+                  <ExternalLink size={12} />
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    },
+    handler: async ({ destinationCountry, category }) => {
+      return getCulturalTips(
+        destinationCountry,
+        category as "workplace" | "social" | "dining" | "daily_life" | "relationships"
       );
     },
   });

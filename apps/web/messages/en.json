@@ -384,6 +384,8 @@
     "timeTypes": {
       "monochronic": "Structured",
       "polychronic": "Flexible"
-    }
+    },
+    "generateCard": "Generate shareable cultural card",
+    "shareCard": "Share Card"
   }
 }

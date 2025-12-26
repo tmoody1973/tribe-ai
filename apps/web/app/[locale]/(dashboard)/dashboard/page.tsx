@@ -8,6 +8,7 @@ import { ProtocolTabs } from "@/components/protocol/ProtocolTabs";
 import { DashboardSkeleton } from "@/components/corridor/DashboardSkeleton";
 import { EmptyState } from "@/components/corridor/EmptyState";
 import { JourneyMap } from "@/components/dashboard/JourneyMap";
+import { CountryInfoCard } from "@/components/dashboard/CountryInfoCard";
 import { VisaEligibilityQuiz } from "@/components/dashboard/VisaEligibilityQuiz";
 import { TrueCostCalculator } from "@/components/dashboard/TrueCostCalculator";
 import { First48HoursGuide } from "@/components/dashboard/First48HoursGuide";
@@ -81,6 +82,12 @@ export default function DashboardPage() {
 
         <div className="space-y-6">
           <QuickStats corridorId={corridor._id} />
+
+          {/* Country Guide Card */}
+          <CountryInfoCard
+            destination={corridor.destination}
+            origin={corridor.origin}
+          />
 
           {/* Migrant Tools */}
           <VisaEligibilityQuiz

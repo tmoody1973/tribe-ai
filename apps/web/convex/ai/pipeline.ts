@@ -2,7 +2,7 @@
 
 import { action } from "../_generated/server";
 import { v } from "convex/values";
-import { api } from "../_generated/api";
+import { api, internal } from "../_generated/api";
 import type { Doc } from "../_generated/dataModel";
 
 // Explicit return type to avoid circular reference errors
@@ -39,6 +39,19 @@ export const generateCorridorProtocols = action({
       throw new Error("Corridor not found");
     }
 
+    // CRITICAL: Check if already refreshing to prevent duplicate protocol generation
+    if (corridor.researchStatus === "refreshing") {
+      console.log(`Pipeline already running for corridor ${corridorId}, skipping`);
+      const existing = await ctx.runQuery(api.protocols.getProtocols, {
+        corridorId,
+      });
+      return {
+        protocolIds: existing.map((p: Doc<"protocols">) => p._id),
+        cached: true,
+        errors: [],
+      };
+    }
+
     console.log(`Starting pipeline for ${corridor.origin} → ${corridor.destination}`);
 
     // Check if protocols already exist
@@ -56,6 +69,12 @@ export const generateCorridorProtocols = action({
         };
       }
     }
+
+    // Set status to refreshing to prevent concurrent runs
+    await ctx.runMutation(internal.corridors.updateResearchStatus, {
+      corridorId,
+      status: "refreshing",
+    });
 
     // Step 1: Research
     console.log("Step 1: Starting corridor research...");
@@ -83,6 +102,12 @@ export const generateCorridorProtocols = action({
       );
 
       if (existingContent.length === 0) {
+        // Reset status to error since we can't generate protocols
+        await ctx.runMutation(internal.corridors.updateResearchStatus, {
+          corridorId,
+          status: "error",
+          errorMessage: errors.join("; "),
+        });
         return {
           protocolIds: [],
           cached: false,
@@ -117,6 +142,12 @@ export const generateCorridorProtocols = action({
       const errorMsg = `Synthesis failed: ${error instanceof Error ? error.message : String(error)}`;
       errors.push(errorMsg);
       console.error(errorMsg);
+      // Reset status to error
+      await ctx.runMutation(internal.corridors.updateResearchStatus, {
+        corridorId,
+        status: "error",
+        errorMessage: errorMsg,
+      });
       return {
         protocolIds: [],
         cached: false,
@@ -127,6 +158,13 @@ export const generateCorridorProtocols = action({
     }
 
     console.log("Pipeline complete!");
+
+    // Mark as fresh after successful completion
+    await ctx.runMutation(internal.corridors.updateResearchStatus, {
+      corridorId,
+      status: "fresh",
+      protocolCount: synthesisResult.protocolIds.length,
+    });
 
     return {
       protocolIds: synthesisResult.protocolIds,

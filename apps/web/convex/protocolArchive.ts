@@ -44,6 +44,14 @@ export const archiveProtocolsForStageChange = mutation({
       archivedCount++;
     }
 
+    // Reset corridor status to trigger new protocol generation
+    // Clear lastResearchedAt so the corridor appears stale and triggers regeneration
+    await ctx.db.patch(corridorId, {
+      researchStatus: "stale",
+      lastResearchedAt: undefined,
+      protocolCount: 0,
+    });
+
     return { archivedCount, previousStage, newStage };
   },
 });

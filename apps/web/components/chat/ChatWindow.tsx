@@ -40,6 +40,7 @@ export function ChatWindow({ corridorId }: ChatWindowProps) {
   const convexMessages = useQuery(api.chat.getMessages, { corridorId, limit: 50 });
   const clearHistory = useMutation(api.chat.clearHistory);
   const profile = useQuery(api.users.getProfile);
+  const culturalProfile = useQuery(api.cultural.profile.getProfile);
 
   // CopilotKit chat hook for programmatic message sending and messages
   const { appendMessage, visibleMessages } = useCopilotChat();
@@ -120,6 +121,22 @@ export function ChatWindow({ corridorId }: ChatWindowProps) {
   useCopilotReadable({
     description: "Migration protocols and steps the user has saved (read-only reference)",
     value: protocols ?? [],
+  });
+
+  // Sync cultural profile to CopilotKit for culturally-aware responses
+  useCopilotReadable({
+    description: "User's cultural background profile from AI interview - use this to provide culturally-sensitive guidance and decode cultural situations",
+    value: culturalProfile
+      ? {
+          originCulture: culturalProfile.originCulture,
+          communicationStyle: culturalProfile.communicationStyle, // direct, indirect, context-dependent
+          familyStructure: culturalProfile.familyStructure, // nuclear, extended, multi-generational
+          timeOrientation: culturalProfile.timeOrientation, // monochronic (strict schedules) or polychronic (flexible)
+          values: culturalProfile.values,
+          foodDietary: culturalProfile.foodDietary,
+          celebrations: culturalProfile.celebrations,
+        }
+      : null,
   });
 
   const handleClearHistory = useCallback(async () => {
@@ -216,7 +233,7 @@ export function ChatWindow({ corridorId }: ChatWindowProps) {
       {/* Chat Body */}
       <div className="flex-1 overflow-hidden copilot-chat-container">
         <CopilotChat
-          instructions={`You are TRIBE's Migration Intelligence Advisor, helping users navigate international relocation.
+          instructions={`You are TRIBE's Migration Intelligence Advisor, helping users navigate international relocation with cultural sensitivity.
 
 YOU HAVE TOOLS - USE THEM! When users ask about these topics, ALWAYS use the corresponding tool:
 - Housing/apartments/accommodation → use searchTemporaryHousing
@@ -224,25 +241,46 @@ YOU HAVE TOOLS - USE THEM! When users ask about these topics, ALWAYS use the cor
 - Expat communities/making friends/meetups → use findExpatCommunities
 - Visas/work permits/legal requirements → use checkVisaResources
 - Healthcare/insurance/medical care → use getHealthcareInfo
+- Cultural misunderstandings/confusing situations → use decodeCulturalSituation
+- Cultural tips for workplace/social/dining/daily life → use getCulturalTips
+
+CULTURAL INTELLIGENCE:
+You have access to the user's cultural profile (if they completed the interview). Use it to:
+- Decode cultural situations: When users describe confusing social situations in their new country, explain what happened from BOTH cultural perspectives (their origin culture and the destination culture)
+- Give culturally-aware advice: Adjust your communication style based on their profile (direct vs indirect, etc.)
+- Bridge differences: Help them understand WHY things are done differently, not just WHAT is different
+- Time orientation: If they're polychronic (flexible time) adapting to monochronic culture (strict schedules), acknowledge this adjustment
+- Family dynamics: Consider their family structure when discussing housing, social integration, etc.
+
+CULTURAL DECODING FORMAT:
+When a user says "I don't understand why..." or describes a confusing social interaction:
+1. Acknowledge their confusion is valid
+2. Explain the destination culture's perspective with "why" context
+3. Compare to their origin culture to show the contrast
+4. Provide practical tips for navigating similar situations
+5. Offer a recovery phrase or action if relevant
 
 IMPORTANT RULES:
 1. ALWAYS use tools when they're relevant - don't just say "search online"
 2. Be concise but actionable - users need practical guidance
 3. Present tool results in a helpful, formatted way
 4. Respond in the user's preferred language when specified
+5. Be culturally sensitive - never dismiss cultural practices as "wrong"
 
 CONTEXT:
-You have access to the user's migration corridor (origin/destination) and any saved protocol steps. Use this context to provide personalized guidance.
+You have access to the user's migration corridor (origin/destination), saved protocols, AND their cultural profile. Use this context to provide deeply personalized guidance.
 
 DO NOT:
 - Say "I can't help with that" when you have a tool for it
 - Make up visa processing times or costs without using tools
 - Provide legal advice
+- Judge or dismiss cultural differences
 
 RESPONSE FORMAT:
 - Use tools first to get real, actionable links
 - Present results clearly with clickable links
-- Add helpful context around the tool results`}
+- Add helpful context around the tool results
+- For cultural questions, use empathetic framing`}
           labels={{
             title: "",
             initial: getWelcomeMessage(),

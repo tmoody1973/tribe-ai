@@ -15,6 +15,7 @@ import { TrueCostCalculator } from "@/components/dashboard/TrueCostCalculator";
 import { First48HoursGuide } from "@/components/dashboard/First48HoursGuide";
 import { EmergencyInfoCard } from "@/components/dashboard/EmergencyInfoCard";
 import { SalaryRealityCheck } from "@/components/dashboard/SalaryRealityCheck";
+import { CulturalProfileSummary } from "@/components/cultural/CulturalProfileSummary";
 
 export default function DashboardPage() {
   // Get active corridor
@@ -83,6 +84,9 @@ export default function DashboardPage() {
 
         <div className="space-y-6">
           <QuickStats corridorId={corridor._id} />
+
+          {/* Cultural Profile - Interview summary or CTA */}
+          <CulturalProfileSummary />
 
           {/* Cultural Bridge - AI-powered cultural comparison */}
           <CulturalBridge

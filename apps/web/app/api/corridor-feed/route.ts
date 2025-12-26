@@ -241,13 +241,13 @@ async function scrapeSubreddit(subreddit: SubredditInfo): Promise<FeedItem[]> {
 
     console.log(`Scraping ${url}...`);
 
-    const result = await firecrawl.scrapeUrl(url, {
+    const result = await firecrawl.scrape(url, {
       formats: ["markdown", "html"],
       onlyMainContent: true, // Focus on main content, skip navigation
       waitFor: 2000, // Wait for dynamic content to load
     });
 
-    if (!result.success || !result.markdown) {
+    if (!result.markdown) {
       console.log(`Failed to scrape ${subreddit.name}: No content`);
       return [];
     }
@@ -267,13 +267,13 @@ async function scrapeExpatForum(forum: { name: string; url: string }, countryNam
   try {
     console.log(`Scraping forum ${forum.name}...`);
 
-    const result = await firecrawl.scrapeUrl(forum.url, {
+    const result = await firecrawl.scrape(forum.url, {
       formats: ["markdown", "html"],
       onlyMainContent: true,
       waitFor: 2000,
     });
 
-    if (!result.success || !result.markdown) {
+    if (!result.markdown) {
       console.log(`Failed to scrape ${forum.name}: No content`);
       return [];
     }
@@ -374,7 +374,7 @@ export async function GET(req: NextRequest) {
     console.log(`Found ${countrySubreddits.length} country subreddits, ${globalSubreddits.length} global subreddits, ${expatForums.length} forums`);
 
     // Collect all feed items
-    let allItems: FeedItem[] = [];
+    const allItems: FeedItem[] = [];
 
     // Check if Firecrawl API key is configured
     if (!process.env.FIRECRAWL_API_KEY) {

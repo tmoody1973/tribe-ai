@@ -7,7 +7,6 @@ import { Id, Doc } from "@/convex/_generated/dataModel";
 import {
   DndContext,
   DragEndEvent,
-  DragOverEvent,
   DragStartEvent,
   DragOverlay,
   closestCenter,

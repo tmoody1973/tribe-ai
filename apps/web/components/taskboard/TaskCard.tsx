@@ -3,7 +3,7 @@
 import { Doc } from "@/convex/_generated/dataModel";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Calendar, GripVertical, AlertCircle, Clock } from "lucide-react";
+import { Calendar, GripVertical, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface TaskCardProps {

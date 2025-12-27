@@ -60,8 +60,26 @@
   * {
     @apply border-border;
   }
+
+  /* Mobile-first typography */
+  html {
+    font-size: 16px; /* Prevents iOS zoom on input focus */
+    -webkit-text-size-adjust: 100%; /* Prevents iOS text inflation */
+  }
+
   body {
     @apply bg-background text-foreground font-sans;
+    line-height: 1.6; /* Better readability on mobile */
+  }
+
+  /* Better touch targets on mobile */
+  button, a, input, select, textarea {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+  }
+
+  /* Smooth scroll behavior */
+  html {
+    scroll-behavior: smooth;
   }
 }
 

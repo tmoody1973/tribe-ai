@@ -155,7 +155,7 @@ function VideoCard({ item }: { item: FeedItem }) {
           <img
             src={item.thumbnail}
             alt={item.title}
-            className="w-full h-40 object-cover"
+            className="w-full h-32 sm:h-40 md:h-48 object-cover"
           />
           <div className="absolute inset-0 bg-black/20 flex items-center justify-center group-hover:bg-black/30 transition-colors">
             <div className="bg-red-600 rounded-full p-3 border-2 border-white shadow-lg">
@@ -172,7 +172,7 @@ function VideoCard({ item }: { item: FeedItem }) {
       )}
 
       {/* Content */}
-      <div className="p-4 space-y-3">
+      <div className="p-3 sm:p-4 space-y-2 sm:space-y-3">
         <div className="flex items-start gap-2">
           <SourceBadge source={item.source} />
           {item.timestamp && (
@@ -183,7 +183,7 @@ function VideoCard({ item }: { item: FeedItem }) {
           )}
         </div>
 
-        <h4 className="font-bold text-sm leading-tight line-clamp-2">
+        <h4 className="font-bold text-base sm:text-sm leading-snug line-clamp-2">
           {item.title}
         </h4>
 
@@ -205,13 +205,13 @@ function VideoCard({ item }: { item: FeedItem }) {
               </p>
             </div>
 
-            {/* Key Timestamps (Toggle) */}
+            {/* Key Timestamps (Toggle) - Better touch target */}
             <button
               onClick={(e) => {
                 e.preventDefault();
                 setShowSummary(!showSummary);
               }}
-              className="text-xs text-blue-600 hover:text-blue-800 font-bold underline"
+              className="text-sm sm:text-xs text-blue-600 hover:text-blue-800 active:text-blue-900 font-bold underline py-2 px-1 -mx-1 min-h-[44px] sm:min-h-0 flex items-center"
             >
               {showSummary ? "Hide" : "Show"} Key Timestamps
             </button>
@@ -258,10 +258,10 @@ function RegularFeedCard({ item }: { item: FeedItem }) {
       href={item.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="block p-4 border-b-4 border-gray-200 hover:bg-gray-50 transition-colors group"
+      className="block p-4 sm:p-5 border-b-4 border-gray-200 hover:bg-gray-50 active:bg-gray-100 transition-colors group min-h-[88px]"
     >
       <div className="flex items-start gap-3">
-        <div className="flex-1 min-w-0 space-y-2">
+        <div className="flex-1 min-w-0 space-y-2.5 sm:space-y-2">
           <div className="flex items-center gap-2 flex-wrap">
             <SourceBadge source={item.source} />
             {item.relevanceScore !== undefined && (
@@ -280,12 +280,12 @@ function RegularFeedCard({ item }: { item: FeedItem }) {
             )}
           </div>
 
-          <p className="text-sm font-bold leading-tight line-clamp-2 group-hover:text-blue-600 transition-colors">
+          <p className="text-base sm:text-sm font-bold leading-snug line-clamp-2 group-hover:text-blue-600 transition-colors">
             {item.title}
           </p>
 
           {item.snippet && (
-            <p className="text-xs text-gray-600 line-clamp-2">
+            <p className="text-sm sm:text-xs text-gray-600 leading-relaxed line-clamp-2">
               {item.snippet}
             </p>
           )}

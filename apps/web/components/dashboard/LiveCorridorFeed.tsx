@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import {
@@ -201,7 +201,7 @@ function VideoCard({ item }: { item: FeedItem }) {
             {/* You'll Learn */}
             <div className="bg-white border border-blue-200 p-2 rounded">
               <p className="text-xs font-bold text-blue-900">
-                💡 You'll learn: {item.aiSummary.youllLearn}
+                💡 You&apos;ll learn: {item.aiSummary.youllLearn}
               </p>
             </div>
 
@@ -550,7 +550,7 @@ export function LiveCorridorFeed({
             {/* End of Feed */}
             {displayCount >= items.length && items.length > 10 && (
               <div className="text-center py-4 text-sm text-gray-500 font-medium">
-                🎉 You've reached the end!
+                🎉 You&apos;ve reached the end!
               </div>
             )}
           </div>
@@ -559,7 +559,7 @@ export function LiveCorridorFeed({
             <Sparkles size={32} className="mx-auto text-gray-300 mb-3" />
             <p className="text-gray-600 font-bold mb-2">No updates yet</p>
             <p className="text-gray-500 text-sm mb-4">
-              We're gathering the latest insights from your corridor
+              We&apos;re gathering the latest insights from your corridor
             </p>
             <button
               onClick={() => fetchFeed(true)}

@@ -90,7 +90,7 @@ async function extractTranscript(videoId: string): Promise<string | null> {
     const fullText = transcriptItems.map((item) => item.text).join(" ");
 
     return fullText;
-  } catch (error) {
+  } catch {
     // Video might not have transcripts or they're disabled
     return null;
   }

@@ -4,7 +4,7 @@ import { api } from "@/convex/_generated/api";
 import FirecrawlApp from "@mendable/firecrawl-js";
 import { analyzeRelevance, type UserContext } from "@/lib/gemini-relevance";
 import { searchMigrationVideos } from "@/lib/youtube";
-import { analyzeVideos } from "@/lib/gemini-video";
+import { analyzeVideos, type VideoAnalysis } from "@/lib/gemini-video";
 import fs from "fs";
 import path from "path";
 
@@ -132,6 +132,9 @@ interface FeedItem {
   alertType?: "opportunity" | "warning" | "update";
   thumbnail?: string;
   timestamp?: number;
+  relevanceScore?: number;
+  stageScore?: number;
+  aiReason?: string;
   aiSummary?: {
     summary: string;
     keyTimestamps: Array<{
@@ -414,7 +417,7 @@ export async function GET(req: NextRequest) {
         });
 
         // Analyze video transcripts with Gemini (Story 8.4)
-        let videoAnalyses = new Map<string, any>();
+        let videoAnalyses = new Map<string, VideoAnalysis>();
         if (process.env.GOOGLE_GENERATIVE_AI_API_KEY && videos.length > 0) {
           try {
             log(`Analyzing ${videos.length} video transcripts with Gemini...`);
@@ -530,8 +533,8 @@ export async function GET(req: NextRequest) {
 
     // Sort by relevance score (if available), then by timestamp
     const sortedItems = uniqueItems.sort((a, b) => {
-      const scoreA = (a as any).relevanceScore || 0;
-      const scoreB = (b as any).relevanceScore || 0;
+      const scoreA = a.relevanceScore || 0;
+      const scoreB = b.relevanceScore || 0;
       if (scoreA !== scoreB) return scoreB - scoreA;
       return (b.timestamp || 0) - (a.timestamp || 0);
     });
@@ -547,9 +550,9 @@ export async function GET(req: NextRequest) {
           destination: destinationCode,
           ...item,
           // Include AI analysis fields
-          relevanceScore: (item as any).relevanceScore,
-          stageScore: (item as any).stageScore,
-          aiReason: (item as any).aiReason,
+          relevanceScore: item.relevanceScore,
+          stageScore: item.stageScore,
+          aiReason: item.aiReason,
           // Include video AI summary if available
           aiSummary: item.aiSummary,
         });

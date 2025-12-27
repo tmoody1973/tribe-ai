@@ -180,14 +180,22 @@ async function cacheVideos(
   videos: YouTubeVideo[]
 ): Promise<void> {
   try {
-    const cacheKey = `youtube_videos_${destination.toLowerCase().replace(/\s+/g, "_")}`;
-
     // Store in Convex cache (handled by API route, not here directly)
     // This is a placeholder - actual caching happens in the route
     console.log(`Cached ${videos.length} videos for ${destination}`);
   } catch (error) {
     console.error("Error caching videos:", error);
   }
+}
+
+interface CachedFeedItem {
+  source: string;
+  title: string;
+  snippet: string;
+  url: string;
+  thumbnail?: string;
+  author?: string;
+  timestamp?: number;
 }
 
 /**
@@ -202,15 +210,15 @@ async function getCachedVideos(destination: string): Promise<YouTubeVideo[]> {
       limit: 10,
     });
 
-    return cached
-      .filter((item: any) => item.source === "youtube")
-      .map((item: any) => ({
+    return (cached as CachedFeedItem[])
+      .filter((item) => item.source === "youtube")
+      .map((item) => ({
         videoId: extractVideoId(item.url),
         title: item.title,
         description: item.snippet,
         thumbnail: item.thumbnail || "",
         channelTitle: item.author || "",
-        publishedAt: new Date(item.timestamp).toISOString(),
+        publishedAt: new Date(item.timestamp || Date.now()).toISOString(),
         url: item.url,
       }));
   } catch (error) {
@@ -227,6 +235,13 @@ function extractVideoId(url: string): string {
   return match ? match[1] : "";
 }
 
+interface VideoStatistics {
+  viewCount?: string;
+  likeCount?: string;
+  commentCount?: string;
+  duration?: string;
+}
+
 /**
  * Get video statistics (views, likes, etc.)
  * Cost: 1 quota unit per video
@@ -235,7 +250,7 @@ function extractVideoId(url: string): string {
 export async function getVideoStatistics(
   videoIds: string[],
   debugLog?: (msg: string) => void
-): Promise<Map<string, any>> {
+): Promise<Map<string, VideoStatistics>> {
   const log = debugLog || console.log;
   const stats = new Map();
 

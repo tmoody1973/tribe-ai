@@ -548,12 +548,23 @@ export async function GET(req: NextRequest) {
         await convex.mutation(api.corridorFeed.saveFeedItem, {
           origin: originCode,
           destination: destinationCode,
-          ...item,
-          // Include AI analysis fields
+          // Feed item fields (explicitly listed - DO NOT use ...item spread)
+          source: item.source,
+          title: item.title,
+          snippet: item.snippet,
+          url: item.url,
+          type: item.type,
+          thumbnail: item.thumbnail,
+          author: item.author,
+          subreddit: item.subreddit,
+          upvotes: item.upvotes,
+          comments: item.comments,
+          isAlert: item.isAlert,
+          alertType: item.alertType,
+          // AI analysis fields
           relevanceScore: item.relevanceScore,
           stageScore: item.stageScore,
           aiReason: item.aiReason,
-          // Include video AI summary if available
           aiSummary: item.aiSummary,
         });
       } catch (e) {

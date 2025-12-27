@@ -97,8 +97,8 @@ export async function analyzeRelevance(
           const post = batch[analysis.postIndex];
           if (!post) continue;
 
-          // Filter threshold: only include relevance >= 50
-          if (analysis.relevanceScore >= 50) {
+          // Filter threshold: only include relevance >= 40 (lowered for better content discovery)
+          if (analysis.relevanceScore >= 40) {
             analyzedPosts.push({
               ...post,
               relevanceScore: analysis.relevanceScore,
@@ -110,7 +110,7 @@ export async function analyzeRelevance(
           }
         }
 
-        log(`Batch ${batchIndex + 1}: Analyzed ${analyses.length} posts, kept ${analyses.filter(a => a.relevanceScore >= 50).length} relevant`);
+        log(`Batch ${batchIndex + 1}: Analyzed ${analyses.length} posts, kept ${analyses.filter(a => a.relevanceScore >= 40).length} relevant`);
       } catch (err) {
         const error = err as Error;
         log(`Batch ${batchIndex + 1} error: ${error.message}, using fallback`);

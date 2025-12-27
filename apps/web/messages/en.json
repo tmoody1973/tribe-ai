@@ -12,6 +12,7 @@
   },
   "navigation": {
     "dashboard": "Dashboard",
+    "feed": "Feed",
     "tasks": "Tasks",
     "documents": "Documents",
     "chat": "Ask TRIBE",

@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { ConvexHttpClient } from "convex/browser";
 import { api } from "@/convex/_generated/api";
 import FirecrawlApp from "@mendable/firecrawl-js";
+import { analyzeRelevance, type UserContext } from "@/lib/gemini-relevance";
+import { searchMigrationVideos } from "@/lib/youtube";
+import { analyzeVideos } from "@/lib/gemini-video";
 import fs from "fs";
 import path from "path";
 
@@ -116,7 +119,8 @@ function getExpatForums(isoCode: string): Array<{ name: string; url: string }> {
 }
 
 interface FeedItem {
-  source: "reddit" | "forum" | "news" | "official";
+  source: "reddit" | "forum" | "news" | "official" | "youtube";
+  type?: string;
   title: string;
   snippet: string;
   url: string;
@@ -126,6 +130,16 @@ interface FeedItem {
   comments?: number;
   isAlert?: boolean;
   alertType?: "opportunity" | "warning" | "update";
+  thumbnail?: string;
+  timestamp?: number;
+  aiSummary?: {
+    summary: string;
+    keyTimestamps: Array<{
+      time: string;
+      topic: string;
+    }>;
+    youllLearn: string;
+  };
 }
 
 // Detect alerts in post content
@@ -390,47 +404,154 @@ export async function GET(req: NextRequest) {
       log("Skipping forum scraping - Firecrawl API key not configured");
     }
 
+    // Fetch YouTube videos (Story 8.3)
+    if (process.env.YOUTUBE_API_KEY) {
+      try {
+        log("Searching YouTube for migration videos...");
+        const videos = await searchMigrationVideos(destination, {
+          maxResults: 5,
+          debugLog: log,
+        });
+
+        // Analyze video transcripts with Gemini (Story 8.4)
+        let videoAnalyses = new Map<string, any>();
+        if (process.env.GOOGLE_AI_API_KEY && videos.length > 0) {
+          try {
+            log(`Analyzing ${videos.length} video transcripts with Gemini...`);
+            videoAnalyses = await analyzeVideos(
+              videos.map(v => ({ videoId: v.videoId, title: v.title })),
+              destination,
+              {
+                maxAnalyses: 5,
+                debugLog: log,
+              }
+            );
+            log(`Successfully analyzed ${videoAnalyses.size} videos`);
+          } catch (error) {
+            const err = error as Error;
+            log(`Video analysis error: ${err.message}, continuing without AI summaries`);
+          }
+        }
+
+        // Convert videos to feed items with AI summaries
+        for (const video of videos) {
+          const analysis = videoAnalyses.get(video.videoId);
+
+          allItems.push({
+            source: "youtube",
+            type: "video",
+            title: video.title,
+            snippet: video.description.slice(0, 300), // Limit description length
+            url: video.url,
+            thumbnail: video.thumbnail,
+            author: video.channelTitle,
+            timestamp: new Date(video.publishedAt).getTime(),
+            isAlert: false,
+            // Add AI summary if available
+            ...(analysis && {
+              aiSummary: analysis,
+            }),
+          });
+        }
+
+        log(`Added ${videos.length} YouTube videos to feed`);
+      } catch (error) {
+        const err = error as Error;
+        log(`YouTube search error: ${err.message}`);
+      }
+    } else {
+      log("YouTube API key not configured - skipping video search");
+    }
+
     log(`Total items collected: ${allItems.length}`);
 
-    // If no items scraped, add helpful sample data
-    if (allItems.length === 0) {
-      log("No items scraped, adding sample data");
-      allItems.push({
+    // NEW: AI-Powered Relevance Analysis (Story 8.2.5)
+    let analyzedItems = allItems;
+
+    if (allItems.length > 0) {
+      try {
+        // Determine user's journey stage (default to "planning" if not available)
+        // TODO: Get actual stage from user profile
+        const userStage: UserContext["stage"] = "planning";
+
+        log(`Analyzing ${allItems.length} items with Gemini AI...`);
+        analyzedItems = await analyzeRelevance(
+          allItems,
+          {
+            origin,
+            destination,
+            stage: userStage,
+          },
+          log
+        );
+
+        log(`AI filtered to ${analyzedItems.length} relevant items (removed ${allItems.length - analyzedItems.length} low-relevance items)`);
+      } catch (error) {
+        const err = error as Error;
+        log(`AI analysis error: ${err.message}, continuing with unfiltered items`);
+        analyzedItems = allItems;
+      }
+    }
+
+    // If no items scraped or all filtered out, add helpful sample data
+    if (analyzedItems.length === 0) {
+      log("No items scraped or all filtered out, adding sample data");
+      analyzedItems.push({
         source: "reddit",
         title: `Moving to ${destination} - Visa Timeline Questions`,
-        snippet: "Has anyone recently moved from ${origin} to ${destination}? Looking for timeline estimates for the application process...",
+        snippet: `Has anyone recently moved from ${origin} to ${destination}? Looking for timeline estimates for the application process...`,
         url: `https://reddit.com/r/iwantout`,
         subreddit: "IWantOut",
         isAlert: false,
+        relevanceScore: 80,
+        stageScore: 90,
+        aiReason: "Sample data for empty feed",
       });
-      allItems.push({
+      analyzedItems.push({
         source: "reddit",
         title: `${destination} Housing Market Update`,
         snippet: "Latest updates on rental prices and availability in major cities. Things have been changing rapidly...",
         url: `https://reddit.com/r/${destination.toLowerCase()}`,
         isAlert: true,
         alertType: "update",
+        relevanceScore: 70,
+        stageScore: 60,
+        aiReason: "Sample data for empty feed",
       });
     }
 
     // Deduplicate by URL
     const seenUrls = new Set<string>();
-    const uniqueItems = allItems.filter((item) => {
+    const uniqueItems = analyzedItems.filter((item) => {
       if (seenUrls.has(item.url)) return false;
       seenUrls.add(item.url);
       return true;
     });
 
-    // Take top 15 items
-    const feedItems = uniqueItems.slice(0, 15);
+    // Sort by relevance score (if available), then by timestamp
+    const sortedItems = uniqueItems.sort((a, b) => {
+      const scoreA = (a as any).relevanceScore || 0;
+      const scoreB = (b as any).relevanceScore || 0;
+      if (scoreA !== scoreB) return scoreB - scoreA;
+      return (b.timestamp || 0) - (a.timestamp || 0);
+    });
 
-    // Save to Convex (use codes for storage)
+    // Take top 15 items
+    const feedItems = sortedItems.slice(0, 15);
+
+    // Save to Convex (use codes for storage) with AI scores
     for (const item of feedItems) {
       try {
         await convex.mutation(api.corridorFeed.saveFeedItem, {
           origin: originCode,
           destination: destinationCode,
           ...item,
+          // Include AI analysis fields
+          relevanceScore: (item as any).relevanceScore,
+          stageScore: (item as any).stageScore,
+          aiReason: (item as any).aiReason,
+          // Include video AI summary if available
+          aiSummary: item.aiSummary,
         });
       } catch (e) {
         console.error("Error saving feed item:", e);

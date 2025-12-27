@@ -34,6 +34,7 @@ The 2-week hackathon constraint requires ruthless prioritization. The MVP focuse
 | Dec 2025 | 1.1 | Added Firecrawl for web scraping/ingestion | John (PM) |
 | Dec 2025 | 1.2 | Added CopilotKit + AG-UI for agentic chat and Generative UI | John (PM) |
 | Dec 2025 | 1.3 | Added Epic 6: Cultural Bridge & Inclusion (FR24-FR29) | Claude |
+| Dec 27, 2025 | 1.4 | Added Epic 8: Live Corridor Feed with multi-source intelligence, Gemini video analysis, Threads/Twitter UI, and Document Vault integration (FR30-FR40, NFR15-NFR19) | Claude |
 
 ---
 
@@ -70,6 +71,17 @@ The 2-week hackathon constraint requires ruthless prioritization. The MVP focuse
 - **FR27:** System shall offer Cultural Exchange Matcher connecting migrants with local cultural buddies/allies
 - **FR28:** System shall display Belonging Dashboard tracking integration milestones, social connections, and cultural experiences
 - **FR29:** System shall provide micro-moment cultural insights (contextual tips for daily situations)
+- **FR30:** System shall provide Live Corridor Feed displaying corridor-specific content from multiple sources (Reddit, YouTube, forums, news)
+- **FR31:** System shall filter feed content by relevance to user's specific corridor (origin→destination)
+- **FR32:** System shall display feed in Threads/Twitter-style interface with infinite scroll and inline media
+- **FR33:** System shall allow users to save feed items to Document Vault with categories and notes
+- **FR34:** System shall use YouTube Data API to fetch corridor-specific migration videos
+- **FR35:** System shall use Gemini AI to analyze YouTube video transcripts and generate TL;DR summaries, key timestamps, and learning outcomes
+- **FR36:** System shall use Tavily API for smart search and discovery of migration resources
+- **FR37:** System shall use Perplexity API for real-time policy alerts and official announcements
+- **FR38:** System shall implement relevance scoring algorithm that ranks content by recency, source credibility, engagement, and journey stage match
+- **FR39:** System shall respect YouTube API quota limits (10K units/day) with intelligent caching and prioritization
+- **FR40:** System shall categorize feed items by type: Alerts, Success Stories, Videos, Discussions, Educational
 
 ### 2.2 Non-Functional Requirements
 
@@ -87,6 +99,11 @@ The 2-week hackathon constraint requires ruthless prioritization. The MVP focuse
 - **NFR12:** System shall implement rate limiting via Upstash to prevent abuse
 - **NFR13:** System shall log errors to Sentry for monitoring and debugging
 - **NFR14:** System shall track user analytics via PostHog for product insights
+- **NFR15:** Live Corridor Feed shall refresh in <2 seconds for cached content
+- **NFR16:** Feed items shall load incrementally with smooth infinite scroll (no janky pagination)
+- **NFR17:** YouTube video analyses shall be cached for 7 days to minimize API usage
+- **NFR18:** Total API costs for corridor feed shall not exceed $30/month for 30 active corridors
+- **NFR19:** Feed relevance algorithm shall filter out 95%+ non-corridor-specific content
 
 ---
 
@@ -315,6 +332,9 @@ Build bi-directional cultural intelligence features that promote understanding b
 
 ### Epic 7: Task Board (Kanban)
 Create a Trello-style task board that integrates with protocols and journeys, allowing users to track their migration tasks visually with drag-and-drop functionality. Tasks can be created from protocol steps or added manually, with journey-scoped boards and two-way sync between task completion and protocol progress.
+
+### Epic 8: Live Corridor Feed
+Build a personalized, real-time feed of corridor-specific migration content from multiple sources (Reddit, YouTube, forums, news, official sources). Uses multi-source intelligence (Reddit's free JSON API, YouTube Data API, Tavily for smart search, Perplexity for policy alerts, and Firecrawl for forums) with AI-powered relevance scoring. Features Gemini-analyzed video content with TL;DR summaries, Threads/Twitter-style UI with infinite scroll, and ability to save items to Document Vault.
 
 ---
 
@@ -1067,6 +1087,273 @@ Create a Trello-style task board that integrates with protocols and journeys, al
 5. Empty state when switching to journey with no tasks
 6. Task count per journey shown in journey switcher dropdown
 7. No task data bleeds between journeys
+
+---
+
+### Epic 8: Live Corridor Feed
+
+**Goal:** Build a personalized, real-time migration intelligence feed that aggregates content from multiple sources (Reddit, YouTube, expat forums, news, official sources) filtered specifically for the user's corridor. Uses AI to analyze video content, smart relevance scoring, and enables saving useful items to the Document Vault.
+
+**Key Innovation:** Unlike generic migration news feeds, TRIBE's Live Corridor Feed is hyper-personalized to the user's specific origin→destination journey with AI-enhanced content (Gemini video summaries), multi-source aggregation, and journey-stage awareness.
+
+---
+
+#### Story 8.1: Feed Data Model & Caching
+
+**As a** developer,
+**I want** a data model for feed items with caching and quota management,
+**so that** feed content can be stored efficiently and API costs are controlled.
+
+**Acceptance Criteria:**
+1. CorridorFeed table with: id, origin, destination, source (reddit/youtube/forum/news/official), type, title, snippet, url, timestamp, thumbnail, upvotes, comments, isAlert, alertType
+2. SavedFeedItems table with: id, userId, corridorId, feedItem (embedded), category, userNotes, savedAt, updatedAt
+3. YouTubeQuotaUsage table tracking daily quota consumption with automatic reset
+4. VideoAnalysisCache table with: videoId, transcript, aiSummary, keyTimestamps, youllLearn, cachedAt (7-day TTL)
+5. Indexes on origin+destination and timestamp for efficient feed queries
+6. TypeScript types generated for all feed schemas
+7. Convex queries for: getCorridorFeed, needsRefresh, getCorridorStats
+
+---
+
+#### Story 8.2: Reddit Integration via Free JSON API
+
+**As a** system,
+**I want** to fetch corridor-specific posts from Reddit without authentication,
+**so that** the feed includes real community discussions and experiences.
+
+**Acceptance Criteria:**
+1. Reddit client fetches from `/r/{subreddit}/new.json` endpoint (no auth needed)
+2. Fetches from country-specific subreddits (e.g., r/japan, r/germany) for destination
+3. Fetches from global migration subreddits (r/IWantOut, r/expats) and filters by destination mention
+4. Alert detection for keywords: "slots opened", "scam", "warning", "policy change"
+5. Rate limiting with 300ms delay between requests
+6. Handles Reddit API errors gracefully with fallback to cached data
+7. Posts stored with upvotes, comments, author attribution
+
+---
+
+#### Story 8.2.5: AI-Powered Relevance Analysis
+
+**As a** system,
+**I want** to use Gemini AI to analyze feed items for true relevance to user's corridor and journey stage,
+**so that** users only see content that's genuinely useful for their specific migration path (not just keyword matches).
+
+**Acceptance Criteria:**
+1. Gemini 2.0 Flash analyzes batches of 10 feed items per request for cost efficiency
+2. AI assigns relevance score (0-100) based on corridor match, migration focus, and actionability
+3. AI assigns stage score (0-100) matching user's journey stage (researching, applying, approved, arrived)
+4. AI detects alerts intelligently (not keyword-based) and assigns type (opportunity, warning, update)
+5. Items with relevance score < 50 are filtered out (not shown to user)
+6. Analysis includes 1-sentence reason explaining the score for debugging
+7. Batch analysis processes all sources (Reddit, forums, news) before saving to feed
+8. Results cached with feed items to avoid re-analysis on subsequent requests
+9. Analysis respects Gemini free tier (1,500 requests/day = 15,000 posts/day analyzed)
+10. Graceful fallback to keyword-based filtering if Gemini unavailable
+
+**Example Analysis:**
+
+```json
+{
+  "postIndex": 0,
+  "relevanceScore": 92,
+  "stageScore": 85,
+  "isAlert": true,
+  "alertType": "opportunity",
+  "reason": "Specific work visa slots opened for tech workers in Japan - highly actionable for planning stage"
+}
+```
+
+**Why This Story Is Critical:**
+- Current keyword matching shows "Japan Airlines office in Germany" (irrelevant) ❌
+- Current keyword matching misses "Tokyo work visa timeline" (no "Japan" keyword) ❌
+- AI understands context, intent, and true relevance ✅
+
+---
+
+#### Story 8.3: YouTube Integration with Data API v3
+
+**As a** system,
+**I want** to fetch corridor-specific migration videos,
+**so that** users can learn from visual experiences and guides.
+
+**Acceptance Criteria:**
+1. YouTube Data API v3 client with API key authentication
+2. Search queries: "{destination} immigration", "{destination} moving vlog", "{destination} visa guide"
+3. Quota management system tracks daily usage (10K units limit)
+4. Search costs 100 units; quota checked before each call
+5. Results cached for 24 hours to reduce API calls
+6. Prioritizes high-traffic corridors when quota is low
+7. Fallback to cached videos when quota exhausted
+
+---
+
+#### Story 8.4: Gemini Video Transcript Analysis
+
+**As a** system,
+**I want** to analyze YouTube video transcripts using Gemini AI,
+**so that** users get TL;DR summaries and key timestamps without watching full videos.
+
+**Acceptance Criteria:**
+1. youtube-transcript npm package extracts transcripts from video IDs
+2. Gemini 2.0 Flash analyzes transcript (free tier: 1,500 requests/day)
+3. AI generates: 2-3 sentence TL;DR, 3 key timestamps with topics, "You'll learn:" sentence
+4. Analysis returned as structured JSON for frontend rendering
+5. Results cached in VideoAnalysisCache table for 7 days
+6. Handles videos without transcripts gracefully (skip analysis)
+7. Analysis prompt optimized for migration content extraction
+
+---
+
+#### Story 8.5: Tavily Smart Search Integration
+
+**As a** system,
+**I want** to use Tavily API for intelligent resource discovery,
+**so that** the feed includes high-quality articles and guides not found via standard scraping.
+
+**Acceptance Criteria:**
+1. Tavily API client with API key authentication
+2. Advanced search mode with domain filtering (official sites, trusted resources)
+3. Search queries personalized to corridor and user's journey stage
+4. Results include: title, snippet, URL, published date, domain
+5. Deduplication with existing feed items (URL matching)
+6. Rate limiting to stay within free tier (1K credits/month = ~125 searches)
+7. Cost tracking logs usage for monitoring
+
+---
+
+#### Story 8.6: Perplexity API for Policy Alerts
+
+**As a** system,
+**I want** to query Perplexity for real-time policy changes and official announcements,
+**so that** users get time-sensitive updates about their corridor.
+
+**Acceptance Criteria:**
+1. Perplexity Search API client with API key authentication
+2. Time filtering set to "daily" or "weekly" for recent updates
+3. Domain filtering prioritizes government/official sources
+4. Query: "{destination} immigration policy changes {current_date}"
+5. Results flagged as "Alert" type with "update" or "warning" badge
+6. Rate limiting: max 5 queries per corridor per day ($5/1K requests budget)
+7. Results deduplicated and merged into main feed
+
+---
+
+#### Story 8.7: Firecrawl Forum Scraping
+
+**As a** system,
+**I want** to scrape expat forum discussions using Firecrawl,
+**so that** the feed includes community wisdom from specialized forums.
+
+**Acceptance Criteria:**
+1. Firecrawl API client configured with API key
+2. Scrapes forums from migration_app_complete.json where scrapable=true
+3. Uses markdown format with onlyMainContent=true for clean extraction
+4. Filters forum posts mentioning destination country or migration keywords
+5. Limit to 1 forum per corridor to control costs ($16/month budget)
+6. Handles forums that require JavaScript rendering (waitFor: 2000ms)
+7. Forum posts limited to 5 per feed to prevent dominance
+
+---
+
+#### Story 8.8: Relevance Scoring Algorithm
+
+**As a** system,
+**I want** to rank feed items by relevance to user's corridor and journey,
+**so that** the most useful content appears first.
+
+**Acceptance Criteria:**
+1. Scoring algorithm considers: destination mention (required), recency (max 10 points), source credibility (official: 15, youtube: 8, reddit: 7, forum: 5), alert priority (opportunity: 20, warning: 18, update: 12), engagement (upvotes/comments), journey stage keywords match
+2. Items without destination mention automatically scored 0 and filtered out
+3. Stage relevance: "researching"→guides, "applying"→docs, "approved"→housing, "arrived"→settling
+4. Source diversification prevents monotony (no more than 3 consecutive items from same source)
+5. Alert items always boosted to top regardless of other scores
+6. Scoring function returns numeric score 0-100
+7. Feed sorted by score descending before display
+
+---
+
+#### Story 8.9: Threads/Twitter-Style Feed UI
+
+**As a** user,
+**I want** a modern, engaging feed interface,
+**so that** consuming migration content feels familiar and enjoyable.
+
+**Acceptance Criteria:**
+1. Infinite scroll implementation (loads more items as user scrolls)
+2. Feed item cards with: source badge, title, snippet, inline thumbnail (videos), engagement metrics (upvotes, comments), timestamp ("2h ago")
+3. Alert items highlighted with colored badges and pulsing animation
+4. Video items show thumbnail, duration, and AI-generated TL;DR inline
+5. Click expands full item details in modal (or navigates to external link)
+6. RetroUI styling with bold borders, chunky buttons, high contrast
+7. Mobile-optimized touch targets and responsive layout
+
+---
+
+#### Story 8.10: Save to Document Vault
+
+**As a** user,
+**I want** to save useful feed items to my Document Vault,
+**so that** I can reference them later during my migration journey.
+
+**Acceptance Criteria:**
+1. "Save" button on each feed item (bookmark icon)
+2. Save modal with: category selector (Visa, Housing, Jobs, Finance, Health, Legal, Culture, General), notes field (optional), corridor auto-populated
+3. Saved items stored in SavedFeedItems table with userId reference
+4. Saved items accessible from Document Vault with new "Saved Feed Items" tab
+5. Prevent duplicate saves (show "Already saved" badge if item saved)
+6. Saved items grouped by category in vault
+7. Option to edit notes or delete saved items from vault
+
+---
+
+#### Story 8.11: Feed Refresh & Caching Strategy
+
+**As a** system,
+**I want** to cache feed content and refresh intelligently,
+**so that** users get fast load times while data stays current.
+
+**Acceptance Criteria:**
+1. Feed cached in Convex CorridorFeed table per corridor
+2. Cache considered fresh for 6 hours
+3. After 6 hours, background refresh triggered while showing cached data
+4. Manual refresh button available for users (force refresh)
+5. Refresh fetches from all sources in parallel (Reddit, YouTube, Tavily, Perplexity)
+6. Deduplicate by URL before saving to cache
+7. Refresh status indicator shows last update time
+
+---
+
+#### Story 8.12: Feed Personalization by Journey Stage
+
+**As a** user,
+**I want** feed content tailored to my current migration stage,
+**so that** I see information relevant to where I am in my journey.
+
+**Acceptance Criteria:**
+1. Feed query accepts user's current stage (researching, applying, approved, arrived)
+2. Content filtered/boosted based on stage keywords
+3. Stage-specific content categories emphasized (researching→guides, applying→requirements, approved→housing/jobs, arrived→settling tips)
+4. Stage preference stored in user profile
+5. Stage switcher in feed header to preview other stages
+6. Feed adapts in real-time when user updates stage in profile
+7. Empty state messages personalized by stage ("No visa updates yet - we're watching for you")
+
+---
+
+#### Story 8.13: Feed Analytics & Monitoring
+
+**As a** system,
+**I want** to track feed performance and API usage,
+**so that** costs stay within budget and users get relevant content.
+
+**Acceptance Criteria:**
+1. Track API usage daily: YouTube quota, Tavily credits, Perplexity requests, Firecrawl scrapes
+2. Log relevance score distribution to validate algorithm effectiveness
+3. Track user engagement: save rate, click-through rate, time spent on feed
+4. Alert when approaching quota limits (90% of daily cap)
+5. Cost tracking dashboard showing spend per API per month
+6. A/B testing capability for relevance algorithm tweaks
+7. Error logging for API failures with automatic retries
 
 ---
 

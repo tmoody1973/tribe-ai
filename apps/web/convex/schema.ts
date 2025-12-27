@@ -414,19 +414,22 @@ export default defineSchema({
     .index("by_protocol_step", ["protocolStepId"])
     .index("by_category", ["corridorId", "category"]),
 
-  // Live corridor feed - real-time updates from Reddit, forums, news
+  // Live corridor feed - real-time updates from Reddit, YouTube, forums, news
   corridorFeed: defineTable({
     origin: v.string(),
     destination: v.string(),
     source: v.union(
       v.literal("reddit"),
+      v.literal("youtube"),
       v.literal("forum"),
       v.literal("news"),
       v.literal("official")
     ),
+    type: v.optional(v.string()), // "video", "post", "article", "alert"
     title: v.string(),
     snippet: v.string(),
     url: v.string(),
+    thumbnail: v.optional(v.string()), // For YouTube videos
     author: v.optional(v.string()),
     subreddit: v.optional(v.string()),
     upvotes: v.optional(v.number()),
@@ -435,13 +438,109 @@ export default defineSchema({
     alertType: v.optional(
       v.union(v.literal("opportunity"), v.literal("warning"), v.literal("update"))
     ),
+    // AI relevance analysis (Story 8.2.5)
+    relevanceScore: v.optional(v.number()), // 0-100, AI-determined relevance
+    stageScore: v.optional(v.number()), // 0-100, journey stage match
+    aiReason: v.optional(v.string()), // Why this score (for debugging)
+    // Video AI summary (Story 8.4)
+    aiSummary: v.optional(
+      v.object({
+        summary: v.string(), // 2-3 sentence TL;DR
+        keyTimestamps: v.array(
+          v.object({
+            time: v.string(), // "MM:SS" format
+            topic: v.string(),
+          })
+        ),
+        youllLearn: v.string(), // "You'll learn: ..."
+      })
+    ),
     timestamp: v.number(),
     createdAt: v.number(),
     updatedAt: v.number(),
   })
     .index("by_corridor", ["origin", "destination"])
     .index("by_url", ["url"])
-    .index("by_timestamp", ["timestamp"]),
+    .index("by_timestamp", ["timestamp"])
+    .index("by_source", ["origin", "destination", "source"])
+    .index("by_relevance", ["origin", "destination", "relevanceScore"]),
+
+  // Saved feed items - users can bookmark useful content
+  savedFeedItems: defineTable({
+    userId: v.id("users"),
+    corridorId: v.id("corridors"),
+    // Snapshot of feed item at time of save
+    feedItem: v.object({
+      source: v.string(),
+      type: v.optional(v.string()),
+      title: v.string(),
+      snippet: v.string(),
+      url: v.string(),
+      thumbnail: v.optional(v.string()),
+      timestamp: v.number(),
+      upvotes: v.optional(v.number()),
+      comments: v.optional(v.number()),
+      aiSummary: v.optional(
+        v.object({
+          summary: v.string(),
+          keyTimestamps: v.optional(
+            v.array(
+              v.object({
+                time: v.string(),
+                topic: v.string(),
+              })
+            )
+          ),
+          youllLearn: v.optional(v.string()),
+        })
+      ),
+    }),
+    category: v.string(), // "Visa", "Housing", "Jobs", "Finance", "Health", "Legal", "Culture", "General"
+    userNotes: v.optional(v.string()),
+    savedAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_corridor", ["userId", "corridorId"])
+    .index("by_user_url", ["userId", "feedItem.url"])
+    .index("by_category", ["userId", "category"]),
+
+  // YouTube API quota tracking
+  youtubeQuotaUsage: defineTable({
+    date: v.string(), // YYYY-MM-DD format for daily tracking
+    quotaUsed: v.number(), // Units consumed (search = 100, video details = 1)
+    quotaLimit: v.number(), // Daily limit (10,000 for free tier)
+    operations: v.array(
+      v.object({
+        type: v.string(), // "search", "video_details"
+        cost: v.number(),
+        corridor: v.optional(v.string()),
+        timestamp: v.number(),
+      })
+    ),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }).index("by_date", ["date"]),
+
+  // Video analysis cache - Gemini-analyzed YouTube transcripts
+  videoAnalysisCache: defineTable({
+    videoId: v.string(),
+    transcript: v.string(), // Full transcript from youtube-transcript
+    aiSummary: v.object({
+      summary: v.string(), // 2-3 sentence TL;DR
+      keyTimestamps: v.array(
+        v.object({
+          time: v.string(), // "MM:SS" format
+          topic: v.string(),
+        })
+      ),
+      youllLearn: v.string(), // "You'll learn: ..."
+    }),
+    cachedAt: v.number(),
+    expiresAt: v.number(), // 7-day TTL
+  })
+    .index("by_video_id", ["videoId"])
+    .index("by_expiry", ["expiresAt"]),
 
   // Corridor statistics - migrant counts, success rates
   corridorStats: defineTable({

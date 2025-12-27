@@ -274,6 +274,16 @@ async function scrapeExpatForum(forum: { name: string; url: string }, countryNam
         const title = linkMatch[1];
         const url = linkMatch[2];
 
+        // Skip image URLs (banners, avatars, etc.)
+        if (url.match(/\.(jpg|jpeg|png|gif|webp|svg|ico)(\?|$)/i)) {
+          continue;
+        }
+
+        // Skip non-forum URLs (ads, external sites)
+        if (!url.includes('expatforum.com/threads/')) {
+          continue;
+        }
+
         // Filter for relevant topics (contains country name or migration keywords)
         const titleLower = title.toLowerCase();
         const countryLower = countryName.toLowerCase();
@@ -303,6 +313,89 @@ async function scrapeExpatForum(forum: { name: string; url: string }, countryNam
   } catch (e) {
     const error = e as Error;
     log(`Error scraping forum ${forum.name}: ${error.message}`);
+    return [];
+  }
+}
+
+/**
+ * Fetch migration content using Perplexity AI (searches web + Reddit)
+ */
+async function fetchMigrationNews(
+  origin: string,
+  destination: string,
+  debugLog?: (msg: string) => void
+): Promise<FeedItem[]> {
+  const log = debugLog || console.log;
+
+  try {
+    // Perplexity can search Reddit, news sites, and official sources all at once
+    const query = `Search Reddit (r/IWantOut, r/${destination.toLowerCase()}), news sites, and official government sources for recent posts and articles about immigrating or moving from ${origin} to ${destination}. Include visa updates, job opportunities, housing tips, and expat experiences.`;
+
+    const response = await fetch("https://api.perplexity.ai/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${process.env.PERPLEXITY_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "sonar",
+        messages: [
+          {
+            role: "system",
+            content: "You are a migration content aggregator. Search Reddit, news sites, and official sources for immigration information. Return results as a JSON array with: title, snippet (1-2 sentences), url, source (reddit/news/official), and isAlert (boolean for urgent updates). Include 5-10 most relevant recent results.",
+          },
+          {
+            role: "user",
+            content: query,
+          },
+        ],
+        temperature: 0.2,
+        max_tokens: 2000,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Perplexity API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const content = data.choices?.[0]?.message?.content;
+
+    if (!content) {
+      throw new Error("No content in Perplexity response");
+    }
+
+    log(`Perplexity raw response: ${content.substring(0, 200)}...`);
+
+    // Try to extract JSON array from the response
+    const jsonMatch = content.match(/\[[\s\S]*\]/);
+    if (!jsonMatch) {
+      log("Perplexity returned no structured results");
+      return [];
+    }
+
+    const newsResults = JSON.parse(jsonMatch[0]);
+    log(`Perplexity returned ${newsResults.length} results`);
+
+    return newsResults.slice(0, 10).map((item: {
+      title: string;
+      snippet: string;
+      url: string;
+      source?: string;
+      isAlert?: boolean;
+    }) => ({
+      source: (item.source === "official" ? "official" :
+               item.source === "reddit" ? "reddit" :
+               "news") as "reddit" | "news" | "official",
+      title: item.title || "Untitled",
+      snippet: item.snippet || "",
+      url: item.url || "",
+      isAlert: item.isAlert || false,
+      alertType: item.isAlert ? ("update" as const) : undefined,
+    }));
+  } catch (error) {
+    const err = error as Error;
+    log(`Perplexity fetch error: ${err.message}`);
     return [];
   }
 }
@@ -376,28 +469,8 @@ export async function GET(req: NextRequest) {
       log("Firecrawl API key not configured - skipping forum scraping");
     }
 
-    // Fetch Reddit posts using free JSON API (limit to 2 subreddits)
-    const subredditsToFetch = countrySubreddits.slice(0, 2);
-
-    for (const subreddit of subredditsToFetch) {
-      const posts = await fetchRedditPosts(subreddit, log);
-      allItems.push(...posts);
-
-      // Small delay between requests
-      await new Promise((r) => setTimeout(r, 300));
-    }
-
-    // Fetch from global migration subreddit (IWantOut is most relevant)
-    const iwantout = globalSubreddits.find((s) => s.name === "IWantOut");
-    if (iwantout) {
-      const posts = await fetchRedditPosts(iwantout, log);
-      // Filter for posts mentioning destination
-      const relevantPosts = posts.filter((post) => {
-        const text = (post.title + " " + post.snippet).toLowerCase();
-        return text.includes(destination.toLowerCase()) || text.includes(destinationCode.toLowerCase());
-      });
-      allItems.push(...relevantPosts.slice(0, 5));
-    }
+    // NOTE: Reddit scraping removed - now handled by Perplexity API
+    // Perplexity searches Reddit + news + official sources all at once
 
     // Scrape expat forums using Firecrawl (limit to 1)
     if (expatForums.length > 0 && process.env.FIRECRAWL_API_KEY) {
@@ -464,6 +537,21 @@ export async function GET(req: NextRequest) {
       }
     } else {
       log("YouTube API key not configured - skipping video search");
+    }
+
+    // Fetch migration news and official sources using Perplexity AI
+    if (process.env.PERPLEXITY_API_KEY) {
+      try {
+        log("Searching for migration news with Perplexity AI...");
+        const newsItems = await fetchMigrationNews(origin, destination, log);
+        allItems.push(...newsItems);
+        log(`Added ${newsItems.length} news/official sources from Perplexity`);
+      } catch (error) {
+        const err = error as Error;
+        log(`Perplexity search error: ${err.message}`);
+      }
+    } else {
+      log("Perplexity API key not configured - skipping news search");
     }
 
     log(`Total items collected: ${allItems.length}`);

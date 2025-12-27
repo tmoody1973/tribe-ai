@@ -187,62 +187,8 @@ function detectAlert(title: string, content: string): { isAlert: boolean; alertT
   return { isAlert: false };
 }
 
-// Fetch Reddit posts using their free JSON API (no auth needed!)
-async function fetchRedditPosts(subreddit: SubredditInfo, debugLog?: (msg: string) => void): Promise<FeedItem[]> {
-  const log = debugLog || console.log;
-
-  try {
-    const url = `https://www.reddit.com/r/${subreddit.name}/new.json?limit=15`;
-    log(`Fetching ${url}...`);
-
-    const response = await fetch(url, {
-      headers: {
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
-        "Accept": "application/json",
-        "Accept-Language": "en-US,en;q=0.9",
-        "Accept-Encoding": "gzip, deflate, br",
-        "DNT": "1",
-        "Connection": "keep-alive",
-        "Upgrade-Insecure-Requests": "1",
-      },
-    });
-
-    if (!response.ok) {
-      log(`Reddit API error for r/${subreddit.name}: ${response.status}`);
-      return [];
-    }
-
-    const data = await response.json();
-    const posts: FeedItem[] = [];
-
-    if (data?.data?.children) {
-      for (const child of data.data.children) {
-        const post = child.data;
-        if (!post.title) continue;
-
-        const alert = detectAlert(post.title, post.selftext || "");
-        posts.push({
-          source: "reddit",
-          title: post.title,
-          snippet: (post.selftext || "").slice(0, 200),
-          url: `https://reddit.com${post.permalink}`,
-          author: post.author,
-          subreddit: subreddit.name,
-          upvotes: post.ups,
-          comments: post.num_comments,
-          ...alert,
-        });
-      }
-    }
-
-    log(`Found ${posts.length} posts from r/${subreddit.name}`);
-    return posts;
-  } catch (e) {
-    const error = e as Error;
-    log(`Error fetching r/${subreddit.name}: ${error.message}`);
-    return [];
-  }
-}
+// NOTE: Reddit fetching removed - now handled by Perplexity API
+// Perplexity can search Reddit without hitting their API directly (no 403 errors)
 
 // Scrape an expat forum using Firecrawl
 async function scrapeExpatForum(forum: { name: string; url: string }, countryName: string, debugLog?: (msg: string) => void): Promise<FeedItem[]> {

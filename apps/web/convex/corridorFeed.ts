@@ -126,6 +126,19 @@ export const saveFeedItem = mutation({
     relevanceScore: v.optional(v.number()),
     stageScore: v.optional(v.number()),
     aiReason: v.optional(v.string()),
+    // Video AI summary (Story 8.4)
+    aiSummary: v.optional(
+      v.object({
+        summary: v.string(),
+        keyTimestamps: v.array(
+          v.object({
+            time: v.string(),
+            topic: v.string(),
+          })
+        ),
+        youllLearn: v.string(),
+      })
+    ),
   },
   handler: async (ctx, args) => {
     // Check for duplicate by URL
@@ -142,6 +155,7 @@ export const saveFeedItem = mutation({
         relevanceScore: args.relevanceScore,
         stageScore: args.stageScore,
         aiReason: args.aiReason,
+        aiSummary: args.aiSummary,
         updatedAt: Date.now(),
       });
       return existing._id;

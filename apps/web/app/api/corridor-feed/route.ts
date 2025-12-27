@@ -415,7 +415,7 @@ export async function GET(req: NextRequest) {
 
         // Analyze video transcripts with Gemini (Story 8.4)
         let videoAnalyses = new Map<string, any>();
-        if (process.env.GOOGLE_AI_API_KEY && videos.length > 0) {
+        if (process.env.GOOGLE_GENERATIVE_AI_API_KEY && videos.length > 0) {
           try {
             log(`Analyzing ${videos.length} video transcripts with Gemini...`);
             videoAnalyses = await analyzeVideos(

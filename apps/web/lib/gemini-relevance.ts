@@ -1,6 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY || "");
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY || "");
 
 export interface FeedItem {
   source: "reddit" | "youtube" | "forum" | "news" | "official";
@@ -50,7 +50,7 @@ export async function analyzeRelevance(
 ): Promise<AnalyzedFeedItem[]> {
   const log = debugLog || console.log;
 
-  if (!process.env.GOOGLE_AI_API_KEY) {
+  if (!process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
     log("Google AI API key not configured - falling back to keyword filtering");
     return fallbackKeywordFilter(posts, userContext);
   }

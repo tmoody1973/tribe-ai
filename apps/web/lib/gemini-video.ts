@@ -3,7 +3,7 @@ import { YoutubeTranscript } from "youtube-transcript";
 import { ConvexHttpClient } from "convex/browser";
 import { api } from "@/convex/_generated/api";
 
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY || "");
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY || "");
 const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 
 export interface VideoAnalysis {
@@ -34,7 +34,7 @@ export async function analyzeVideoTranscript(
 ): Promise<VideoAnalysis | null> {
   const log = debugLog || console.log;
 
-  if (!process.env.GOOGLE_AI_API_KEY) {
+  if (!process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
     log("Google AI API key not configured - skipping video analysis");
     return null;
   }

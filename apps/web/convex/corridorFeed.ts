@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { query, mutation, internalMutation } from "./_generated/server";
+import { query, mutation, internalMutation, internalAction } from "./_generated/server";
 import { internal } from "./_generated/api";
 
 // Feed item type
@@ -630,5 +630,59 @@ export const cleanupExpiredAnalyses = internalMutation({
     }
 
     return { deletedCount };
+  },
+});
+
+// ============================================
+// FEED REFRESH (Daily Cron Job)
+// ============================================
+
+// Refresh all active corridor feeds (called by daily cron job)
+export const refreshAllCorridorFeeds = internalAction({
+  args: {},
+  handler: async (ctx) => {
+    // Get all active corridors
+    const corridors = await ctx.runQuery(internal.corridors.getAllActive);
+
+    console.log(`[Feed Refresh] Found ${corridors.length} active corridors to refresh`);
+
+    let successCount = 0;
+    let errorCount = 0;
+
+    for (const corridor of corridors) {
+      try {
+        const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+        const apiUrl = `${appUrl}/api/corridor-feed?origin=${encodeURIComponent(corridor.origin)}&destination=${encodeURIComponent(corridor.destination)}&refresh=true`;
+
+        console.log(`[Feed Refresh] Refreshing ${corridor.origin} → ${corridor.destination}`);
+
+        const response = await fetch(apiUrl, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`API returned ${response.status}`);
+        }
+
+        successCount++;
+        console.log(`[Feed Refresh] ✓ ${corridor.origin} → ${corridor.destination}`);
+      } catch (error) {
+        errorCount++;
+        console.error(`[Feed Refresh] ✗ ${corridor.origin} → ${corridor.destination}:`, error);
+      }
+    }
+
+    const result = {
+      total: corridors.length,
+      success: successCount,
+      errors: errorCount,
+      timestamp: Date.now(),
+    };
+
+    console.log(`[Feed Refresh] Complete:`, result);
+    return result;
   },
 });

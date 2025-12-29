@@ -220,6 +220,28 @@ export const getStaleCorridors = internalQuery({
   },
 });
 
+// Internal query to get all active corridors (for feed refresh)
+export const getAllActive = internalQuery({
+  args: {},
+  handler: async (ctx) => {
+    // Get all corridors updated in last 30 days (active users)
+    const thirtyDaysAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
+    const allCorridors = await ctx.db.query("corridors").collect();
+
+    // Filter for recently active corridors
+    const activeCorridors = allCorridors.filter((c) => c.updatedAt > thirtyDaysAgo);
+
+    // Return unique origin-destination pairs
+    const seen = new Set<string>();
+    return activeCorridors.filter((c) => {
+      const key = `${c.origin}-${c.destination}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  },
+});
+
 // ============================================
 // MULTI-JOURNEY SUPPORT
 // ============================================

@@ -17,6 +17,13 @@ crons.daily(
   internal.maintenance.refreshStaleCorridors
 );
 
+// Daily feed refresh for all active corridors (6 AM UTC)
+crons.daily(
+  "refresh corridor feeds",
+  { hourUTC: 6, minuteUTC: 0 },
+  internal.corridorFeed.refreshAllCorridorFeeds
+);
+
 // Weekly cleanup of old metrics (Sunday 5 AM UTC)
 crons.weekly(
   "cleanup old metrics",

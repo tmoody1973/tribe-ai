@@ -386,12 +386,9 @@ export function LiveCorridorFeed({
     }
   };
 
-  // Initial fetch
-  useEffect(() => {
-    if (!cachedFeed || cachedFeed.length === 0) {
-      fetchFeed();
-    }
-  }, [origin, destination]);
+  // Initial fetch - REMOVED! Now only shows cached data from Convex
+  // User can manually refresh with the refresh button
+  // Daily cron job refreshes feed automatically at 6 AM UTC
 
   // Infinite scroll observer
   useEffect(() => {

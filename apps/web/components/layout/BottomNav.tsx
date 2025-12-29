@@ -3,11 +3,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { LayoutDashboard, Radio, MessageSquare, Settings } from "lucide-react";
+import { LayoutDashboard, Radio, DollarSign, MessageSquare, Settings } from "lucide-react";
 
 const bottomNavItems = [
   { href: "/dashboard", labelKey: "dashboard", icon: LayoutDashboard },
   { href: "/feed", labelKey: "feed", icon: Radio },
+  { href: "/finances", labelKey: "finances", icon: DollarSign },
   { href: "/chat", labelKey: "chat", icon: MessageSquare },
   { href: "/settings", labelKey: "settings", icon: Settings },
 ];
@@ -28,7 +29,7 @@ export function BottomNav() {
 
       {/* Bottom Navigation - Mobile Only */}
       <nav className="fixed bottom-0 left-0 right-0 z-50 border-t-4 border-black bg-white md:hidden">
-        <div className="grid grid-cols-4 gap-0">
+        <div className="grid grid-cols-5 gap-0">
           {bottomNavItems.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.href);

@@ -24,6 +24,13 @@ crons.daily(
   internal.corridorFeed.refreshAllCorridorFeeds
 );
 
+// Daily exchange rate updates (8 AM UTC)
+crons.daily(
+  "update exchange rates",
+  { hourUTC: 8, minuteUTC: 0 },
+  internal.financial.updateExchangeRates
+);
+
 // Weekly cleanup of old metrics (Sunday 5 AM UTC)
 crons.weekly(
   "cleanup old metrics",

@@ -611,4 +611,85 @@ export default defineSchema({
     .index("by_hash", ["hash"])
     .index("by_expiry", ["expiresAt"])
     .index("by_locale_pair", ["sourceLocale", "targetLocale"]),
+
+  // ============================================
+  // FINANCIAL TRACKER
+  // ============================================
+
+  // User's migration budget
+  financialBudgets: defineTable({
+    userId: v.id("users"),
+    corridorId: v.id("corridors"),
+    // Currencies
+    originCurrency: v.string(), // "NGN", "INR", "PHP", etc.
+    destinationCurrency: v.string(), // "CAD", "USD", "GBP", "EUR", etc.
+    // Total budget
+    totalBudgetOrigin: v.number(), // e.g., ₦2,460,000
+    totalBudgetDestination: v.number(), // e.g., CAD $8,500
+    createdExchangeRate: v.number(), // Rate when budget was created
+    // Category allocations (in destination currency)
+    allocations: v.object({
+      visaImmigration: v.number(),
+      tests: v.number(),
+      travel: v.number(),
+      settlement: v.number(),
+      financial: v.number(),
+      miscellaneous: v.number(),
+    }),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_corridor", ["corridorId"])
+    .index("by_user_corridor", ["userId", "corridorId"]),
+
+  // Individual expenses
+  financialExpenses: defineTable({
+    userId: v.id("users"),
+    corridorId: v.id("corridors"),
+    budgetId: v.id("financialBudgets"),
+    // Expense details
+    name: v.string(),
+    category: v.union(
+      v.literal("visaImmigration"),
+      v.literal("tests"),
+      v.literal("travel"),
+      v.literal("settlement"),
+      v.literal("financial"),
+      v.literal("miscellaneous")
+    ),
+    // Amount
+    amountPaid: v.number(),
+    currency: v.string(),
+    exchangeRate: v.number(), // Rate at time of payment
+    amountInDestination: v.number(), // Converted amount
+    // Status
+    status: v.union(
+      v.literal("paid"),
+      v.literal("pending"),
+      v.literal("planned")
+    ),
+    datePaid: v.optional(v.number()),
+    dateDue: v.optional(v.number()),
+    // Metadata
+    notes: v.optional(v.string()),
+    receiptUrl: v.optional(v.string()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_budget", ["budgetId"])
+    .index("by_user_corridor", ["userId", "corridorId"])
+    .index("by_status", ["status"])
+    .index("by_date_due", ["dateDue"]),
+
+  // Currency exchange rates (cached)
+  currencyRates: defineTable({
+    fromCurrency: v.string(), // e.g., "NGN"
+    toCurrency: v.string(), // e.g., "CAD"
+    rate: v.number(), // e.g., 287.65 (1 CAD = 287.65 NGN)
+    source: v.string(), // "exchangerate-api.com"
+    timestamp: v.number(),
+  })
+    .index("by_pair", ["fromCurrency", "toCurrency"])
+    .index("by_timestamp", ["timestamp"]),
 });

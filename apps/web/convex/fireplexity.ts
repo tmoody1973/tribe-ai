@@ -14,6 +14,34 @@ import { internal, api } from "./_generated/api";
 
 const MONTHLY_FIREPLEXITY_LIMIT = 50;
 
+// Type definitions for Fireplexity search results
+interface QuotaStatus {
+  available: boolean;
+  used: number;
+  limit: number;
+  remaining: number;
+  resetDate: number;
+  daysUntilReset: number;
+}
+
+interface ScrapeResult {
+  url: string;
+  markdown?: string;
+  title?: string;
+  error?: string;
+}
+
+interface FireplexitySearchResult {
+  error?: boolean;
+  message?: string;
+  success?: boolean;
+  answer?: string;
+  sources?: string[];
+  scrapedData?: ScrapeResult[];
+  dataFreshness?: string;
+  quotaStatus?: QuotaStatus;
+}
+
 /**
  * Check if Fireplexity quota is available
  */
@@ -136,7 +164,7 @@ export const fireplexitySearch = action({
     query: v.string(),
     targetCountry: v.optional(v.string()),
   },
-  handler: async (ctx, { query, targetCountry }) => {
+  handler: async (ctx, { query, targetCountry }): Promise<FireplexitySearchResult> => {
     // Check quota first
     const quotaStatus = await ctx.runQuery(api.fireplexity.checkFireplexityQuota);
 

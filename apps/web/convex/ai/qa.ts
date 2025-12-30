@@ -87,7 +87,7 @@ ${r.content}
       .join("\n\n");
 
     // Step 4: Build sources list
-    const sources: Source[] = searchResults.map((r, i) => ({
+    const sources: Source[] = searchResults.map((r: any, i: number) => ({
       index: i + 1,
       url: r.metadata.url,
       author: r.metadata.author,
@@ -184,7 +184,7 @@ function formatAnswer(rawAnswer: string, sources: Source[]): string {
 
   // Add sources section
   const sourcesSection = sources
-    .map((s) => {
+    .map((s: Source) => {
       const authorDate = [s.author, s.date].filter(Boolean).join(", ");
       return `[${s.index}] ${s.url}${authorDate ? ` (${authorDate})` : ""}`;
     })

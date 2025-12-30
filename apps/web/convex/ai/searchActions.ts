@@ -110,7 +110,7 @@ export const searchRelevantContent = action({
     }>;
 
     // Create a map for quick lookup
-    const contentMap = new Map(contents.map((c) => [c._id, c]));
+    const contentMap = new Map(contents.map((c: any) => [c._id, c]));
     const corridorResultIds = new Set(
       searchResults.slice(0, corridorId ? searchResults.length : 0).map((r) => r._id)
     );
@@ -186,7 +186,7 @@ export const getSimilarContent = action({
     }>;
 
     // Create a map for quick lookup
-    const contentMap = new Map(contents.map((c) => [c._id, c]));
+    const contentMap = new Map(contents.map((c: any) => [c._id, c]));
 
     // Format results
     return filteredResults

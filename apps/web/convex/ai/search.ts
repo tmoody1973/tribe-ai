@@ -17,7 +17,8 @@ export const getContentById = internalQuery({
 export const getContentByIds = internalQuery({
   args: { ids: v.array(v.id("ingestedContent")) },
   handler: async (ctx, { ids }) => {
-    const results = await Promise.all(ids.map((id) => ctx.db.get(id)));
-    return results.filter((r) => r !== null);
+    const promises = ids.map((id: any) => ctx.db.get(id));
+    const results: any[] = await Promise.all(promises);
+    return results.filter((r: any) => r !== null);
   },
 });

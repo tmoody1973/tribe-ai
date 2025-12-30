@@ -139,7 +139,7 @@ export const synthesizeProtocols = action({
 
     // Prepare content for synthesis
     const researchText = content
-      .map((c) => `[Source: ${c.url}]\n${c.content}`)
+      .map((c: any) => `[Source: ${c.url}]\n${c.content}`)
       .join("\n\n---\n\n");
 
     // Limit content to avoid token limits (~100k chars)

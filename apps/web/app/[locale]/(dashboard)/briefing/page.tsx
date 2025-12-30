@@ -2,6 +2,7 @@
 
 import { useQuery, useAction } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { Doc } from "@/convex/_generated/dataModel";
 import { AudioPlayer } from "@/components/audio/AudioPlayer";
 import { Transcript } from "@/components/audio/Transcript";
 import { BriefingTypeSelector } from "@/components/audio/BriefingTypeSelector";
@@ -16,7 +17,7 @@ export default function BriefingPage() {
   const [showTranscript, setShowTranscript] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
 
-  const corridor = useQuery(api.corridors.getActiveCorridor);
+  const corridor = useQuery(api.corridors.getActiveCorridor) as Doc<"corridors"> | undefined | null;
   const briefing = useQuery(
     api.ttsQueries.getBriefingWithAudio,
     corridor ? { corridorId: corridor._id, type: briefingType } : "skip"

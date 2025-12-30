@@ -2,6 +2,7 @@
 
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { Doc } from "@/convex/_generated/dataModel";
 import { useTranslations } from "next-intl";
 import { TaskBoard } from "@/components/taskboard";
 import { DashboardNav } from "@/components/layout/DashboardNav";
@@ -10,7 +11,7 @@ import Link from "next/link";
 
 export default function TasksPage() {
   const t = useTranslations("tasks");
-  const corridor = useQuery(api.corridors.getActiveCorridor);
+  const corridor = useQuery(api.corridors.getActiveCorridor) as Doc<"corridors"> | undefined | null;
 
   // Loading state
   if (corridor === undefined) {

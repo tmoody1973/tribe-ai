@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { useTranslations } from "next-intl";
 import { api } from "@/convex/_generated/api";
+import { Doc } from "@/convex/_generated/dataModel";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { CountrySelector } from "@/components/onboarding/CountrySelector";
@@ -16,7 +17,7 @@ type Stage = "dreaming" | "planning" | "preparing" | "relocating" | "settling";
 
 export default function SettingsPage() {
   const profile = useQuery(api.users.getProfile);
-  const corridor = useQuery(api.corridors.getActiveCorridor);
+  const corridor = useQuery(api.corridors.getActiveCorridor) as Doc<"corridors"> | undefined | null;
   const updateProfile = useMutation(api.users.updateProfile);
   const t = useTranslations("settings");
   const tOnboarding = useTranslations("onboarding");

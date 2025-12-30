@@ -2,11 +2,12 @@
 
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { Doc } from "@/convex/_generated/dataModel";
 import { LiveCorridorFeed } from "@/components/dashboard/LiveCorridorFeed";
 
 export default function FeedPage() {
   // Get active corridor for origin/destination
-  const corridor = useQuery(api.corridors.getActiveCorridor);
+  const corridor = useQuery(api.corridors.getActiveCorridor) as Doc<"corridors"> | undefined | null;
 
   // Loading state
   if (corridor === undefined) {

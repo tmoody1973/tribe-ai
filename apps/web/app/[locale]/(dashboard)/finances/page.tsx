@@ -12,7 +12,7 @@ export default function FinancesPage() {
   const [showAddExpense, setShowAddExpense] = useState(false);
   const [showCSVImport, setShowCSVImport] = useState(false);
 
-  const corridor = useQuery(api.corridors.getActiveCorridor);
+  const corridor = useQuery(api.corridors.getActiveCorridor) as Doc<"corridors"> | undefined | null;
   const budget = useQuery(
     api.financial.getBudget,
     corridor ? { corridorId: corridor._id } : "skip"

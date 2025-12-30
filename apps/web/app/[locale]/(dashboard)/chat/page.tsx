@@ -2,13 +2,14 @@
 
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { Doc } from "@/convex/_generated/dataModel";
 import { ChatWindow } from "@/components/chat/ChatWindow";
 import { useTranslations } from "next-intl";
 import { MessageCircle } from "lucide-react";
 
 export default function ChatPage() {
   const t = useTranslations("chat");
-  const corridor = useQuery(api.corridors.getActiveCorridor);
+  const corridor = useQuery(api.corridors.getActiveCorridor) as Doc<"corridors"> | undefined | null;
 
   if (corridor === undefined) {
     // Loading state

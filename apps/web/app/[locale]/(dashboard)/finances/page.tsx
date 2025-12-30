@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { Loader2, Plus, DollarSign, TrendingUp, AlertCircle, Upload } from "lucide-react";
+import { Doc } from "@/convex/_generated/dataModel";
+import { Loader2, Plus, DollarSign, Upload } from "lucide-react";
 import { CSVImportModal } from "@/components/finances/CSVImportModal";
 import { CreateBudgetWizard } from "@/components/finances/CreateBudgetWizard";
 
@@ -153,7 +154,7 @@ export default function FinancesPage() {
         <div className="border-4 border-black bg-white p-6 shadow-[4px_4px_0_0_#000]">
           <h2 className="text-xl font-black mb-4">📅 Upcoming Expenses</h2>
           <div className="space-y-3">
-            {upcomingExpenses.slice(0, 5).map((expense: any) => {
+            {upcomingExpenses.slice(0, 5).map((expense: Doc<"expenses">) => {
               const daysUntil = Math.ceil(
                 ((expense.dateDue || 0) - Date.now()) / (1000 * 60 * 60 * 24)
               );
@@ -186,7 +187,7 @@ export default function FinancesPage() {
         <div className="border-4 border-black bg-white p-6 shadow-[4px_4px_0_0_#000]">
           <h2 className="text-xl font-black mb-4">💳 Recent Expenses</h2>
           <div className="space-y-2">
-            {summary.expenses.slice(0, 10).map((expense: any) => (
+            {summary.expenses.slice(0, 10).map((expense: Doc<"expenses">) => (
               <div
                 key={expense._id}
                 className="flex items-center justify-between p-3 hover:bg-gray-50 border-b-2 border-gray-100 last:border-b-0"
@@ -250,8 +251,8 @@ function AddExpenseModal({
   destinationCurrency,
   onClose,
 }: {
-  corridorId: any;
-  budgetId: any;
+  corridorId: Doc<"corridors">["_id"];
+  budgetId: Doc<"budgets">["_id"];
   destinationCurrency: string;
   onClose: () => void;
 }) {
@@ -264,7 +265,7 @@ function AddExpenseModal({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const addExpense = useMutation(api.financial.addExpense);
-  const getExchangeRate = useQuery(api.financial.getExchangeRate, {
+  const _getExchangeRate = useQuery(api.financial.getExchangeRate, {
     fromCurrency: destinationCurrency,
     toCurrency: destinationCurrency,
   });
@@ -318,7 +319,7 @@ function AddExpenseModal({
             <label className="block font-bold mb-2">Category *</label>
             <select
               value={category}
-              onChange={(e) => setCategory(e.target.value as any)}
+              onChange={(e) => setCategory(e.target.value as "visaImmigration" | "tests" | "travel" | "settlement" | "financial" | "miscellaneous")}
               className="w-full px-3 py-2 border-2 border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="visaImmigration">📋 Visa & Immigration</option>

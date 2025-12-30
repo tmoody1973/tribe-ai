@@ -137,7 +137,7 @@ export function VoiceChat({ language = "en", onClose }: VoiceChatProps) {
     }
   }, [language, speak]);
 
-  const speakResponse = useCallback(async (text: string, lang: string) => {
+  const _speakResponse = useCallback(async (text: string, lang: string) => {
     try {
       setState("speaking");
       messageIdRef.current += 1;

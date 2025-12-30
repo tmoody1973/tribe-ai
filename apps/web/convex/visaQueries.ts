@@ -223,9 +223,9 @@ export const cacheProcessingTimes = internalMutation({
 });
 
 /**
- * Get all active corridors for weekly refresh
+ * INTERNAL: Get all active corridors for weekly refresh
  */
-export const getActiveCorridors = query({
+export const getActiveCorridors = internalQuery({
   args: {},
   handler: async (ctx) => {
     // Get all corridors (limit to 30 most active)

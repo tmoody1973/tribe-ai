@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useMutation, useQuery } from "convex/react";
-import { api } from "@/convex/_generated/api";
+// import { useMutation, useQuery } from "convex/react";
+// import { api } from "@/convex/_generated/api";
 import { Globe, Volume2, Clock, Bell, Check } from "lucide-react";
 
 interface Language {
@@ -48,25 +48,35 @@ const PLAYBACK_SPEEDS = [
 ];
 
 export function BriefingSettings() {
-  const preferences = useQuery(api.users.getBriefingPreferences);
-  const updatePreferences = useMutation(api.users.updateBriefingPreferences);
+  // TODO: Implement getBriefingPreferences and updateBriefingPreferences in convex/users.ts
+  // const preferences = useQuery(api.users.getBriefingPreferences);
+  // const updatePreferences = useMutation(api.users.updateBriefingPreferences);
+  const preferences = null;
 
-  const [selectedLanguage, setSelectedLanguage] = useState(preferences?.language || "en-US");
-  const [selectedVoice, setSelectedVoice] = useState(preferences?.voiceName || "Neural2-A");
-  const [playbackSpeed, setPlaybackSpeed] = useState(preferences?.playbackSpeed || 1);
-  const [dailyBriefings, setDailyBriefings] = useState(preferences?.dailyBriefings ?? true);
-  const [weeklyBriefings, setWeeklyBriefings] = useState(preferences?.weeklyBriefings ?? true);
-  const [briefingTime, setBriefingTime] = useState(preferences?.briefingTime || "06:00");
-  const [weeklySummaryEmail, setWeeklySummaryEmail] = useState(
-    preferences?.weeklySummaryEmail ?? false
-  );
+  const [selectedLanguage, setSelectedLanguage] = useState("en-US");
+  const [selectedVoice, setSelectedVoice] = useState("Neural2-A");
+  const [playbackSpeed, setPlaybackSpeed] = useState(1);
+  const [dailyBriefings, setDailyBriefings] = useState(true);
+  const [weeklyBriefings, setWeeklyBriefings] = useState(true);
+  const [briefingTime, setBriefingTime] = useState("06:00");
+  const [weeklySummaryEmail, setWeeklySummaryEmail] = useState(false);
 
   const [isSaving, setIsSaving] = useState(false);
 
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      await updatePreferences({
+      // TODO: Implement updatePreferences mutation
+      // await updatePreferences({
+      //   language: selectedLanguage,
+      //   voiceName: selectedVoice,
+      //   playbackSpeed,
+      //   dailyBriefings,
+      //   weeklyBriefings,
+      //   briefingTime,
+      //   weeklySummaryEmail,
+      // });
+      console.log("Saving preferences (not implemented yet):", {
         language: selectedLanguage,
         voiceName: selectedVoice,
         playbackSpeed,

@@ -201,7 +201,7 @@ export const synthesizeProtocols = action({
       if (protocol.attribution) {
         const normalized = normalizeAttribution(protocol.attribution);
         if (validateAttribution(normalized)) {
-          const selected = selectBestAttribution({ attribution: normalized }, content);
+          const selected = selectBestAttribution({ attribution: normalized }, content as any);
           attribution = selected
             ? {
                 sourceUrl: selected.sourceUrl,

@@ -52,7 +52,7 @@ export function GenerativeProtocolList({ corridorId, stage }: GenerativeProtocol
           {protocols.length} {t("steps")} - {stage}
         </span>
       </div>
-      <ProtocolList protocols={protocols} corridorId={corridorId} />
+      <ProtocolList protocols={protocols as any} corridorId={corridorId} />
     </div>
   );
 }

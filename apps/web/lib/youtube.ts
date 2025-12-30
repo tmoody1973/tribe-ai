@@ -210,7 +210,7 @@ async function getCachedVideos(destination: string): Promise<YouTubeVideo[]> {
       limit: 10,
     });
 
-    return (cached as CachedFeedItem[])
+    return (cached as unknown as CachedFeedItem[])
       .filter((item) => item.source === "youtube")
       .map((item) => ({
         videoId: extractVideoId(item.url),

@@ -179,7 +179,7 @@ export function ProtocolTabs({
 
           {activeTab === "saved" && userId && (
             <SavedProtocolsView
-              savedProtocols={savedProtocols ?? []}
+              savedProtocols={(savedProtocols ?? []) as any}
               corridorId={corridorId}
               userId={userId}
             />

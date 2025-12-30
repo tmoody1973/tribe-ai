@@ -6,7 +6,7 @@ import {
 import fs from "fs";
 import path from "path";
 import { ConvexHttpClient } from "convex/browser";
-import { api } from "@/convex/_generated/api";
+import { api, internal } from "@/convex/_generated/api";
 
 // Initialize Convex client for Fireplexity actions
 const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
@@ -137,7 +137,7 @@ const runtime = new CopilotRuntime({
       handler: async ({ query, targetCountry }: any) => {
         try {
           // Check quota first
-          const quotaStatus = await convex.query(api.fireplexity.checkFireplexityQuota);
+          const quotaStatus = await convex.query(api.fireplexityQueries.checkFireplexityQuota);
 
           if (!quotaStatus.available) {
             return {
@@ -208,7 +208,7 @@ const runtime = new CopilotRuntime({
       handler: async ({ origin, destination, getProcessingTimes = false }: any) => {
         try {
           // Get visa requirements
-          const visaReqs = await convex.action(api.visaDiscovery.getVisaRequirementsForCorridor, {
+          const visaReqs = await convex.action(internal.visaDiscovery.getVisaRequirementsForCorridor, {
             origin,
             destination,
           });
@@ -232,7 +232,7 @@ const runtime = new CopilotRuntime({
 
           // Get processing times if requested
           if (getProcessingTimes && visaReqs.visaType) {
-            const processingTimes = await convex.action(api.visaDiscovery.getProcessingTimes, {
+            const processingTimes = await convex.action(internal.visaDiscovery.getProcessingTimes, {
               origin,
               destination,
               visaType: visaReqs.visaType,

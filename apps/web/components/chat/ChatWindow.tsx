@@ -311,7 +311,7 @@ When someone says "I don't understand why..." or describes confusion:
           origin={corridor.origin}
           destination={corridor.destination}
           stage={corridor.stage}
-          currentProtocol={currentProtocol}
+          currentProtocol={currentProtocol as any}
           onSelectQuestion={handleSelectQuestion}
         />
       )}

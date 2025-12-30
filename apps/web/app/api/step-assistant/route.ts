@@ -51,7 +51,7 @@ async function searchRelevantContent(
         corridorId: corridorId as Id<"corridors">,
         limit: 5,
       });
-      return recentContent.map((r: { content: string; title: string; url: string; metadata?: { author?: string; subreddit?: string } }) => ({
+      return recentContent.map((r) => ({
         content: r.content,
         title: r.title,
         metadata: {

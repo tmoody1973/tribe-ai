@@ -58,7 +58,7 @@ export function ProtocolList({ protocols, corridorId, corridorOrigin, corridorDe
   const markIncomplete = useMutation(api.progress.markIncomplete);
 
   // Create set of completed protocol IDs
-  const completedIds = new Set(progress?.map((p: { protocolId: Id<"protocols"> }) => p.protocolId) ?? []);
+  const completedIds = new Set((progress as any)?.map((p: { protocolId: Id<"protocols"> }) => p.protocolId) ?? []);
   const completedCount = completedIds.size;
 
   // Sort: incomplete first (by order), then completed (by order)

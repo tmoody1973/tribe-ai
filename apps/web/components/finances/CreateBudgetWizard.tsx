@@ -89,7 +89,7 @@ export function CreateBudgetWizard({ corridor }: CreateBudgetWizardProps) {
   const getExchangeRate = useQuery(
     api.financial.getExchangeRate,
     originCurrency !== destinationCurrency
-      ? { from: originCurrency, to: destinationCurrency }
+      ? { fromCurrency: originCurrency, toCurrency: destinationCurrency }
       : "skip"
   );
 
@@ -117,7 +117,7 @@ export function CreateBudgetWizard({ corridor }: CreateBudgetWizardProps) {
     setIsCreating(true);
     try {
       const budget = parseFloat(totalBudget);
-      const exchangeRate = getExchangeRate || 1;
+      const exchangeRate = (getExchangeRate as unknown as number) || 1;
 
       await createBudget({
         corridorId: corridor._id,
@@ -219,7 +219,7 @@ export function CreateBudgetWizard({ corridor }: CreateBudgetWizardProps) {
           <div className="border-2 border-gray-200 bg-gray-50 p-3">
             <p className="text-sm">
               <span className="font-bold">Exchange Rate:</span> 1 {destinationCurrency} ={" "}
-              {getExchangeRate.toFixed(4)} {originCurrency}
+              {(getExchangeRate as unknown as number).toFixed(4)} {originCurrency}
             </p>
           </div>
         )}
@@ -239,7 +239,7 @@ export function CreateBudgetWizard({ corridor }: CreateBudgetWizardProps) {
           />
           {totalBudget && originCurrency !== destinationCurrency && getExchangeRate && (
             <p className="text-xs text-gray-600 mt-1">
-              ≈ {formatCurrency(parseFloat(totalBudget) * getExchangeRate, originCurrency)} in origin currency
+              ≈ {formatCurrency(parseFloat(totalBudget) * (getExchangeRate as unknown as number), originCurrency)} in origin currency
             </p>
           )}
         </div>

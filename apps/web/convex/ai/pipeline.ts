@@ -46,7 +46,7 @@ export const generateCorridorProtocols = action({
         corridorId,
       });
       return {
-        protocolIds: existing.map((p: Doc<"protocols">) => p._id),
+        protocolIds: (existing as any).map((p: Doc<"protocols">) => p._id),
         cached: true,
         errors: [],
       };
@@ -63,7 +63,7 @@ export const generateCorridorProtocols = action({
       if (existing.length > 0) {
         console.log(`Found ${existing.length} existing protocols, returning cached`);
         return {
-          protocolIds: existing.map((p: Doc<"protocols">) => p._id),
+          protocolIds: (existing as any).map((p: Doc<"protocols">) => p._id),
           cached: true,
           errors: [],
         };
@@ -119,7 +119,7 @@ export const generateCorridorProtocols = action({
 
       console.log(`Using ${existingContent.length} existing content items for synthesis`);
       researchResult = {
-        sources: existingContent.map((c: Doc<"ingestedContent">) => c.url),
+        sources: (existingContent as any).map((c: Doc<"ingestedContent">) => c.url),
         contentStored: existingContent.length,
         errors: [] as string[],
       };
@@ -198,7 +198,7 @@ export const refreshCorridorProtocols = action({
     });
 
     // Delete existing AI-generated protocols
-    console.log(`Deleting ${existing.filter((p: Doc<"protocols">) => p.aiGenerated).length} existing AI-generated protocols`);
+    console.log(`Deleting ${(existing as any).filter((p: Doc<"protocols">) => p.aiGenerated).length} existing AI-generated protocols`);
     for (const protocol of existing) {
       if (protocol.aiGenerated) {
         await ctx.runMutation(api.protocols.deleteProtocol, {
@@ -284,12 +284,12 @@ export const getPipelineStatus = action({
         : null,
       hasProtocols: protocols.length > 0,
       protocolCount: protocols.length,
-      aiGeneratedCount: protocols.filter((p: Doc<"protocols">) => p.aiGenerated).length,
+      aiGeneratedCount: (protocols as any).filter((p: Doc<"protocols">) => p.aiGenerated).length,
       hasResearchContent: content.length > 0,
       contentCount: content.length,
       lastContentScraped:
         content.length > 0
-          ? Math.max(...content.map((c: Doc<"ingestedContent">) => c.scrapedAt))
+          ? Math.max(...(content as any).map((c: Doc<"ingestedContent">) => c.scrapedAt))
           : null,
     };
   },

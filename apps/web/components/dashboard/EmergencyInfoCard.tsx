@@ -90,7 +90,7 @@ export function EmergencyInfoCard({ destination, origin }: EmergencyInfoCardProp
   }, [isOpen, cachedData, localData, isLoading, fetchEmergencyInfo]);
 
   // Use cached data, local data, or show loading state
-  const info: EmergencyInfo | null = cachedData || localData;
+  const info = (cachedData || localData) as EmergencyInfo | null;
 
   const copyToClipboard = () => {
     if (!info) return;

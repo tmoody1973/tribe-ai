@@ -1,5 +1,3 @@
-"use node";
-
 /**
  * Travel Buddy API v2 Client
  * Story 9.13: Visa Pathway Discovery

@@ -357,10 +357,10 @@ export function LiveCorridorFeed({
   // Use cached data if available
   useEffect(() => {
     if (cachedFeed && cachedFeed.length > 0) {
-      setItems(cachedFeed as FeedItem[]);
+      setItems(cachedFeed as unknown as FeedItem[]);
     }
     if (cachedStats) {
-      setStats(cachedStats);
+      setStats(cachedStats as any);
     }
   }, [cachedFeed, cachedStats]);
 

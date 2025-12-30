@@ -23,7 +23,7 @@ import { TaskBoardSummary } from "@/components/taskboard/TaskBoardSummary";
 
 export default function DashboardPage() {
   // Get active corridor
-  const corridor: Doc<"corridors"> | undefined | null = useQuery(api.corridors.getActiveCorridor);
+  const corridor = useQuery(api.corridors.getActiveCorridor) as Doc<"corridors"> | undefined | null;
 
   // Get user profile for userId
   const profile = useQuery(api.users.getProfile);

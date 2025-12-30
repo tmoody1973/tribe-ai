@@ -23,9 +23,11 @@ import type * as ai_searchActions from "../ai/searchActions.js";
 import type * as ai_synthesis from "../ai/synthesis.js";
 import type * as ai_translation from "../ai/translation.js";
 import type * as ai_tts from "../ai/tts.js";
+import type * as briefingScheduler from "../briefingScheduler.js";
 import type * as briefingsQueries from "../briefingsQueries.js";
 import type * as cache from "../cache.js";
 import type * as chat from "../chat.js";
+import type * as corridorComparison from "../corridorComparison.js";
 import type * as corridorData from "../corridorData.js";
 import type * as corridorFeed from "../corridorFeed.js";
 import type * as corridors from "../corridors.js";
@@ -34,6 +36,8 @@ import type * as cultural_interview from "../cultural/interview.js";
 import type * as cultural_profile from "../cultural/profile.js";
 import type * as documentChecklists from "../documentChecklists.js";
 import type * as emergencyInfo from "../emergencyInfo.js";
+import type * as financial from "../financial.js";
+import type * as fireplexity from "../fireplexity.js";
 import type * as health from "../health.js";
 import type * as ingestedContent from "../ingestedContent.js";
 import type * as integrations_costOfLiving from "../integrations/costOfLiving.js";
@@ -52,6 +56,9 @@ import type * as translation from "../translation.js";
 import type * as ttsQueries from "../ttsQueries.js";
 import type * as userDocuments from "../userDocuments.js";
 import type * as users from "../users.js";
+import type * as visaDiscovery from "../visaDiscovery.js";
+import type * as visaQueries from "../visaQueries.js";
+import type * as visaRefreshScheduler from "../visaRefreshScheduler.js";
 
 import type {
   ApiFromModules,
@@ -75,9 +82,11 @@ declare const fullApi: ApiFromModules<{
   "ai/synthesis": typeof ai_synthesis;
   "ai/translation": typeof ai_translation;
   "ai/tts": typeof ai_tts;
+  briefingScheduler: typeof briefingScheduler;
   briefingsQueries: typeof briefingsQueries;
   cache: typeof cache;
   chat: typeof chat;
+  corridorComparison: typeof corridorComparison;
   corridorData: typeof corridorData;
   corridorFeed: typeof corridorFeed;
   corridors: typeof corridors;
@@ -86,6 +95,8 @@ declare const fullApi: ApiFromModules<{
   "cultural/profile": typeof cultural_profile;
   documentChecklists: typeof documentChecklists;
   emergencyInfo: typeof emergencyInfo;
+  financial: typeof financial;
+  fireplexity: typeof fireplexity;
   health: typeof health;
   ingestedContent: typeof ingestedContent;
   "integrations/costOfLiving": typeof integrations_costOfLiving;
@@ -104,6 +115,9 @@ declare const fullApi: ApiFromModules<{
   ttsQueries: typeof ttsQueries;
   userDocuments: typeof userDocuments;
   users: typeof users;
+  visaDiscovery: typeof visaDiscovery;
+  visaQueries: typeof visaQueries;
+  visaRefreshScheduler: typeof visaRefreshScheduler;
 }>;
 
 /**

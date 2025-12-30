@@ -1,0 +1,1492 @@
+{
+  "housing_resources": [
+    {
+      "country": "United States",
+      "continent": "North America",
+      "country_code": "US",
+      "resources": [
+        {
+          "organization_name": "Refugee Housing Solutions",
+          "url": "https://refugeehousing.org/",
+          "description": "Provides resources, training, capacity building, and partnerships to increase access to affordable housing for refugee families and newcomers. Operates Housing Hub & Directory connecting ORR-eligible populations with housing resources.",
+          "resource_type": "Government-Supported NGO",
+          "services": [
+            "Housing placement",
+            "Landlord partnerships",
+            "Resource directory",
+            "Training programs"
+          ]
+        },
+        {
+          "organization_name": "FindHello",
+          "url": "https://usahello.org/findhello/",
+          "description": "Free app and website with searchable map listing over 6,000 resources for immigrants across the USA, including housing & food, legal help, resettlement services. Available in 6 languages.",
+          "resource_type": "Online Platform",
+          "services": [
+            "Housing search",
+            "Food assistance",
+            "Legal help",
+            "Resettlement services"
+          ]
+        },
+        {
+          "organization_name": "Church World Service (CWS)",
+          "url": "https://cwsglobal.org/our-work/united-states/housing-for-newcomers/",
+          "description": "Partners with national housing groups and private organizations to support refugees and newcomers with housing as they rebuild their lives in the United States.",
+          "resource_type": "NGO",
+          "services": [
+            "Housing partnerships",
+            "Resettlement support",
+            "Newcomer assistance"
+          ]
+        },
+        {
+          "organization_name": "U.S. Committee for Refugees and Immigrants (USCRI)",
+          "url": "https://refugees.org/",
+          "description": "Provides legal, social, and health services to refugees, unaccompanied migrating children, trafficking survivors, and other immigrants in all 50 states.",
+          "resource_type": "NGO",
+          "services": [
+            "Legal services",
+            "Social services",
+            "Health services",
+            "Housing assistance"
+          ]
+        },
+        {
+          "organization_name": "International Rescue Committee (IRC)",
+          "url": "https://www.rescue.org/topic/refugees-america",
+          "description": "Provides comprehensive resettlement services for refugees arriving in the United States, including housing assistance and integration support.",
+          "resource_type": "NGO",
+          "services": [
+            "Resettlement services",
+            "Housing placement",
+            "Integration programs"
+          ]
+        },
+        {
+          "organization_name": "HIAS",
+          "url": "https://hias.org/",
+          "description": "Global Jewish humanitarian organization providing resettlement, legal protection, and advocacy services for refugees and asylum seekers in the United States.",
+          "resource_type": "NGO",
+          "services": [
+            "Resettlement",
+            "Legal services",
+            "Housing assistance",
+            "Advocacy"
+          ]
+        },
+        {
+          "organization_name": "Office of Refugee Resettlement (ORR)",
+          "url": "https://acf.gov/orr",
+          "description": "Federal government agency promoting health, well-being, and stability of refugees, unaccompanied alien children. Provides rental assistance and cash assistance for basic needs.",
+          "resource_type": "Government Agency",
+          "services": [
+            "Rental assistance",
+            "Cash assistance",
+            "Resettlement support"
+          ]
+        },
+        {
+          "organization_name": "Lutheran Social Services of Northern California (LSSNCA)",
+          "url": "https://lssnca.org/help/rent.html",
+          "description": "Provides rent for program participants for the first three months of their arrival, ensuring smooth transition for new neighbors.",
+          "resource_type": "NGO",
+          "services": [
+            "Rent assistance",
+            "Transitional support"
+          ]
+        },
+        {
+          "organization_name": "Welcome.US",
+          "url": "https://welcome.us/",
+          "description": "National initiative built to inspire, mobilize, and empower Americans and institutions nationwide to welcome and support those seeking refuge in the U.S.",
+          "resource_type": "NGO",
+          "services": [
+            "Community sponsorship",
+            "Welcome support",
+            "Housing coordination"
+          ]
+        },
+        {
+          "organization_name": "Border Kindness",
+          "url": "https://borderkindness.org/",
+          "description": "Provides asylum-seekers, migrants, refugees, and the displaced with comprehensive services including food, shelter, clothing, medical care.",
+          "resource_type": "NGO",
+          "services": [
+            "Shelter",
+            "Food",
+            "Medical care",
+            "Clothing"
+          ]
+        },
+        {
+          "organization_name": "International Institute of Minnesota (IIMN)",
+          "url": "https://iimn.org/program/housing/",
+          "description": "Provides refugee housing services in the Minneapolis-St. Paul area, connecting landlords with refugee families needing safe, sanitary, and affordable housing.",
+          "resource_type": "NGO",
+          "services": [
+            "Housing placement",
+            "Landlord partnerships"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Canada",
+      "continent": "North America",
+      "country_code": "CA",
+      "resources": [
+        {
+          "organization_name": "Romero House",
+          "url": "https://romerohouse.org/",
+          "description": "Charitable organization offering transitional housing and immigration and settlement support in the spirit of good neighbours valuing dignity.",
+          "resource_type": "NGO",
+          "services": [
+            "Transitional housing",
+            "Immigration support",
+            "Settlement services"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Mexico",
+      "continent": "North America",
+      "country_code": "MX",
+      "resources": [
+        {
+          "organization_name": "USCRI Mexico",
+          "url": "https://refugees.org/uscri-mexico/",
+          "description": "Provides vital assistance to refugees and asylum seekers, ensuring safety, support, and essential services including housing assistance.",
+          "resource_type": "NGO",
+          "services": [
+            "Refugee assistance",
+            "Asylum support",
+            "Housing services"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Germany",
+      "continent": "Europe",
+      "country_code": "DE",
+      "resources": [
+        {
+          "organization_name": "Habitat for Humanity Europe",
+          "url": "https://www.habitat.org/emea/housing-ukrainian-refugees-europe",
+          "description": "Provides housing subsidies and support for refugees unable to find housing solutions on the market. Conducted research on housing interventions for Ukrainian refugees.",
+          "resource_type": "NGO",
+          "services": [
+            "Housing subsidies",
+            "Housing research",
+            "Refugee support"
+          ]
+        },
+        {
+          "organization_name": "UNHCR Germany",
+          "url": "https://www.unhcr.org/europe/about-unhcr/where-we-work/europe",
+          "description": "UN refugee agency providing protection and assistance to refugees in Germany, one of the largest refugee-hosting countries in Europe.",
+          "resource_type": "International Organization",
+          "services": [
+            "Refugee protection",
+            "Resettlement",
+            "Housing coordination"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "United Kingdom",
+      "continent": "Europe",
+      "country_code": "GB",
+      "resources": [
+        {
+          "organization_name": "Notre Dame Refugee Centre",
+          "url": "https://www.notredamerc.org.uk/",
+          "description": "Assists refugees, asylum seekers, undocumented migrants and other human rights applicants in the UK with various support services.",
+          "resource_type": "NGO",
+          "services": [
+            "Refugee assistance",
+            "Asylum support",
+            "Human rights advocacy"
+          ]
+        },
+        {
+          "organization_name": "UK Home Office - Asylum Accommodation",
+          "url": "https://migrationobservatory.ox.ac.uk/resources/briefings/asylum-accommodation-in-the-uk/",
+          "description": "Government program providing three types of support for asylum seekers, including accommodation while awaiting decisions.",
+          "resource_type": "Government Agency",
+          "services": [
+            "Asylum accommodation",
+            "Financial support",
+            "Housing provision"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "France",
+      "continent": "Europe",
+      "country_code": "FR",
+      "resources": [
+        {
+          "organization_name": "Singa France",
+          "url": "https://www.infomigrants.net/en/post/30169/help-for-migrants-in-france-a-list-of-organizations",
+          "description": "Runs J'accueille accommodation program through which refugees can find housing in private homes. Also helps refugees integrate into French society.",
+          "resource_type": "NGO",
+          "services": [
+            "Private housing placement",
+            "Integration support",
+            "Community connection"
+          ]
+        },
+        {
+          "organization_name": "French National Reception Scheme",
+          "url": "https://asylumineurope.org/reports/country/france/reception-conditions/housing/types-accommodation/",
+          "description": "Government-run accommodation facilities for asylum seekers under the national reception scheme (dispositif national d'accueil, DNA).",
+          "resource_type": "Government Program",
+          "services": [
+            "Asylum accommodation",
+            "Reception centers",
+            "Housing support"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Belgium",
+      "continent": "Europe",
+      "country_code": "BE",
+      "resources": [
+        {
+          "organization_name": "Belgian Red Cross",
+          "url": "https://redcross.eu/projects/specialised-care-at-belgian-receptions-for-asylum-seekers",
+          "description": "Runs 35 reception centres capable of housing more than 8,000 asylum seekers, providing specialized care and support services.",
+          "resource_type": "NGO",
+          "services": [
+            "Reception centers",
+            "Specialized care",
+            "Housing for asylum seekers"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Sweden",
+      "continent": "Europe",
+      "country_code": "SE",
+      "resources": [
+        {
+          "organization_name": "Swedish Migration Agency",
+          "url": "https://www.migrationsverket.se/en/about-the-swedish-migration-agency/the-swedish-migration-agency-answers/2024/2024-10-16-the-reception-and-housing-of-asylum-seekers---how-does-it-work.html",
+          "description": "Government agency providing accommodation and financial support to asylum seekers while they await decisions. Municipalities sign agreements to receive asylum seekers.",
+          "resource_type": "Government Agency",
+          "services": [
+            "Asylum accommodation",
+            "Financial support",
+            "Reception services"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Netherlands",
+      "continent": "Europe",
+      "country_code": "NL",
+      "resources": [
+        {
+          "organization_name": "City of Utrecht NGO Programs",
+          "url": "https://cmise.web.ox.ac.uk/shelters-and-housing",
+          "description": "City provides funding to NGOs to manage three shelters hosting irregular migrants, also providing financial, legal and medical assistance.",
+          "resource_type": "Government-Funded NGO",
+          "services": [
+            "Shelter management",
+            "Financial assistance",
+            "Legal support",
+            "Medical care"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Spain",
+      "continent": "Europe",
+      "country_code": "ES",
+      "resources": [
+        {
+          "organization_name": "Spanish Reception System",
+          "url": "https://includeu.eu/housing-in-spain/",
+          "description": "Government reception system designed to secure housing for migrants, asylum seekers and refugees in Spain.",
+          "resource_type": "Government Program",
+          "services": [
+            "Housing provision",
+            "Reception services",
+            "Integration support"
+          ]
+        },
+        {
+          "organization_name": "Lend a Hand Shelter Project",
+          "url": "https://home-affairs.ec.europa.eu/projects/spain-lend-hand-shelter-project-benefits-refugees-and-host-families-alike_en",
+          "description": "EU-funded project facilitating social integration of refugees with international or temporary protection status by providing housing with host families.",
+          "resource_type": "NGO",
+          "services": [
+            "Host family placement",
+            "Social integration",
+            "Temporary housing"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Portugal",
+      "continent": "Europe",
+      "country_code": "PT",
+      "resources": [
+        {
+          "organization_name": "Portuguese Government Migration Support",
+          "url": "https://www2.gov.pt/en/migrantes-viver-e-trabalhar-em-portugal/migrantes-encontrar-alojamento-e-casa-em-portugal",
+          "description": "Government mechanisms to help migrants find accommodation in Portugal, providing support for newly arrived immigrants.",
+          "resource_type": "Government Program",
+          "services": [
+            "Accommodation search",
+            "Housing support",
+            "Migration services"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Poland",
+      "continent": "Europe",
+      "country_code": "PL",
+      "resources": [
+        {
+          "organization_name": "Polish Asylum System",
+          "url": "https://asylumineurope.org/reports/country/poland/content-international-protection/housing/",
+          "description": "Provides housing support for asylum seekers and refugees, though property rights are limited for foreigners.",
+          "resource_type": "Government Program",
+          "services": [
+            "Asylum housing",
+            "Property assistance",
+            "Legal support"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Czech Republic",
+      "continent": "Europe",
+      "country_code": "CZ",
+      "resources": [
+        {
+          "organization_name": "UNHCR Czechia",
+          "url": "https://help.unhcr.org/czech/information-for-people-from-ukraine/about-housing-in-the-czech-republic/",
+          "description": "Provides cost-free humanitarian housing for newcomers with Temporary Protection, with specific provisions for Ukrainian refugees.",
+          "resource_type": "International Organization",
+          "services": [
+            "Humanitarian housing",
+            "Temporary protection",
+            "Housing coordination"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Multi-Country Europe",
+      "continent": "Europe",
+      "country_code": "EU",
+      "resources": [
+        {
+          "organization_name": "Refugees Welcome International",
+          "url": "https://www.refugees-welcome.net/",
+          "description": "Connects refugees and other displaced persons looking for housing with locals who have vacant rooms in their flats or houses across Europe.",
+          "resource_type": "Online Platform",
+          "services": [
+            "Housing matching",
+            "Private room placement",
+            "Community integration"
+          ]
+        },
+        {
+          "organization_name": "Housing Europe",
+          "url": "https://www.housingeurope.eu/housing-for-refugee-inclusion/",
+          "description": "Provides overview of various housing models across Europe and serves as platform for exchange of best practices for refugee housing inclusion.",
+          "resource_type": "NGO",
+          "services": [
+            "Housing models",
+            "Best practices",
+            "Policy advocacy"
+          ]
+        },
+        {
+          "organization_name": "HIAS Europe",
+          "url": "https://hias.org/hias-eu/",
+          "description": "Manages humanitarian programming worldwide and supports European Jewish communities in their efforts to welcome refugees.",
+          "resource_type": "NGO",
+          "services": [
+            "Humanitarian programming",
+            "Refugee welcome",
+            "Community support"
+          ]
+        },
+        {
+          "organization_name": "IRAP Europe",
+          "url": "https://refugeerights.org/irap-europe",
+          "description": "Uses the power of law to help displaced people from around the world find a safe place to live and a safe way to get there.",
+          "resource_type": "NGO",
+          "services": [
+            "Legal assistance",
+            "Resettlement support",
+            "Advocacy"
+          ]
+        },
+        {
+          "organization_name": "PICUM",
+          "url": "https://picum.org/members/",
+          "description": "Network of 155 member organizations working to advance social justice and human rights of undocumented migrants across Europe.",
+          "resource_type": "NGO Network",
+          "services": [
+            "Advocacy",
+            "Human rights",
+            "Migrant support"
+          ]
+        },
+        {
+          "organization_name": "Lento.eu",
+          "url": "https://lento.eu/en",
+          "description": "Online platform offering housing for migrant workers in Europe, provided with photos, price information and all features.",
+          "resource_type": "Online Platform",
+          "services": [
+            "Housing search",
+            "Worker accommodation",
+            "Rental listings"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Japan",
+      "continent": "Asia",
+      "country_code": "JP",
+      "resources": [
+        {
+          "organization_name": "International Social Service Japan (ISSJ)",
+          "url": "https://www.issj.org/en/migrants",
+          "description": "Provides wide range of consultation services for refugees and migrant families in Japan to facilitate their integration into Japanese society.",
+          "resource_type": "NGO",
+          "services": [
+            "Consultation services",
+            "Integration support",
+            "Family services"
+          ]
+        },
+        {
+          "organization_name": "JELA Foundation",
+          "url": "https://www.jela.or.jp/en/what-we-do/refugees/",
+          "description": "Offers two types of assistance to refugees and asylum seekers in Japan: housing support and scholarships.",
+          "resource_type": "NGO",
+          "services": [
+            "Housing assistance",
+            "Scholarships",
+            "Refugee support"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Singapore",
+      "continent": "Asia",
+      "country_code": "SG",
+      "resources": [
+        {
+          "organization_name": "Humanitarian Organisation for Migration Economics (HOME)",
+          "url": "https://www.home.org.sg/",
+          "description": "Advocates for migrant workers' rights and provides support to migrant workers in Singapore.",
+          "resource_type": "NGO",
+          "services": [
+            "Migrant worker support",
+            "Rights advocacy",
+            "Assistance programs"
+          ]
+        },
+        {
+          "organization_name": "UNHCR Singapore",
+          "url": "https://www.unhcr.org/where-we-work/countries/singapore",
+          "description": "UN refugee agency providing support and services to refugees, asylum-seekers and stateless persons in Singapore.",
+          "resource_type": "International Organization",
+          "services": [
+            "Refugee protection",
+            "Asylum support",
+            "Legal assistance"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Thailand",
+      "continent": "Asia",
+      "country_code": "TH",
+      "resources": [
+        {
+          "organization_name": "Asylum Access Thailand",
+          "url": "https://asylumaccess.org/",
+          "description": "Provides legal counsel and representation to refugees seeking asylum in Thailand, believing all refugees deserve a fair chance at a new life.",
+          "resource_type": "NGO",
+          "services": [
+            "Legal counsel",
+            "Asylum representation",
+            "Refugee support"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Indonesia",
+      "continent": "Asia",
+      "country_code": "ID",
+      "resources": [
+        {
+          "organization_name": "IOM Indonesia",
+          "url": "https://indonesia.iom.int/alternatives-detention",
+          "description": "Operates 84 community housing facilities spread across the country for refugees and asylum seekers under IOM's programme.",
+          "resource_type": "International Organization",
+          "services": [
+            "Community housing",
+            "Alternatives to detention",
+            "Refugee accommodation"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "South Korea",
+      "continent": "Asia",
+      "country_code": "KR",
+      "resources": [
+        {
+          "organization_name": "UNHCR Republic of Korea",
+          "url": "https://help.unhcr.org/southkorea/help/livelihood/",
+          "description": "Refugees and asylum seekers can apply for Government Living Expense Support including housing allowances.",
+          "resource_type": "International Organization",
+          "services": [
+            "Living expense support",
+            "Housing allowances",
+            "Livelihood assistance"
+          ]
+        },
+        {
+          "organization_name": "Korean Refugee Housing Support",
+          "url": "https://refugee-health-booklet.freemed.or.kr/en/support/housing",
+          "description": "Provides housing support for refugee applicants who need humanitarian consideration, such as families with infants and pregnant women.",
+          "resource_type": "Government Program",
+          "services": [
+            "Housing support",
+            "Humanitarian assistance",
+            "Family support"
+          ]
+        },
+        {
+          "organization_name": "Korea Hana Foundation",
+          "url": "https://www.koreahana.or.kr/home/eng/contents.do?menuPos=10",
+          "description": "Provides diverse programs for North Korean defectors including initial resettlement support and housing assistance.",
+          "resource_type": "Government-Supported Organization",
+          "services": [
+            "Resettlement support",
+            "Housing assistance",
+            "Medical support"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Australia",
+      "continent": "Oceania",
+      "country_code": "AU",
+      "resources": [
+        {
+          "organization_name": "Australian Refugee Council",
+          "url": "https://www.refugeecouncil.org.au/",
+          "description": "Provides food, emergency accommodation, rent assistance, transport and healthcare for refugees, though with little government funding.",
+          "resource_type": "NGO",
+          "services": [
+            "Emergency accommodation",
+            "Rent assistance",
+            "Healthcare",
+            "Transport"
+          ]
+        },
+        {
+          "organization_name": "Australian Department of Home Affairs",
+          "url": "https://immi.homeaffairs.gov.au/what-we-do/refugee-and-humanitarian-program",
+          "description": "Manages Australia's refugee and humanitarian program, an important part of international protection of refugees.",
+          "resource_type": "Government Agency",
+          "services": [
+            "Refugee resettlement",
+            "Humanitarian program",
+            "Housing coordination"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "New Zealand",
+      "continent": "Oceania",
+      "country_code": "NZ",
+      "resources": [
+        {
+          "organization_name": "New Zealand Immigration - Refugee Resettlement",
+          "url": "https://www.immigration.govt.nz/about-us/our-strategies-and-programmes/supporting-refugees-and-asylum-seekers/refugee-resettlement-strategy/",
+          "description": "Whole-of-government approach to delivering improved refugee resettlement outcomes including housing support.",
+          "resource_type": "Government Program",
+          "services": [
+            "Refugee resettlement",
+            "Housing support",
+            "Integration services"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Multi-Country Asia",
+      "continent": "Asia",
+      "country_code": "ASIA",
+      "resources": [
+        {
+          "organization_name": "UNHCR Asia Pacific",
+          "url": "https://www.unhcr.org/asia",
+          "description": "Regional UN refugee agency dedicated to saving lives and protecting rights of refugees and forcibly displaced communities across Asia Pacific.",
+          "resource_type": "International Organization",
+          "services": [
+            "Refugee protection",
+            "Regional coordination",
+            "Housing support"
+          ]
+        },
+        {
+          "organization_name": "Asian Resources",
+          "url": "https://asianresources.org/refugee-support-services/",
+          "description": "Provides wide range of family-centered, trauma-informed, and culturally responsive services for refugees, asylees, and SIV holders.",
+          "resource_type": "NGO",
+          "services": [
+            "Family services",
+            "Trauma support",
+            "Refugee assistance"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Colombia",
+      "continent": "South America",
+      "country_code": "CO",
+      "resources": [
+        {
+          "organization_name": "HIAS Colombia",
+          "url": "https://hias.org/where/colombia/",
+          "description": "Provides services to displaced women in transit, including emergency support, housing, and food, ensuring access to safe housing.",
+          "resource_type": "NGO",
+          "services": [
+            "Emergency housing",
+            "Food assistance",
+            "Women's support"
+          ]
+        },
+        {
+          "organization_name": "Colombia Resilient Housing Project",
+          "url": "https://worldrelief.org/spblog-creative-solutions-for-refugees-in-south-america/",
+          "description": "Improved housing infrastructure and access to housing for refugees and host communities in Colombia.",
+          "resource_type": "NGO Project",
+          "services": [
+            "Housing infrastructure",
+            "Refugee housing",
+            "Community development"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Brazil",
+      "continent": "South America",
+      "country_code": "BR",
+      "resources": [
+        {
+          "organization_name": "Brazilian Worker Center",
+          "url": "https://braziliancenter.org/family-welcome-center/",
+          "description": "Family Welcome Center dedicated to welcoming and supporting newly arrived immigrants, providing safe and respectful environment.",
+          "resource_type": "NGO",
+          "services": [
+            "Welcome center",
+            "Immigrant support",
+            "Safe housing"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Panama",
+      "continent": "South America",
+      "country_code": "PA",
+      "resources": [
+        {
+          "organization_name": "HIAS Panama",
+          "url": "https://hias.org/where/panama/",
+          "description": "Protects refugees and displaced people by offering legal support, providing safe housing, ensuring access to food, and resettling families.",
+          "resource_type": "NGO",
+          "services": [
+            "Legal support",
+            "Safe housing",
+            "Food assistance",
+            "Resettlement"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Costa Rica",
+      "continent": "South America",
+      "country_code": "CR",
+      "resources": [
+        {
+          "organization_name": "HIAS Costa Rica",
+          "url": "https://hias.org/where/costa-rica/",
+          "description": "Supports refugees in Costa Rica by providing legal services and economic assistance and training.",
+          "resource_type": "NGO",
+          "services": [
+            "Legal services",
+            "Economic assistance",
+            "Training programs"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Chile",
+      "continent": "South America",
+      "country_code": "CL",
+      "resources": [
+        {
+          "organization_name": "R4V Chile",
+          "url": "https://www.r4v.info/en/chile",
+          "description": "National coordination platform facilitating response to refugees and migrants from Venezuela and their host communities in Chile.",
+          "resource_type": "Coordination Platform",
+          "services": [
+            "Coordination",
+            "Refugee response",
+            "Community support"
+          ]
+        },
+        {
+          "organization_name": "Caritas Chile",
+          "url": "https://www.caritas.org/where-we-work-country/chile/",
+          "description": "Non-profit charitable organisation developing and promoting solidarity with individuals and families in need, including migrants.",
+          "resource_type": "NGO",
+          "services": [
+            "Solidarity programs",
+            "Family support",
+            "Migrant assistance"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Argentina",
+      "continent": "South America",
+      "country_code": "AR",
+      "resources": [
+        {
+          "organization_name": "UNHCR Argentina",
+          "url": "https://www.unhcr.org/us/where-we-work/countries/argentina",
+          "description": "Focuses on facilitating regularization and integration of refugees, promoting inclusion in national services, employment, and vocational training.",
+          "resource_type": "International Organization",
+          "services": [
+            "Regularization",
+            "Integration",
+            "Employment support"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Multi-Country South America",
+      "continent": "South America",
+      "country_code": "LATAM",
+      "resources": [
+        {
+          "organization_name": "R4V (Response for Venezuelans)",
+          "url": "https://www.r4v.info/en/shelter",
+          "description": "Regional coordination platform for Venezuelan refugees and migrants. Approximately 73% of refugees and migrants live in rented accommodation across the region.",
+          "resource_type": "Coordination Platform",
+          "services": [
+            "Regional coordination",
+            "Shelter support",
+            "Data collection"
+          ]
+        },
+        {
+          "organization_name": "Church World Service Latin America",
+          "url": "https://cwsglobal.org/our-work/latin-america-and-the-caribbean/migration/",
+          "description": "Works alongside faith-based networks to defend rights of migrants, displaced people, deportees and refugees across Latin America.",
+          "resource_type": "NGO",
+          "services": [
+            "Rights advocacy",
+            "Faith-based support",
+            "Migration services"
+          ]
+        },
+        {
+          "organization_name": "JRS Latin America and Caribbean",
+          "url": "https://jrs.net/en/jrs_offices/jrs-latin-america-and-caribbean/",
+          "description": "Jesuit Refugee Service working in education, livelihoods, peacebuilding and reconciliation across Latin America and Caribbean.",
+          "resource_type": "NGO",
+          "services": [
+            "Education",
+            "Livelihoods",
+            "Peacebuilding"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "South Africa",
+      "continent": "Africa",
+      "country_code": "ZA",
+      "resources": [
+        {
+          "organization_name": "HIAS South Africa",
+          "url": "https://hias.org/where/south-africa/",
+          "description": "Helps refugees in South Africa by providing legal support and mental health care, as well as advocating for refugee rights.",
+          "resource_type": "NGO",
+          "services": [
+            "Legal support",
+            "Mental health care",
+            "Advocacy"
+          ]
+        },
+        {
+          "organization_name": "Lawyers for Human Rights",
+          "url": "https://www.lhr.org.za/lhr-programmes/refugee-and-migrant-rights-programme/",
+          "description": "Largest legal aid organization for refugees and migrants in South Africa, advocating for prevention of xenophobia and promoting access to protection.",
+          "resource_type": "NGO",
+          "services": [
+            "Legal aid",
+            "Advocacy",
+            "Protection services"
+          ]
+        },
+        {
+          "organization_name": "UNHCR South Africa",
+          "url": "https://help.unhcr.org/southafrica/",
+          "description": "Provides information to refugees, asylum-seekers and stateless persons about their rights, obligations and available services.",
+          "resource_type": "International Organization",
+          "services": [
+            "Information services",
+            "Rights protection",
+            "Refugee support"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Kenya",
+      "continent": "Africa",
+      "country_code": "KE",
+      "resources": [
+        {
+          "organization_name": "HIAS Kenya",
+          "url": "https://hias.org/where/kenya/",
+          "description": "Protects refugees and displaced people by offering legal support, preventing and responding to violence against women and girls, and looking after children's welfare.",
+          "resource_type": "NGO",
+          "services": [
+            "Legal support",
+            "Protection services",
+            "Child welfare"
+          ]
+        },
+        {
+          "organization_name": "JRS Eastern Africa",
+          "url": "https://jrs.net/en/jrs_offices/jrs-eastern-africa/",
+          "description": "Provides assistance to refugees and asylum seekers in camps and cities, as well as individuals displaced within their own countries.",
+          "resource_type": "NGO",
+          "services": [
+            "Camp assistance",
+            "Urban support",
+            "IDP services"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Ethiopia",
+      "continent": "Africa",
+      "country_code": "ET",
+      "resources": [
+        {
+          "organization_name": "UNHCR Ethiopia",
+          "url": "https://www.unhcr.org/us/where-we-work/countries/ethiopia",
+          "description": "Ethiopia is one of Africa's largest refugee-hosting countries, sheltering over 1 million refugees and asylum seekers. UNHCR provides coordination and support.",
+          "resource_type": "International Organization",
+          "services": [
+            "Refugee coordination",
+            "Camp management",
+            "Protection services"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Uganda",
+      "continent": "Africa",
+      "country_code": "UG",
+      "resources": [
+        {
+          "organization_name": "JRS Eastern Africa - Uganda",
+          "url": "https://jrs.net/en/jrs_offices/jrs-eastern-africa/",
+          "description": "Provides assistance to refugees and asylum seekers in camps and urban areas in Uganda.",
+          "resource_type": "NGO",
+          "services": [
+            "Camp assistance",
+            "Urban support",
+            "Education"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Morocco",
+      "continent": "Africa",
+      "country_code": "MA",
+      "resources": [
+        {
+          "organization_name": "UNHCR Morocco",
+          "url": "https://help.unhcr.org/morocco/en/services/social-and-financial-assistance/",
+          "description": "Provides financial assistance and shelter programme offering emergency and protection-focused housing for refugees recognized by UNHCR.",
+          "resource_type": "International Organization",
+          "services": [
+            "Financial assistance",
+            "Emergency housing",
+            "Protection services"
+          ]
+        },
+        {
+          "organization_name": "IOM Morocco",
+          "url": "https://morocco.iom.int/",
+          "description": "Provides assisted voluntary return and reintegration services, supporting migrants in vulnerable situations.",
+          "resource_type": "International Organization",
+          "services": [
+            "Voluntary return",
+            "Reintegration",
+            "Migrant assistance"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Multi-Country Africa",
+      "continent": "Africa",
+      "country_code": "AF",
+      "resources": [
+        {
+          "organization_name": "Alliance for African Assistance",
+          "url": "https://www.alliance-for-africa.org/",
+          "description": "Assists refugees with range of services including adjustment of status, naturalization applications, asylum and refugee matters.",
+          "resource_type": "NGO",
+          "services": [
+            "Legal services",
+            "Naturalization",
+            "Asylum support"
+          ]
+        },
+        {
+          "organization_name": "African Community Housing & Development",
+          "url": "https://www.achdo.org/",
+          "description": "Empowers African Diaspora immigrants, refugees, and descendants in Greater Seattle Area by building culturally responsive housing and services.",
+          "resource_type": "NGO",
+          "services": [
+            "Housing development",
+            "Community empowerment",
+            "Cultural support"
+          ]
+        },
+        {
+          "organization_name": "African Services Committee",
+          "url": "https://africanservices.org/",
+          "description": "Multi-service human rights agency dedicated to assisting immigrants, refugees, and asylees from across the African Diaspora.",
+          "resource_type": "NGO",
+          "services": [
+            "Human rights",
+            "Multi-service support",
+            "Immigrant assistance"
+          ]
+        },
+        {
+          "organization_name": "African Community Center",
+          "url": "https://www.acc-den.org/",
+          "description": "Uses imaginative approaches to integration, working side-by-side with refugees and immigrants to help rebuild their lives.",
+          "resource_type": "NGO",
+          "services": [
+            "Integration support",
+            "Life rebuilding",
+            "Community services"
+          ]
+        },
+        {
+          "organization_name": "RSC Africa (CWS)",
+          "url": "https://cwsglobal.org/our-work/africa/rsc-africa/",
+          "description": "Resettlement Support Center Africa guides all US-bound refugees from sub-Saharan Africa through the resettlement process.",
+          "resource_type": "NGO",
+          "services": [
+            "Resettlement processing",
+            "US-bound refugee support"
+          ]
+        },
+        {
+          "organization_name": "IOM Shelter Programme",
+          "url": "https://www.iom.int/shelter",
+          "description": "Strengthens housing, land and property rights for displaced persons across Africa, focusing on due diligence and rights protection.",
+          "resource_type": "International Organization",
+          "services": [
+            "Shelter programming",
+            "Property rights",
+            "Settlement support"
+          ]
+        },
+        {
+          "organization_name": "African Human Rights Coalition",
+          "url": "https://www.africanhrc.org/services",
+          "description": "Engages in humanitarian relief through direct support and fundraising for safe-shelter, food programs, medicine, relocation and transport.",
+          "resource_type": "NGO",
+          "services": [
+            "Humanitarian relief",
+            "Safe shelter",
+            "Relocation support"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Global",
+      "continent": "Global",
+      "country_code": "GLOBAL",
+      "resources": [
+        {
+          "organization_name": "UNHCR (United Nations High Commissioner for Refugees)",
+          "url": "https://www.unhcr.org/",
+          "description": "Global organization dedicated to saving lives and protecting rights of refugees, forcibly displaced communities and stateless people in more than 130 countries.",
+          "resource_type": "International Organization",
+          "services": [
+            "Refugee protection",
+            "Emergency shelter",
+            "Resettlement",
+            "Legal assistance"
+          ]
+        },
+        {
+          "organization_name": "IOM (International Organization for Migration)",
+          "url": "https://www.iom.int/",
+          "description": "Leading inter-governmental organization providing services and advice concerning migration to governments and migrants, including shelter and housing support.",
+          "resource_type": "International Organization",
+          "services": [
+            "Migration services",
+            "Shelter programming",
+            "Housing support"
+          ]
+        },
+        {
+          "organization_name": "Airbnb.org",
+          "url": "https://www.airbnb.org/",
+          "description": "Provides safe short-term housing for individuals in vulnerable situations globally, including refugees and displaced persons.",
+          "resource_type": "Online Platform",
+          "services": [
+            "Short-term housing",
+            "Emergency accommodation",
+            "Host matching"
+          ]
+        },
+        {
+          "organization_name": "Global Refuge",
+          "url": "https://www.globalrefuge.org/",
+          "description": "For over 80 years, has provided resources, guidance, and community to help refugees find a way forward.",
+          "resource_type": "NGO",
+          "services": [
+            "Resettlement",
+            "Community support",
+            "Resources"
+          ]
+        },
+        {
+          "organization_name": "International Refugee Assistance Project (IRAP)",
+          "url": "https://refugeerights.org/",
+          "description": "Innovative model of mobilizing legal resources to provide direct client services and advocate for refugees and displaced persons globally.",
+          "resource_type": "NGO",
+          "services": [
+            "Legal services",
+            "Advocacy",
+            "Direct assistance"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Global - Students & Digital Nomads",
+      "continent": "Global",
+      "country_code": "GLOBAL_STUDENTS",
+      "resources": [
+        {
+          "organization_name": "Student.com",
+          "url": "https://www.student.com/",
+          "description": "World's largest marketplace for international student housing with over 2M beds in 400+ cities worldwide. Covers 25+ countries including UK, USA, Australia, Canada, Germany, France, Spain, Italy, Japan, South Korea, Singapore, and more. Features instant booking, price match promise, and perfect home guarantee.",
+          "resource_type": "Online Platform",
+          "services": [
+            "Student housing search",
+            "Instant booking",
+            "Price matching",
+            "Short stays",
+            "University partnerships"
+          ]
+        },
+        {
+          "organization_name": "Uniplaces",
+          "url": "https://www.uniplaces.com/",
+          "description": "Safe and easy housing platform to find and book rooms, apartments, flats and residences for students across Europe and beyond. Verified listings with secure booking.",
+          "resource_type": "Online Platform",
+          "services": [
+            "Student accommodation",
+            "Verified listings",
+            "Secure booking",
+            "Apartments and rooms"
+          ]
+        },
+        {
+          "organization_name": "Erasmus Play",
+          "url": "https://erasmusplay.com/",
+          "description": "International student housing platform helping students find new homes. Choose from residences, apartments, shared flats across Europe and worldwide.",
+          "resource_type": "Online Platform",
+          "services": [
+            "Student housing",
+            "Residences",
+            "Shared apartments",
+            "Erasmus students"
+          ]
+        },
+        {
+          "organization_name": "Spotahome",
+          "url": "https://www.spotahome.com/",
+          "description": "Easy-to-use, fully online booking platform with full virtual tours for students looking for home accommodation abroad. No need to visit in person.",
+          "resource_type": "Online Platform",
+          "services": [
+            "Virtual tours",
+            "Online booking",
+            "Student accommodation",
+            "Mid-term rentals"
+          ]
+        },
+        {
+          "organization_name": "Casita",
+          "url": "https://www.casita.com/",
+          "description": "Safe and secure student rooms available in all major countries and cities across the world. Variety of accommodation options for international students.",
+          "resource_type": "Online Platform",
+          "services": [
+            "Student rooms",
+            "Global coverage",
+            "Secure booking",
+            "Multiple room types"
+          ]
+        },
+        {
+          "organization_name": "UniAcco",
+          "url": "https://uniacco.com/",
+          "description": "Find best student accommodation & housing with 10,000+ properties in UK, Canada, Ireland, France, Germany and more countries.",
+          "resource_type": "Online Platform",
+          "services": [
+            "Student housing",
+            "10,000+ properties",
+            "Multiple countries",
+            "Affordable options"
+          ]
+        },
+        {
+          "organization_name": "AmberStudent",
+          "url": "https://amberstudent.com/",
+          "description": "Global student accommodation platform covering USA, UK, Australia, Ireland, Canada, Germany, Spain, New Zealand, France and more.",
+          "resource_type": "Online Platform",
+          "services": [
+            "Student accommodation",
+            "Global coverage",
+            "University partnerships",
+            "Booking assistance"
+          ]
+        },
+        {
+          "organization_name": "University Living",
+          "url": "https://www.universityliving.com/",
+          "description": "Student accommodation booking platform connecting students with housing options near universities worldwide.",
+          "resource_type": "Online Platform",
+          "services": [
+            "Student accommodation",
+            "University proximity",
+            "Booking platform",
+            "Global listings"
+          ]
+        },
+        {
+          "organization_name": "Housing Anywhere",
+          "url": "https://housinganywhere.com/",
+          "description": "Lets current students rent out their rooms to incoming international students. Peer-to-peer student housing platform with secure booking.",
+          "resource_type": "Online Platform",
+          "services": [
+            "Peer-to-peer housing",
+            "Student sublets",
+            "Secure platform",
+            "International students"
+          ]
+        },
+        {
+          "organization_name": "Yugo",
+          "url": "https://yugo.com/",
+          "description": "Student accommodation provider with 130 locations across 12 countries: USA, UK, Ireland, Spain, Germany, Italy, France, Portugal, Austria, Australia, UAE, Japan.",
+          "resource_type": "Online Platform",
+          "services": [
+            "Purpose-built student accommodation",
+            "130 locations",
+            "12 countries",
+            "Modern facilities"
+          ]
+        },
+        {
+          "organization_name": "Anyplace",
+          "url": "https://www.anyplace.com/digital-nomad-housing",
+          "description": "Furnished apartments designed for digital nomads with equipped home office, high-speed internet, full kitchen, on-site laundry. Perfect for remote workers relocating.",
+          "resource_type": "Online Platform",
+          "services": [
+            "Digital nomad housing",
+            "Furnished apartments",
+            "Home office",
+            "High-speed internet"
+          ]
+        },
+        {
+          "organization_name": "Flatio",
+          "url": "https://www.flatio.com/",
+          "description": "Hand-picked, mostly deposit-free, and reasonably priced accommodations in over 300 destinations for digital nomads worldwide. Mid to long-term stays.",
+          "resource_type": "Online Platform",
+          "services": [
+            "Digital nomad accommodation",
+            "300+ destinations",
+            "Deposit-free options",
+            "Long-term stays"
+          ]
+        },
+        {
+          "organization_name": "NomadStays",
+          "url": "https://www.nomadstays.com/",
+          "description": "Find amazing, affordable, longer stays with wifi, workspaces and lifestyle amenities. Created by digital nomads, for digital nomads.",
+          "resource_type": "Online Platform",
+          "services": [
+            "Long-term stays",
+            "Workspace amenities",
+            "WiFi verified",
+            "Nomad-friendly"
+          ]
+        },
+        {
+          "organization_name": "Coliving.com",
+          "url": "https://coliving.com/",
+          "description": "50,000 rooms in 2,000 coliving spaces in key locations worldwide. Catering to professionals, remote workers, and digital nomads seeking community.",
+          "resource_type": "Online Platform",
+          "services": [
+            "Coliving spaces",
+            "2,000 locations",
+            "Community living",
+            "Remote workers"
+          ]
+        },
+        {
+          "organization_name": "Coliving Compass",
+          "url": "https://colivingcompass.com/",
+          "description": "Finds co-living spaces for digital nomads looking for local community and to meet new friends. Curated coliving directory.",
+          "resource_type": "Online Platform",
+          "services": [
+            "Coliving directory",
+            "Community focus",
+            "Digital nomads",
+            "Social living"
+          ]
+        },
+        {
+          "organization_name": "RemoteBase",
+          "url": "https://remotebase.co/",
+          "description": "Curated accommodation listings perfect for digital nomads & traveling remote workers with up to 80% off long-stay bookings.",
+          "resource_type": "Online Platform",
+          "services": [
+            "Remote worker housing",
+            "Long-stay discounts",
+            "Curated listings",
+            "Travel deals"
+          ]
+        },
+        {
+          "organization_name": "Selina",
+          "url": "https://www.selina.com/",
+          "description": "Global hospitality brand offering coliving and coworking spaces for digital nomads in 100+ locations across 25+ countries.",
+          "resource_type": "Online Platform",
+          "services": [
+            "Coliving",
+            "Coworking spaces",
+            "100+ locations",
+            "Digital nomad community"
+          ]
+        },
+        {
+          "organization_name": "Outsite",
+          "url": "https://www.outsite.co/",
+          "description": "Coliving network for remote workers and digital nomads with locations in beautiful destinations worldwide. Includes coworking spaces.",
+          "resource_type": "Online Platform",
+          "services": [
+            "Coliving network",
+            "Coworking included",
+            "Remote workers",
+            "Global locations"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "France",
+      "continent": "Europe",
+      "country_code": "FR_STUDENTS",
+      "resources": [
+        {
+          "organization_name": "Studapart",
+          "url": "https://www.studapart.com/en",
+          "description": "Official housing service of more than 150 French schools and universities. Over 100,000 accommodations in 42 French cities for students.",
+          "resource_type": "Online Platform",
+          "services": [
+            "Student housing",
+            "University partnerships",
+            "100,000+ accommodations",
+            "42 French cities"
+          ]
+        },
+        {
+          "organization_name": "Cité Internationale Universitaire de Paris",
+          "url": "https://www.ciup.fr/en/",
+          "description": "Largest accommodation site for French and international students with 7,000 rooms in 47 houses in Paris.",
+          "resource_type": "University Housing",
+          "services": [
+            "Student residences",
+            "7,000 rooms",
+            "International students",
+            "Paris accommodation"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "South Korea",
+      "continent": "Asia",
+      "country_code": "KR_STUDENTS",
+      "resources": [
+        {
+          "organization_name": "Your Home in Korea",
+          "url": "https://www.yourhomeinkorea.com/",
+          "description": "Helps find accommodation in Korea at discounted prices. Choose between host family, share house and hotel for students and tourists.",
+          "resource_type": "Online Platform",
+          "services": [
+            "Host family",
+            "Share house",
+            "Student accommodation",
+            "Discounted prices"
+          ]
+        },
+        {
+          "organization_name": "Korea University International Housing",
+          "url": "https://gsc.korea.ac.kr/",
+          "description": "On-campus accommodation for international students with three buildings housing over 700 students from overseas.",
+          "resource_type": "University Housing",
+          "services": [
+            "On-campus housing",
+            "700+ capacity",
+            "International students",
+            "University-managed"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Japan",
+      "continent": "Asia",
+      "country_code": "JP_STUDENTS",
+      "resources": [
+        {
+          "organization_name": "Soka University International Dormitory",
+          "url": "https://www.soka.ac.jp/en/campuslife/dormitory/",
+          "description": "University-operated dormitories for international students with priority for preparatory Japanese language program students.",
+          "resource_type": "University Housing",
+          "services": [
+            "International dormitories",
+            "Japanese language support",
+            "University-operated",
+            "Priority enrollment"
+          ]
+        },
+        {
+          "organization_name": "Nanzan University Accommodation",
+          "url": "https://www.nanzan-u.ac.jp/English/studentlife/accommodation/",
+          "description": "Four types of university-owned dormitories and homestay program to accommodate international students in Japan.",
+          "resource_type": "University Housing",
+          "services": [
+            "University dormitories",
+            "Homestay program",
+            "International students",
+            "Multiple options"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Canada",
+      "continent": "North America",
+      "country_code": "CA_STUDENTS",
+      "resources": [
+        {
+          "organization_name": "Places 4 Students",
+          "url": "https://www.places4students.com/",
+          "description": "North America's leading off-campus housing platform trusted by students, landlords, colleges, and universities across Canada.",
+          "resource_type": "Online Platform",
+          "services": [
+            "Off-campus housing",
+            "Student rentals",
+            "University partnerships",
+            "Landlord verified"
+          ]
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "version": "2.0",
+    "last_updated": "2025-12-29",
+    "total_countries": 41,
+    "total_resources": 104,
+    "continents_covered": [
+      "North America",
+      "South America",
+      "Europe",
+      "Asia",
+      "Africa",
+      "Oceania"
+    ],
+    "resource_types": [
+      "Government Agency",
+      "Government Program",
+      "NGO",
+      "International Organization",
+      "Online Platform",
+      "Coordination Platform",
+      "University Housing"
+    ],
+    "firecrawl_optimized": true,
+    "description": "Comprehensive dataset of housing resources for migrants, refugees, asylum seekers, international students, and digital nomads across multiple continents, optimized for web scraping with Firecrawl"
+  }
+}

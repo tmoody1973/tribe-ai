@@ -1,7 +1,7 @@
 # TRIBE Product Requirements Document (PRD)
 
-**Version:** 1.0
-**Date:** December 2025
+**Version:** 1.5
+**Date:** December 29, 2025
 **Status:** Draft
 
 ---
@@ -35,6 +35,7 @@ The 2-week hackathon constraint requires ruthless prioritization. The MVP focuse
 | Dec 2025 | 1.2 | Added CopilotKit + AG-UI for agentic chat and Generative UI | John (PM) |
 | Dec 2025 | 1.3 | Added Epic 6: Cultural Bridge & Inclusion (FR24-FR29) | Claude |
 | Dec 27, 2025 | 1.4 | Added Epic 8: Live Corridor Feed with multi-source intelligence, Gemini video analysis, Threads/Twitter UI, and Document Vault integration (FR30-FR40, NFR15-NFR19) | Claude |
+| Dec 29, 2025 | 1.5 | Added Epic 9: Financial Tracker & Budget Management with CSV import, AI categorization, savings goals, exchange rates (FR41-FR52, NFR20-NFR23). Enhanced Epic 5 with hyper-personalized audio briefings using 10 data sources (FR53-FR60, NFR24-NFR26) | John (PM) |
 
 ---
 
@@ -82,6 +83,26 @@ The 2-week hackathon constraint requires ruthless prioritization. The MVP focuse
 - **FR38:** System shall implement relevance scoring algorithm that ranks content by recency, source credibility, engagement, and journey stage match
 - **FR39:** System shall respect YouTube API quota limits (10K units/day) with intelligent caching and prioritization
 - **FR40:** System shall categorize feed items by type: Alerts, Success Stories, Videos, Discussions, Educational
+- **FR41:** System shall provide CSV/Excel import for bank statements with automatic transaction parsing
+- **FR42:** System shall use Gemini AI to automatically categorize imported transactions into migration expense categories
+- **FR43:** System shall support bulk expense import from parsed CSV data with transaction matching and deduplication
+- **FR44:** System shall provide multi-currency expense tracking with automatic conversion to destination currency
+- **FR45:** System shall integrate real-time exchange rate API (exchangeratesapi.io with fallback to exchangerate-api.com)
+- **FR46:** System shall provide savings goals tracker with target amounts, deadlines, and milestone tracking
+- **FR47:** System shall display savings progress with visual progress bars and achievement celebrations
+- **FR48:** System shall provide budget creation wizard with corridor-specific templates and allocation suggestions
+- **FR49:** System shall calculate and display budget summaries showing spent vs remaining by category
+- **FR50:** System shall track upcoming expenses with due date notifications
+- **FR51:** System shall provide budget status indicators (on-track, over-budget, under-budget) based on spending pace
+- **FR52:** System shall update exchange rates daily via scheduled cron job caching 22 major currency pairs
+- **FR53:** System shall generate hyper-personalized audio briefings using 10 data sources: user todos, saved documents, feed alerts, Perplexity (policy news, job market, cultural insights, destination news), corridor statistics, financial data, community wisdom
+- **FR54:** System shall structure daily audio briefings in 7 sections: personalized greeting, urgent actions, progress summary, new opportunities, financial check-in, today's focus, motivational close (2-3 minutes total)
+- **FR55:** System shall structure weekly audio briefings in 7 sections: week review, corridor intelligence update, financial deep dive, community insights, roadmap for next week, comparative analysis, celebration of milestones (5-7 minutes total)
+- **FR56:** System shall generate audio briefing scripts in user's selected language using Claude with dynamic content synthesis
+- **FR57:** System shall render audio briefings using Google Cloud Text-to-Speech (Gemini integration) supporting 220+ languages and variants with neural voices
+- **FR58:** System shall display audio briefing UI with actionable inline buttons for: save-to-vault, add-to-todos, view-source, and quick-chat
+- **FR59:** System shall allow users to select briefing language independent of app UI language
+- **FR60:** System shall generate briefing transcripts for accessibility and reference
 
 ### 2.2 Non-Functional Requirements
 
@@ -104,6 +125,13 @@ The 2-week hackathon constraint requires ruthless prioritization. The MVP focuse
 - **NFR17:** YouTube video analyses shall be cached for 7 days to minimize API usage
 - **NFR18:** Total API costs for corridor feed shall not exceed $30/month for 30 active corridors
 - **NFR19:** Feed relevance algorithm shall filter out 95%+ non-corridor-specific content
+- **NFR20:** CSV import shall process and categorize 100 transactions in <10 seconds using Gemini batch analysis
+- **NFR21:** Exchange rate API calls shall have fallback mechanism with <2 second failover time
+- **NFR22:** Financial tracker shall support offline mode with local storage sync when connection restored
+- **NFR23:** Budget calculations shall update in real-time (<500ms) when expenses added or modified
+- **NFR24:** Audio briefing generation shall complete in <30 seconds for daily briefing, <60 seconds for weekly briefing
+- **NFR25:** Briefing AI synthesis shall stay within Gemini free tier (1,500 requests/day) through intelligent caching
+- **NFR26:** Audio briefing player shall support background playback on mobile devices
 
 ---
 
@@ -335,6 +363,9 @@ Create a Trello-style task board that integrates with protocols and journeys, al
 
 ### Epic 8: Live Corridor Feed
 Build a personalized, real-time feed of corridor-specific migration content from multiple sources (Reddit, YouTube, forums, news, official sources). Uses multi-source intelligence (Reddit's free JSON API, YouTube Data API, Tavily for smart search, Perplexity for policy alerts, and Firecrawl for forums) with AI-powered relevance scoring. Features Gemini-analyzed video content with TL;DR summaries, Threads/Twitter-style UI with infinite scroll, and ability to save items to Document Vault.
+
+### Epic 9: Financial Tracker & Budget Management
+Build a comprehensive financial management system for migration expenses with CSV import for bank statements, AI-powered transaction categorization using Gemini, savings goals tracking with progress visualization, real-time multi-currency exchange rates, and corridor-specific budget templates. Critical for hackathon judges evaluating Innovation (AI categorization), Technical Execution (exchange rate integration), and Impact (solving real migrant financial pain).
 
 ---
 
@@ -1354,6 +1385,265 @@ Build a personalized, real-time feed of corridor-specific migration content from
 5. Cost tracking dashboard showing spend per API per month
 6. A/B testing capability for relevance algorithm tweaks
 7. Error logging for API failures with automatic retries
+
+---
+
+### Epic 9: Financial Tracker & Budget Management
+
+**Goal:** Build a comprehensive financial management system that helps migrants track their migration expenses, manage budgets across multiple currencies, import bank statements with AI categorization, set and track savings goals, and access real-time exchange rates. This epic is critical for the VisaVerse hackathon, demonstrating Innovation (AI-powered categorization), Technical Execution (multi-currency support, API integration), and Impact (solving the #1 migrant pain point: managing money during transition).
+
+---
+
+#### Story 9.1: Financial Data Model & Exchange Rate Integration
+
+**As a** developer,
+**I want** database schema for budgets, expenses, savings goals, and exchange rates,
+**so that** financial tracking is performant and supports multi-currency workflows.
+
+**Acceptance Criteria:**
+1. FinancialBudgets table with: userId, corridorId, originCurrency, destinationCurrency, totalBudgetOrigin, totalBudgetDestination, createdExchangeRate, allocations (6 categories), createdAt, updatedAt
+2. FinancialExpenses table with: userId, corridorId, budgetId, name, category (6 types), amountPaid, currency, exchangeRate, amountInDestination, status (paid/pending/planned), datePaid, dateDue, notes, receiptUrl
+3. SavingsGoals table with: userId, corridorId, budgetId, name, description, targetAmount, currentAmount, currency, targetDate, milestones array, status (active/completed/paused), completedAt
+4. CurrencyRates table with: fromCurrency, toCurrency, rate, source, timestamp
+5. Exchange rate API client with dual provider support (exchangeratesapi.io primary, exchangerate-api.com fallback)
+6. Daily cron job updating 22 major currency pairs at 8 AM UTC
+7. Exchange rate API route `/api/exchange-rate` for real-time queries
+
+---
+
+#### Story 9.2: Budget Creation Wizard with Corridor Templates
+
+**As a** user,
+**I want** a guided wizard to create my migration budget,
+**so that** I can set realistic financial goals based on my corridor.
+
+**Acceptance Criteria:**
+1. Wizard triggered when user has no budget for their active corridor
+2. Step 1: Display typical budget for corridor (e.g., "Nigeria → Canada: ~$8,500 CAD")
+3. Step 2: User enters total budget in origin OR destination currency (auto-converts using real-time exchange rate)
+4. Step 3: Suggest allocations across 6 categories based on corridor research: Visa & Immigration (30%), Tests (15%), Travel (20%), Settlement (25%), Financial Services (5%), Miscellaneous (5%)
+5. Step 4: User can customize allocation percentages (must total 100%)
+6. Step 5: Review & confirm - shows budget summary with all allocations
+7. Budget saved to Convex with current exchange rate locked in
+8. Wizard uses RetroUI neobrutalist styling with bold visuals
+
+---
+
+#### Story 9.3: Expense Tracking Dashboard
+
+**As a** user,
+**I want** to see my migration budget progress and recent expenses,
+**so that** I stay on track financially.
+
+**Acceptance Criteria:**
+1. Financial tracker page `/finances` in main navigation (DollarSign icon)
+2. Budget overview card showing: total spent vs total budget, progress bar (green <90%, yellow 90-110%, red >110%)
+3. Status indicator badge: "on-track", "over-budget", or "under-budget"
+4. Remaining budget displayed prominently in destination currency
+5. Category breakdown showing spent/allocated for each of 6 categories
+6. Upcoming expenses section (next 30 days) with due dates countdown
+7. Recent expenses list (last 10) with date, category, amount, status
+8. "Add Expense" button opens modal for manual entry
+9. Real-time updates when expenses added (Convex reactivity)
+
+---
+
+#### Story 9.4: Manual Expense Entry
+
+**As a** user,
+**I want** to manually add migration expenses,
+**so that** I can track spending as it happens.
+
+**Acceptance Criteria:**
+1. Add Expense modal with form fields: name (required), category selector (6 options), amount (required), currency (defaults to destination), status (paid/pending/planned)
+2. Optional fields: date paid, date due, notes, receipt upload (future)
+3. Real-time exchange rate fetched if currency differs from destination
+4. Amount automatically converted to destination currency for budget tracking
+5. Expense saved to Convex with exchange rate locked in
+6. Modal closes and expense appears immediately in dashboard
+7. Success feedback with subtle animation
+8. Form validation with helpful error messages
+
+---
+
+#### Story 9.5: CSV Import for Bank Statements
+
+**As a** user,
+**I want** to upload my bank statement CSV,
+**so that** I can import many transactions at once instead of manual entry.
+
+**Acceptance Criteria:**
+1. "Import Transactions" button on finances page opens CSV upload modal
+2. File upload accepts .csv and .xlsx formats (max 5MB)
+3. Parser detects common bank statement formats (date, description, amount columns)
+4. Preview table shows first 10 parsed transactions before import
+5. Column mapping UI if parser uncertain (user maps: date → column A, amount → column B)
+6. "Analyze & Import" triggers AI categorization
+7. Upload progress indicator with current transaction count
+8. Error handling for malformed CSV with clear user guidance
+
+---
+
+#### Story 9.6: Gemini AI Transaction Categorization
+
+**As a** system,
+**I want** to use Gemini AI to categorize imported transactions,
+**so that** users don't manually categorize hundreds of expenses.
+
+**Acceptance Criteria:**
+1. Batch analysis processes 10 transactions per Gemini API call for efficiency
+2. AI analyzes transaction description and amount to determine category
+3. Categories: Visa & Immigration, Tests, Travel, Settlement, Financial Services, Miscellaneous
+4. AI assigns confidence score (0-100) to each categorization
+5. Low confidence (<70) flagged for user review with suggested category
+6. Bulk import mutation saves all categorized expenses to Convex
+7. Deduplication by date+amount to prevent duplicate imports
+8. Import summary shows: X imported, Y duplicates skipped, Z need review
+9. Categorization stays within Gemini free tier (1,500 requests/day = 15,000 transactions/day)
+
+---
+
+#### Story 9.7: Savings Goals Tracker
+
+**As a** user,
+**I want** to set and track savings goals for my migration,
+**so that** I stay motivated and financially prepared.
+
+**Acceptance Criteria:**
+1. "Savings Goals" section on finances page
+2. "Add Goal" button opens creation modal
+3. Goal form: name (required), description (optional), target amount (required), target date (optional)
+4. Milestone suggestions: 25%, 50%, 75%, 100% with custom milestone option
+5. Goal card shows: name, progress bar, current/target amounts, percentage complete
+6. Manual "Add Savings" button to increment current amount
+7. Milestone achievement celebration animation
+8. Goal status: active (in progress), completed (target reached), paused (user paused)
+9. Multiple goals supported per corridor
+
+---
+
+#### Story 9.8: Multi-Currency Display
+
+**As a** user,
+**I want** to see amounts in both origin and destination currencies,
+**so that** I understand costs in familiar terms.
+
+**Acceptance Criteria:**
+1. All expense amounts show destination currency primarily
+2. Hover/tap shows origin currency equivalent with exchange rate
+3. Budget summary shows total in both currencies
+4. Exchange rate watermark: "1 CAD = 287.65 NGN (as of Dec 29)"
+5. Toggle switch to flip primary/secondary currency display
+6. Currency preference persisted to user profile
+7. Historical exchange rate shown for past expenses (rate at time of payment)
+
+---
+
+#### Story 9.9: Budget Analytics & Insights
+
+**As a** user,
+**I want** AI-generated insights about my spending,
+**so that** I can make smarter financial decisions.
+
+**Acceptance Criteria:**
+1. "Insights" card on dashboard with 2-3 bullet points
+2. Spending pace analysis: "You're spending $X/day, on track to reach budget in Y days"
+3. Category alerts: "Visa expenses are 120% of allocation - consider adjusting budget"
+4. Savings recommendations: "Exchange rate favorable now - good time to transfer funds"
+5. Upcoming expense warnings: "$500 due in 3 days - ensure funds available"
+6. Insights update daily using Claude synthesis
+7. Insights clickable to see detailed explanation
+
+---
+
+#### Story 9.10: Enhanced Audio Briefing Script Generation
+
+**As a** system,
+**I want** to generate hyper-personalized audio briefing scripts using 10 data sources,
+**so that** briefings are deeply relevant to each user's journey.
+
+**Acceptance Criteria:**
+1. Daily briefing generator queries 10 sources: user todos, saved documents, feed alerts (from Story 8.x), Perplexity API (policy news, job market trends, cultural insights, destination news), corridor statistics, financial summary (from Story 9.3), community wisdom
+2. Claude synthesis combines all sources into cohesive 2-3 minute script
+3. Script structure: personalized greeting with name/corridor, urgent actions (top 3 todos, feed alerts), progress summary (completed tasks this week), new opportunities (jobs, policy changes), financial check-in (budget status, upcoming expenses), today's focus (recommended next step), motivational close
+4. Script generated in user's selected language (independent of app UI language)
+5. Script cached for 24 hours unless user profile changes significantly
+6. Generation completes in <30 seconds (NFR24)
+
+---
+
+#### Story 9.11: Weekly Briefing with Deep Insights
+
+**As a** system,
+**I want** to generate comprehensive weekly briefings,
+**so that** users get strategic migration insights beyond daily updates.
+
+**Acceptance Criteria:**
+1. Weekly briefing generated every Sunday at 6 AM user's timezone
+2. Script structure (5-7 min): week review (accomplishments, setbacks, time spent on migration tasks), corridor intelligence update (policy changes, new resources, community trends), financial deep dive (spending analysis, savings progress, exchange rate recommendations), community insights (success stories, common mistakes, helpful tips), roadmap for next week (prioritized actions, deadlines), comparative analysis (progress vs typical timeline for corridor), celebration of milestones with encouragement
+3. Perplexity queries for week's policy changes and news
+4. Financial deep dive includes category spending breakdown and trend analysis
+5. Community insights sourced from feed items saved by user + high-engagement Reddit posts
+6. Roadmap generated by Claude based on user's current stage and protocol steps
+7. Script personalized to user's language and cultural communication style
+
+---
+
+#### Story 9.12: Actionable Briefing UI with Inline Buttons
+
+**As a** user,
+**I want** briefing player with actionable buttons,
+**so that** I can act on insights without leaving the audio experience.
+
+**Acceptance Criteria:**
+1. Audio player shows briefing sections as expandable transcript while playing
+2. Each section has inline action buttons based on content type
+3. Urgent actions section: "Add to Todos" button (creates todo item)
+4. Opportunities section: "Save to Vault" button (saves referenced feed item)
+5. Financial check-in: "View Budget" button (navigates to finances page)
+6. Community insights: "View Source" button (opens original Reddit/YouTube link)
+7. "Ask TRIBE" quick-chat button for follow-up questions on any section
+8. Buttons context-aware: only show relevant actions per section
+9. Actions execute without stopping audio playback
+
+---
+
+#### Story 9.13: AI-Powered Visa Pathway Discovery
+
+**As a** user,
+**I want** the AI to suggest visa alternatives and compare pathways conversationally,
+**so that** I discover migration options I didn't know existed.
+
+**Acceptance Criteria:**
+1. VisaRequirements table in Convex with: origin, destination, visaType, processingTime, difficulty, requirements, stayDuration, visaStatus, governmentLink, lastUpdated
+2. Data sourced from Travel Buddy API (primary - /v2/visa/map for multi-destination, /v2/visa/check for details, /v2/passport/rank/custom for difficulty), supplemented with Perplexity API for policy updates and cached processing times database
+3. Weekly cron job refreshes visa data for active corridors using Travel Buddy API free tier (120 requests/month)
+4. AI chat tool `searchVisaOptions` with parameters: originCountry, destinationCountry (optional), visaType (optional)
+5. Tool returns top 10 visa pathways ranked by: ease of qualification, processing time, success rate, current policy favorability
+6. AI formats results conversationally with comparison cards showing: destination, visa type, processing time, key requirements, difficulty score (easy/moderate/hard)
+7. Proactive suggestions during onboarding: "You also qualify for Portugal, UK, UAE - want to track alternatives?"
+8. Corridor dashboard shows subtle "Explore Alternatives" tip that opens chat with pre-filled question
+9. Weekly briefing includes visa intelligence: "Portugal extended tech visa timeline to 90 days" with source attribution
+10. Chat can answer questions like: "Is Germany easier than Canada for me?", "What countries don't need visa from Nigeria?", "Show me tech visa options"
+11. Results include actionable next steps: "Add Germany as alternative corridor?", "View Portugal requirements", "Compare processing times"
+12. Visa policy updates appear in feed with alert badge when relevant to user's corridor
+
+**Key Innovation:**
+- No separate visa search UI (keeps dashboard clean)
+- Conversational discovery via AI chat (judges love this)
+- Proactive intelligence in briefings (shows data integration depth)
+- Strategic positioning: TRIBE doesn't just guide one path, it helps find the BEST path
+
+**Demo Script for Judges:**
+```
+User: "What visa options do I have from Nigeria?"
+AI: "Based on your Nigerian passport, here are your strongest pathways:
+     🇵🇹 Portugal - Tech Visa (3-6 months, moderate)
+     🇦🇪 UAE - Golden Visa (fast, investor focus)
+     🇨🇦 Canada - Express Entry (6-12 months, competitive)
+
+     Portugal might be easier for tech workers right now. Want details?"
+```
 
 ---
 

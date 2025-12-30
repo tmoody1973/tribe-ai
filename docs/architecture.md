@@ -51,6 +51,7 @@ TRIBE is built from scratch using a modern Convex + Next.js stack optimized for 
 | 2025-12-22 | 1.3 | Added Mastra + CopilotKit A2UI integration pattern | Claude |
 | 2025-12-22 | 1.4 | Changed AI model from Claude to Gemini 2.0 Flash | Claude |
 | 2025-12-26 | 1.5 | Added Task Board (Kanban) architecture (Epic 7) | Claude |
+| 2025-12-29 | 1.6 | Added Epic 9: Financial Tracker (CSV import, AI categorization, savings goals, exchange rates), Travel Buddy API expansion (visa pathway discovery), Enhanced Audio Briefings (10 data sources, Google Cloud TTS) | Winston |
 
 ---
 
@@ -635,14 +636,17 @@ export function CorridorCard({ corridorId }: CorridorCardProps) {
 
 | API | Purpose | Rate Limit | Caching |
 |-----|---------|------------|---------|
-| Travel Buddy API | Visa requirements | 120/month (free) | 24h in Convex |
+| Travel Buddy API | Visa requirements, pathway discovery | 120/month (free tier), $4.99/month (3k requests) | 7 days in Convex |
 | REST Countries | Country metadata | Unlimited | 7 days |
 | Voyage AI | Embeddings | 10k/month | N/A (stored) |
 | Google Cloud Translation | Dynamic content | 500k chars/month | Convex (content-hash) |
+| Google Cloud Text-to-Speech | Audio briefings (220+ languages) | Free tier: 1M chars/month | Audio cached 24h |
 | Firecrawl | Web scraping | 500/month | Content stored |
 | Tavily | Web search | 1000/month | 1h in Upstash |
 | Perplexity | Policy queries | 100/day | 1h in Upstash |
-| ElevenLabs | Voice synthesis | 10k chars/month | Audio cached |
+| ElevenLabs | Voice synthesis (legacy) | 10k chars/month | Audio cached |
+| exchangeratesapi.io | Real-time exchange rates (primary) | Free tier: 1k requests/month | 24h in Convex |
+| exchangerate-api.com | Exchange rates (fallback) | 1.5k requests/month | 24h in Convex |
 
 ### API Client Configuration
 
@@ -719,6 +723,135 @@ export async function translateDynamicContent(
   });
 
   return { text: translatedText, cached: false };
+}
+
+// lib/api/travel-buddy-extended.ts
+// Travel Buddy API v2 - Visa Pathway Discovery
+export async function getVisaPathways(originPassport: string) {
+  const cached = await ctx.runQuery(api.visas.getCached, { origin: originPassport });
+  if (cached && Date.now() - cached.lastUpdated < 7 * 24 * 60 * 60 * 1000) {
+    return cached.pathways;
+  }
+
+  // Endpoint: /v2/visa/map - Returns all 210 destinations for a passport
+  const response = await fetch(
+    `https://travel-buddy.ai/api/v2/visa/map?passport=${originPassport}`,
+    { headers: { Authorization: `Bearer ${process.env.TRAVEL_BUDDY_API_KEY}` } }
+  );
+
+  const data = await response.json();
+
+  // Cache for 7 days
+  await ctx.runMutation(api.visas.cache, {
+    origin: originPassport,
+    pathways: data.destinations,
+    lastUpdated: Date.now()
+  });
+
+  return data.destinations;
+}
+
+export async function getVisaDetails(originPassport: string, destination: string) {
+  // Endpoint: /v2/visa/check - Detailed requirements for specific corridor
+  const response = await fetch(
+    `https://travel-buddy.ai/api/v2/visa/check?passport=${originPassport}&destination=${destination}`,
+    { headers: { Authorization: `Bearer ${process.env.TRAVEL_BUDDY_API_KEY}` } }
+  );
+
+  return response.json();
+}
+
+export async function getPassportRanking(weights: Record<string, number>) {
+  // Endpoint: /v2/passport/rank/custom - Difficulty scoring
+  const response = await fetch(
+    `https://travel-buddy.ai/api/v2/passport/rank/custom`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.TRAVEL_BUDDY_API_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ weights })
+    }
+  );
+
+  return response.json();
+}
+
+// lib/api/exchange-rate.ts
+export async function getExchangeRate(from: string, to: string) {
+  const cached = await ctx.runQuery(api.financial.getExchangeRate, {
+    fromCurrency: from,
+    toCurrency: to
+  });
+
+  if (cached && Date.now() - cached.timestamp < 24 * 60 * 60 * 1000) {
+    return cached.rate;
+  }
+
+  try {
+    // Primary: exchangeratesapi.io
+    const apiKey = process.env.EXCHANGE_RATES_API_KEY;
+    if (apiKey) {
+      const response = await fetch(
+        `https://api.exchangeratesapi.io/v1/latest?access_key=${apiKey}&base=${from}&symbols=${to}`
+      );
+      const data = await response.json();
+
+      if (data.rates?.[to]) {
+        await ctx.runMutation(api.financial.cacheExchangeRate, {
+          fromCurrency: from,
+          toCurrency: to,
+          rate: data.rates[to],
+          source: "exchangeratesapi.io",
+          timestamp: Date.now()
+        });
+        return data.rates[to];
+      }
+    }
+  } catch (error) {
+    console.error("Primary exchange rate API failed, trying fallback");
+  }
+
+  // Fallback: exchangerate-api.com (no API key needed)
+  const response = await fetch(`https://api.exchangerate-api.com/v4/latest/${from}`);
+  const data = await response.json();
+
+  await ctx.runMutation(api.financial.cacheExchangeRate, {
+    fromCurrency: from,
+    toCurrency: to,
+    rate: data.rates[to],
+    source: "exchangerate-api.com",
+    timestamp: Date.now()
+  });
+
+  return data.rates[to];
+}
+
+// lib/api/google-tts.ts
+import textToSpeech from "@google-cloud/text-to-speech";
+const ttsClient = new textToSpeech.TextToSpeechClient();
+
+export async function synthesizeSpeech(
+  text: string,
+  languageCode: string,
+  voiceName?: string
+) {
+  const [response] = await ttsClient.synthesizeSpeech({
+    input: { text },
+    voice: {
+      languageCode,
+      name: voiceName, // Auto-select if not provided
+      ssmlGender: "NEUTRAL"
+    },
+    audioConfig: {
+      audioEncoding: "MP3",
+      speakingRate: 1.0,
+      pitch: 0.0
+    }
+  });
+
+  return response.audioContent; // Base64 encoded MP3
 }
 ```
 
@@ -853,6 +986,138 @@ sequenceDiagram
     TaskBoard->>Convex: createTask(title, priority, etc.)
     Convex->>Convex: Create task (no protocolStepId)
     Convex-->>TaskBoard: New task in selected column
+```
+
+### CSV Import + AI Categorization Flow
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Frontend
+    participant API
+    participant Gemini
+    participant Convex
+
+    User->>Frontend: Upload CSV file
+    Frontend->>API: POST /api/import-csv (FormData)
+    API->>API: Parse CSV (Papa Parse)
+    API->>API: Detect columns (date, description, amount)
+
+    alt Invalid Format
+        API-->>Frontend: Error: Invalid CSV format
+    end
+
+    API->>API: Extract transactions (array of 100)
+    API->>API: Batch into groups of 10
+
+    loop For each batch of 10
+        API->>Gemini: Analyze batch (categorize transactions)
+        Gemini-->>API: Return categories + confidence scores
+    end
+
+    API->>Convex: bulkImportExpenses(transactions, categories)
+    Convex->>Convex: Deduplicate by date+amount
+    Convex->>Convex: Insert new expenses
+    Convex-->>API: Import summary (imported, duplicates, errors)
+
+    API-->>Frontend: Success + summary
+    Frontend->>User: Show import results
+```
+
+**Gemini AI Categorization:**
+```typescript
+// Batch categorization prompt (10 transactions per call)
+const prompt = `Categorize these migration expenses into one of these categories:
+- visaImmigration (visa fees, document fees, embassy appointments)
+- tests (language tests, medical exams, credential evaluations)
+- travel (flights, accommodation, transport)
+- settlement (rent, utilities, furniture, moving costs)
+- financial (bank fees, money transfers, credit checks)
+- miscellaneous (other migration-related expenses)
+
+Transactions:
+${transactions.map((t, i) => `${i+1}. ${t.description} - ${t.amount}`).join('\n')}
+
+Return JSON array with: [{ index: 0, category: "visaImmigration", confidence: 95, reason: "..." }]`;
+
+// Cost: 1 Gemini request per 10 transactions
+// Free tier: 1,500 requests/day = 15,000 transactions/day
+```
+
+### Audio Briefing Generation Flow
+
+```mermaid
+sequenceDiagram
+    participant Cron
+    participant Convex
+    participant DataSources
+    participant Claude
+    participant GoogleTTS
+    participant User
+
+    Cron->>Convex: Daily 6AM: generateDailyBriefing(userId)
+
+    Convex->>DataSources: Aggregate 10 sources
+    DataSources->>Convex: User todos (top 3)
+    DataSources->>Convex: Saved documents (recent)
+    DataSources->>Convex: Feed alerts (unread)
+    DataSources->>Convex: Perplexity: Policy news
+    DataSources->>Convex: Perplexity: Job market trends
+    DataSources->>Convex: Perplexity: Cultural insights
+    DataSources->>Convex: Perplexity: Destination news
+    DataSources->>Convex: Corridor statistics
+    DataSources->>Convex: Financial summary (budget, expenses)
+    DataSources->>Convex: Community wisdom (Reddit highlights)
+
+    Convex->>Claude: Synthesize 7-section script
+    Note over Claude: 1. Greeting<br/>2. Urgent Actions<br/>3. Progress<br/>4. Opportunities<br/>5. Financial Check<br/>6. Today's Focus<br/>7. Motivation
+
+    Claude-->>Convex: Script (2-3 min, user's language)
+
+    Convex->>GoogleTTS: synthesizeSpeech(script, languageCode)
+    GoogleTTS-->>Convex: Audio (MP3, base64)
+
+    Convex->>Convex: Store briefing (script + audio)
+    Convex->>Convex: Cache for 24h
+
+    User->>Convex: getBriefing()
+    Convex-->>User: Audio + transcript + action buttons
+```
+
+**10 Data Sources Aggregation:**
+```typescript
+// convex/briefings.ts
+async function aggregateBriefingData(userId: string, corridorId: string) {
+  const [todos, documents, feedAlerts, financialSummary, corridorStats] =
+    await Promise.all([
+      ctx.db.query("todos").withIndex("by_user", q => q.eq("userId", userId)).take(3),
+      ctx.db.query("savedDocuments").withIndex("by_user", q => q.eq("userId", userId)).take(5),
+      ctx.db.query("corridorFeed").filter(q => q.eq(q.field("isAlert"), true)).take(3),
+      ctx.runQuery(api.financial.getBudgetSummary, { corridorId }),
+      ctx.runQuery(api.corridors.getStats, { corridorId })
+    ]);
+
+  // Perplexity queries for real-time intelligence
+  const perplexityData = await Promise.all([
+    perplexity.search(`${corridor.destination} immigration policy changes today`),
+    perplexity.search(`${corridor.destination} job market trends tech workers`),
+    perplexity.search(`${corridor.destination} cultural events news migrants`),
+    perplexity.search(`${corridor.destination} news ${corridor.origin} migrants`)
+  ]);
+
+  return {
+    todos,
+    documents,
+    feedAlerts,
+    policyNews: perplexityData[0],
+    jobTrends: perplexityData[1],
+    culturalNews: perplexityData[2],
+    destinationNews: perplexityData[3],
+    financialSummary,
+    corridorStats,
+    communityWisdom: await getCommunityHighlights(corridorId) // Reddit top posts
+  };
+}
 ```
 
 ---
@@ -1035,7 +1300,123 @@ export default defineSchema({
     .index("by_protocol_step", ["protocolStepId"])
     .index("by_category", ["corridorId", "category"]),
 
-  // Visa data cache (from Travel Buddy API)
+  // Financial Budgets - Epic 9
+  financialBudgets: defineTable({
+    userId: v.id("users"),
+    corridorId: v.id("corridors"),
+    // Currencies
+    originCurrency: v.string(), // "NGN", "INR", "PHP", etc.
+    destinationCurrency: v.string(), // "CAD", "USD", "GBP", "EUR", etc.
+    // Total budget
+    totalBudgetOrigin: v.number(), // e.g., ₦2,460,000
+    totalBudgetDestination: v.number(), // e.g., CAD $8,500
+    createdExchangeRate: v.number(), // Rate when budget was created
+    // Category allocations (in destination currency)
+    allocations: v.object({
+      visaImmigration: v.number(),
+      tests: v.number(),
+      travel: v.number(),
+      settlement: v.number(),
+      financial: v.number(),
+      miscellaneous: v.number(),
+    }),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_corridor", ["corridorId"])
+    .index("by_user_corridor", ["userId", "corridorId"]),
+
+  // Individual expenses - Epic 9
+  financialExpenses: defineTable({
+    userId: v.id("users"),
+    corridorId: v.id("corridors"),
+    budgetId: v.id("financialBudgets"),
+    // Expense details
+    name: v.string(),
+    category: v.union(
+      v.literal("visaImmigration"),
+      v.literal("tests"),
+      v.literal("travel"),
+      v.literal("settlement"),
+      v.literal("financial"),
+      v.literal("miscellaneous")
+    ),
+    // Amount
+    amountPaid: v.number(),
+    currency: v.string(),
+    exchangeRate: v.number(), // Rate at time of payment
+    amountInDestination: v.number(), // Converted amount
+    // Status
+    status: v.union(
+      v.literal("paid"),
+      v.literal("pending"),
+      v.literal("planned")
+    ),
+    datePaid: v.optional(v.number()),
+    dateDue: v.optional(v.number()),
+    // Metadata
+    notes: v.optional(v.string()),
+    receiptUrl: v.optional(v.string()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_budget", ["budgetId"])
+    .index("by_user_corridor", ["userId", "corridorId"])
+    .index("by_status", ["status"])
+    .index("by_date_due", ["dateDue"]),
+
+  // Currency exchange rates (cached) - Epic 9
+  currencyRates: defineTable({
+    fromCurrency: v.string(), // e.g., "NGN"
+    toCurrency: v.string(), // e.g., "CAD"
+    rate: v.number(), // e.g., 287.65 (1 CAD = 287.65 NGN)
+    source: v.string(), // "exchangerate-api.com" or "exchangeratesapi.io"
+    timestamp: v.number(),
+  })
+    .index("by_pair", ["fromCurrency", "toCurrency"])
+    .index("by_timestamp", ["timestamp"]),
+
+  // Savings goals for migration journey - Epic 9
+  savingsGoals: defineTable({
+    userId: v.id("users"),
+    corridorId: v.id("corridors"),
+    budgetId: v.id("financialBudgets"),
+    // Goal details
+    name: v.string(), // e.g., "Emergency Fund", "First Month Rent"
+    description: v.optional(v.string()),
+    targetAmount: v.number(), // In destination currency
+    currentAmount: v.number(), // Amount saved so far
+    currency: v.string(), // Destination currency
+    // Deadline
+    targetDate: v.optional(v.number()),
+    // Progress tracking
+    milestones: v.optional(
+      v.array(
+        v.object({
+          amount: v.number(),
+          label: v.string(),
+          achieved: v.boolean(),
+          achievedAt: v.optional(v.number()),
+        })
+      )
+    ),
+    // Status
+    status: v.union(
+      v.literal("active"),
+      v.literal("completed"),
+      v.literal("paused")
+    ),
+    completedAt: v.optional(v.number()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_budget", ["budgetId"])
+    .index("by_user_corridor", ["userId", "corridorId"])
+    .index("by_status", ["status"]),
+
+  // Visa data cache (from Travel Buddy API) - Story 9.13
   visaRequirements: defineTable({
     origin: v.string(),
     destination: v.string(),
@@ -1477,6 +1858,64 @@ http.route({
 
 export default http;
 ```
+
+### Cron Jobs (Epic 9)
+
+Convex cron jobs for automated data updates and briefing generation:
+
+```typescript
+// convex/crons.ts
+import { cronJobs } from "convex/server";
+import { internal } from "./_generated/api";
+
+const crons = cronJobs();
+
+// Daily exchange rate updates (8:00 AM UTC)
+crons.daily(
+  "update-exchange-rates",
+  { hourUTC: 8, minuteUTC: 0 },
+  internal.financial.updateAllExchangeRates
+);
+
+// Daily briefing generation (6:00 AM UTC)
+crons.daily(
+  "generate-daily-briefings",
+  { hourUTC: 6, minuteUTC: 0 },
+  internal.ai.briefings.generateDailyBriefings
+);
+
+// Weekly briefing generation (Sundays 7:00 AM UTC)
+crons.weekly(
+  "generate-weekly-briefings",
+  { hourUTC: 7, minuteUTC: 0, dayOfWeek: "sunday" },
+  internal.ai.briefings.generateWeeklyBriefings
+);
+
+// Weekly visa data refresh (Mondays 3:00 AM UTC)
+crons.weekly(
+  "refresh-visa-data",
+  { hourUTC: 3, minuteUTC: 0, dayOfWeek: "monday" },
+  internal.integrations.visa.refreshActiveCorridorData
+);
+
+export default crons;
+```
+
+**Cron Job Details:**
+
+| Job | Frequency | Purpose | API Calls |
+|-----|-----------|---------|-----------|
+| `update-exchange-rates` | Daily 8 AM UTC | Update all cached currency exchange rates for active corridors | ~30/day (free tier: 1k/month) |
+| `generate-daily-briefings` | Daily 6 AM UTC | Generate daily audio briefings for users with active corridors | 4 Perplexity queries + 1 Claude synthesis + 1 Google TTS per user |
+| `generate-weekly-briefings` | Sunday 7 AM UTC | Generate comprehensive weekly audio briefings | 4 Perplexity queries + 1 Claude synthesis + 1 Google TTS per user |
+| `refresh-visa-data` | Monday 3 AM UTC | Refresh visa requirements from Travel Buddy API for active corridors | ~30/week (free tier: 120/month) |
+
+**Cost Estimates (Staying Within Free Tiers):**
+- Exchange Rate API: 30 requests/day × 30 days = 900/month (free tier: 1k/month ✓)
+- Travel Buddy API: 30 requests/week × 4 weeks = 120/month (free tier: 120/month ✓)
+- Perplexity API: 4 queries × 100 users = 400/day (free tier: unlimited on basic plan with rate limits)
+- Google Cloud TTS: ~200 chars/user × 100 users = 20k chars/day × 30 = 600k chars/month (free tier: 1M/month ✓)
+- Gemini API (Claude synthesis fallback): 100 requests/day (free tier: 1,500/day ✓)
 
 ---
 

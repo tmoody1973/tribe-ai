@@ -3,10 +3,13 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { Loader2, Plus, DollarSign, TrendingUp, AlertCircle } from "lucide-react";
+import { Loader2, Plus, DollarSign, TrendingUp, AlertCircle, Upload } from "lucide-react";
+import { CSVImportModal } from "@/components/finances/CSVImportModal";
+import { CreateBudgetWizard } from "@/components/finances/CreateBudgetWizard";
 
 export default function FinancesPage() {
   const [showAddExpense, setShowAddExpense] = useState(false);
+  const [showCSVImport, setShowCSVImport] = useState(false);
 
   const corridor = useQuery(api.corridors.getActiveCorridor);
   const budget = useQuery(
@@ -42,7 +45,7 @@ export default function FinancesPage() {
     );
   }
 
-  // No budget yet
+  // No budget yet - show creation wizard
   if (!budget) {
     return (
       <div className="space-y-6">
@@ -51,16 +54,7 @@ export default function FinancesPage() {
           <p className="text-gray-600">Track your migration expenses and budget</p>
         </div>
 
-        <div className="border-4 border-black bg-yellow-50 p-8 text-center shadow-[4px_4px_0_0_#000]">
-          <DollarSign className="w-16 h-16 mx-auto mb-4 text-yellow-600" />
-          <h2 className="text-xl font-bold mb-2">Set up your budget</h2>
-          <p className="text-gray-600 mb-6">
-            Coming soon: Budget setup wizard for {corridor.origin} → {corridor.destination}
-          </p>
-          <div className="text-sm text-gray-500">
-            Typical budget for this corridor: ~$8,500 CAD
-          </div>
-        </div>
+        <CreateBudgetWizard corridor={corridor} />
       </div>
     );
   }
@@ -93,13 +87,22 @@ export default function FinancesPage() {
               {corridor.origin} → {corridor.destination}
             </p>
           </div>
-          <button
-            onClick={() => setShowAddExpense(true)}
-            className="px-4 py-2 bg-black text-white font-bold hover:bg-gray-800 transition-colors flex items-center gap-2"
-          >
-            <Plus size={20} />
-            Add Expense
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setShowCSVImport(true)}
+              className="px-4 py-2 border-2 border-black font-bold hover:bg-gray-100 transition-colors flex items-center gap-2"
+            >
+              <Upload size={20} />
+              Import CSV
+            </button>
+            <button
+              onClick={() => setShowAddExpense(true)}
+              className="px-4 py-2 bg-black text-white font-bold hover:bg-gray-800 transition-colors flex items-center gap-2"
+            >
+              <Plus size={20} />
+              Add Expense
+            </button>
+          </div>
         </div>
       </div>
 
@@ -150,7 +153,7 @@ export default function FinancesPage() {
         <div className="border-4 border-black bg-white p-6 shadow-[4px_4px_0_0_#000]">
           <h2 className="text-xl font-black mb-4">📅 Upcoming Expenses</h2>
           <div className="space-y-3">
-            {upcomingExpenses.slice(0, 5).map((expense) => {
+            {upcomingExpenses.slice(0, 5).map((expense: any) => {
               const daysUntil = Math.ceil(
                 ((expense.dateDue || 0) - Date.now()) / (1000 * 60 * 60 * 24)
               );
@@ -183,7 +186,7 @@ export default function FinancesPage() {
         <div className="border-4 border-black bg-white p-6 shadow-[4px_4px_0_0_#000]">
           <h2 className="text-xl font-black mb-4">💳 Recent Expenses</h2>
           <div className="space-y-2">
-            {summary.expenses.slice(0, 10).map((expense) => (
+            {summary.expenses.slice(0, 10).map((expense: any) => (
               <div
                 key={expense._id}
                 className="flex items-center justify-between p-3 hover:bg-gray-50 border-b-2 border-gray-100 last:border-b-0"
@@ -223,6 +226,17 @@ export default function FinancesPage() {
           budgetId={budget._id}
           destinationCurrency={budget.destinationCurrency}
           onClose={() => setShowAddExpense(false)}
+        />
+      )}
+
+      {/* CSV Import Modal */}
+      {showCSVImport && (
+        <CSVImportModal
+          corridorId={corridor._id}
+          budgetId={budget._id}
+          currency={budget.destinationCurrency}
+          exchangeRate={1} // Default to 1, will be updated with actual rate from API
+          onClose={() => setShowCSVImport(false)}
         />
       )}
     </div>

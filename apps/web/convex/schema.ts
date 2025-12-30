@@ -51,6 +51,15 @@ export default defineSchema({
     // Multi-journey support
     name: v.optional(v.string()), // User-defined name like "Berlin Option"
     isPrimary: v.optional(v.boolean()), // Active journey (only one per user)
+    // Hybrid allocation mode (Option C)
+    allocationMode: v.optional(
+      v.union(
+        v.literal("exploration"), // Independent budgets, no shared pool
+        v.literal("committed") // Primary journey with allocation tracking
+      )
+    ),
+    allocatedSavings: v.optional(v.number()), // Amount of user's savings allocated to this corridor
+    feasibilityScore: v.optional(v.number()), // 0-100, calculated based on funding %
     // Freshness tracking
     lastResearchedAt: v.optional(v.number()),
     researchStatus: v.optional(
@@ -692,4 +701,145 @@ export default defineSchema({
   })
     .index("by_pair", ["fromCurrency", "toCurrency"])
     .index("by_timestamp", ["timestamp"]),
+
+  // Savings goals for migration journey
+  savingsGoals: defineTable({
+    userId: v.id("users"),
+    corridorId: v.id("corridors"),
+    budgetId: v.id("financialBudgets"),
+    // Goal details
+    name: v.string(), // e.g., "Emergency Fund", "First Month Rent"
+    description: v.optional(v.string()),
+    targetAmount: v.number(), // In destination currency
+    currentAmount: v.number(), // Amount saved so far
+    currency: v.string(), // Destination currency
+    // Deadline
+    targetDate: v.optional(v.number()),
+    // Progress tracking
+    milestones: v.optional(
+      v.array(
+        v.object({
+          amount: v.number(),
+          label: v.string(),
+          achieved: v.boolean(),
+          achievedAt: v.optional(v.number()),
+        })
+      )
+    ),
+    // Status
+    status: v.union(
+      v.literal("active"),
+      v.literal("completed"),
+      v.literal("paused")
+    ),
+    completedAt: v.optional(v.number()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_budget", ["budgetId"])
+    .index("by_user_corridor", ["userId", "corridorId"])
+    .index("by_status", ["status"]),
+
+  // Notifications for savings milestones and reminders
+  notifications: defineTable({
+    userId: v.id("users"),
+    type: v.union(
+      v.literal("milestone_achieved"),
+      v.literal("goal_completed"),
+      v.literal("behind_schedule"),
+      v.literal("weekly_reminder"),
+      v.literal("streak_risk")
+    ),
+    title: v.string(),
+    message: v.string(),
+    metadata: v.object({
+      goalId: v.optional(v.id("savingsGoals")),
+      amount: v.optional(v.number()),
+      milestone: v.optional(v.number()),
+    }),
+    read: v.boolean(),
+    createdAt: v.number(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_unread", ["userId", "read"]),
+
+  // === VISA PATHWAY DISCOVERY (Story 9.13) ===
+
+  visaRequirements: defineTable({
+    origin: v.string(), // Origin country/passport
+    destination: v.string(), // Destination country
+    visaRequired: v.boolean(),
+    visaType: v.union(
+      v.literal("visa_free"),
+      v.literal("visa_on_arrival"),
+      v.literal("e_visa"),
+      v.literal("eta"),
+      v.literal("embassy_visa"),
+      v.literal("unknown")
+    ),
+    stayDuration: v.optional(v.number()), // days
+    requirements: v.array(v.string()),
+    processingTime: v.optional(v.string()),
+    cost: v.optional(v.string()),
+    validityPeriod: v.optional(v.string()),
+    multipleEntry: v.optional(v.boolean()),
+    cachedAt: v.number(),
+    expiresAt: v.number(), // 7 days from cachedAt
+  })
+    .index("by_corridor", ["origin", "destination"])
+    .index("by_expiry", ["expiresAt"])
+    .index("by_origin", ["origin"]),
+
+  processingTimes: defineTable({
+    origin: v.string(),
+    destination: v.string(),
+    visaType: v.string(),
+    averageProcessingDays: v.number(),
+    minProcessingDays: v.optional(v.number()),
+    maxProcessingDays: v.optional(v.number()),
+    source: v.union(
+      v.literal("manual_research"),
+      v.literal("perplexity"),
+      v.literal("user_reported"),
+      v.literal("travel_buddy")
+    ),
+    lastUpdated: v.number(),
+    notes: v.optional(v.string()),
+  })
+    .index("by_corridor", ["origin", "destination"])
+    .index("by_source", ["source"])
+    .index("by_last_updated", ["lastUpdated"]),
+
+  apiQuota: defineTable({
+    service: v.union(
+      v.literal("travel_buddy"),
+      v.literal("perplexity"),
+      v.literal("fireplexity")
+    ),
+    endpoint: v.string(),
+    callCount: v.number(),
+    resetDate: v.number(), // timestamp of when quota resets
+    lastCallAt: v.optional(v.number()),
+  })
+    .index("by_service", ["service"])
+    .index("by_reset_date", ["resetDate"]),
+
+  // Rate limiting for CopilotKit actions (hackathon cost control)
+  rateLimits: defineTable({
+    userId: v.id("users"),
+    action: v.union(
+      v.literal("chat_message"),
+      v.literal("fireplexity_search"),
+      v.literal("visa_discovery"),
+      v.literal("processing_times"),
+      v.literal("static_search")
+    ),
+    date: v.number(), // Day start timestamp (UTC midnight)
+    count: v.number(), // Number of actions today
+    lastActionAt: v.number(),
+  })
+    .index("by_user_action_date", ["userId", "action", "date"])
+    .index("by_user_date", ["userId", "date"])
+    .index("by_date", ["date"]),
 });

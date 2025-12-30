@@ -45,4 +45,31 @@ crons.daily(
   internal.translation.cleanExpired
 );
 
+// === ENHANCED AUDIO BRIEFINGS (Stories 9.10-9.11) ===
+
+// Daily briefing generation (6 AM UTC)
+// TODO: Batch by user timezone for optimal delivery
+crons.hourly(
+  "generate daily briefings",
+  { minuteUTC: 0 },
+  internal.briefingScheduler.generateDailyBriefings
+);
+
+// Weekly briefing generation (Sunday 7 PM UTC)
+crons.weekly(
+  "generate weekly briefings",
+  { dayOfWeek: "sunday", hourUTC: 19, minuteUTC: 0 },
+  internal.briefingScheduler.generateWeeklyBriefings
+);
+
+// === VISA DISCOVERY (Story 9.13) ===
+
+// Weekly visa data refresh for active corridors (Sunday 2 AM UTC)
+// Budget: 120 API calls/month → 30 corridors × 4 weeks = 120 calls
+crons.weekly(
+  "refresh visa data",
+  { dayOfWeek: "sunday", hourUTC: 2, minuteUTC: 0 },
+  internal.visaRefreshScheduler.refreshActiveCorridorVisaData
+);
+
 export default crons;

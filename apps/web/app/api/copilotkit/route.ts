@@ -1,8 +1,8 @@
 import {
   CopilotRuntime,
   copilotRuntimeNextJSAppRouterEndpoint,
+  GoogleGenerativeAIAdapter,
 } from "@copilotkit/runtime";
-import { Gemini3Adapter } from "@/lib/adapters/gemini3-adapter";
 import fs from "fs";
 import path from "path";
 import { ConvexHttpClient } from "convex/browser";
@@ -267,11 +267,9 @@ const runtime = new CopilotRuntime({
   ],
 });
 
-// Use Google Gemini 3 Flash Preview with custom adapter
-// Supports thinkingConfig required by Gemini 3
-const serviceAdapter = new Gemini3Adapter({
-  model: "gemini-3-flash-preview",
-  thinkingLevel: "minimal", // Reduce latency
+// Use Google Gemini 2.5 Flash (compatible with CopilotKit)
+const serviceAdapter = new GoogleGenerativeAIAdapter({
+  model: "gemini-2.5-flash",
 });
 
 // Log API key presence for debugging (not the key itself)

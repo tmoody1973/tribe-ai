@@ -74,7 +74,7 @@ export const buildRAGContext = action({
 
     // Step 3: Build formatted context
     const context = searchResults
-      .map((r, i) => {
+      .map((r: any, i: number) => {
         const date = r.metadata.publishedAt
           ? new Date(r.metadata.publishedAt).toLocaleDateString()
           : "unknown date";

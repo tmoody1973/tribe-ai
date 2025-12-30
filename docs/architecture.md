@@ -52,6 +52,7 @@ TRIBE is built from scratch using a modern Convex + Next.js stack optimized for 
 | 2025-12-22 | 1.4 | Changed AI model from Claude to Gemini 2.0 Flash | Claude |
 | 2025-12-26 | 1.5 | Added Task Board (Kanban) architecture (Epic 7) | Claude |
 | 2025-12-29 | 1.6 | Added Epic 9: Financial Tracker (CSV import, AI categorization, savings goals, exchange rates), Travel Buddy API expansion (visa pathway discovery), Enhanced Audio Briefings (10 data sources, Google Cloud TTS) | Winston |
+| 2025-12-30 | 1.7 | Added Epic 10: Google ADK + AG-UI + CopilotKit integration for production-ready chat. Replaced in-process GoogleGenerativeAIAdapter with Python ADK agent backend for reliable Gemini response parsing. Added Generative UI components and AG-UI protocol flow. | Claude |
 
 ---
 
@@ -59,24 +60,26 @@ TRIBE is built from scratch using a modern Convex + Next.js stack optimized for 
 
 ### Technical Summary
 
-TRIBE employs a serverless-first architecture built on Convex for real-time database and backend functions, with Next.js 14 App Router for the frontend. The platform uses Mastra for AI agent orchestration, enabling dynamic corridor research that aggregates visa requirements, cost of living data, and community insights. CopilotKit with AG-UI protocol provides the agentic chat interface with bidirectional state synchronization. The system supports 5 languages (English, Yoruba, Hindi, Portuguese, Tagalog) through next-intl, with ElevenLabs powering voice interactions. Deployment targets Vercel for the frontend and Convex Cloud for backend services.
+TRIBE employs a serverless-first architecture built on Convex for real-time database and backend functions, with Next.js 14 App Router for the frontend. The platform uses **Google Agent Development Kit (ADK)** for primary chat agent orchestration, with a Python/FastAPI backend running on Cloud Run that communicates via the **AG-UI protocol**. CopilotKit provides the React frontend with Generative UI components that render custom cards during tool execution. Mastra agents handle specialized tasks like corridor research. The system supports 5 languages (English, Yoruba, Hindi, Portuguese, Tagalog) through next-intl, with ElevenLabs powering voice interactions. Deployment targets Vercel for the frontend, Cloud Run for the ADK agent, and Convex Cloud for backend services.
 
 ### Platform and Infrastructure
 
-**Platform:** Vercel + Convex Cloud
+**Platform:** Vercel + Convex Cloud + Google Cloud Run
 **Key Services:**
 - Convex (real-time database, serverless functions, vector search)
 - Vercel (frontend hosting, edge functions, analytics)
+- Google Cloud Run (ADK agent hosting, Python/FastAPI)
 - Clerk (authentication)
 - Upstash Redis (rate limiting, caching)
 
 **Deployment Regions:**
 - Primary: US East (Vercel + Convex)
+- ADK Agent: us-central1 (Cloud Run)
 - Edge: Global (Vercel Edge Network)
 
 ### Repository Structure
 
-**Approach:** Monorepo with npm workspaces
+**Approach:** Monorepo with npm workspaces (plus Python for ADK agent)
 
 ```
 tribe-ai/
@@ -86,7 +89,17 @@ tribe-ai/
 │   ├── shared/           # Shared types and utilities
 │   └── ui/               # Shared UI components (RetroUI customizations)
 ├── convex/               # Convex backend (co-located)
-├── agents/               # Mastra agent definitions
+├── agents/
+│   ├── tribe_agent/      # Google ADK agent (Python/FastAPI)
+│   │   ├── agent.py      # Agent definition with tools
+│   │   ├── server.py     # FastAPI server with AG-UI endpoint
+│   │   ├── requirements.txt
+│   │   ├── Dockerfile
+│   │   └── cloudbuild.yaml
+│   └── mastra/           # Mastra agent definitions (TypeScript)
+│       ├── corridorResearcher.ts
+│       ├── protocolAdvisor.ts
+│       └── culturalBridge.ts
 └── docs/                 # Documentation
 ```
 
@@ -103,7 +116,18 @@ tribe-ai/
 │  │  (RetroUI)   │    │    Chat      │    │    Agent     │               │
 │  └──────┬───────┘    └──────┬───────┘    └──────────────┘               │
 │         │                   │                                            │
-│         ▼                   ▼                                            │
+│         │                   ▼                                            │
+│         │            ┌──────────────────────────────────┐               │
+│         │            │        ADK AGENT BACKEND          │               │
+│         │            │      (Python/FastAPI/Cloud Run)   │               │
+│         │            │  ┌────────────┐  ┌────────────┐  │               │
+│         │            │  │  Gemini    │  │   Tools    │  │               │
+│         │            │  │ 2.5 Flash  │  │ (Housing,  │  │               │
+│         │            │  │   (LLM)    │  │ Visa, etc) │  │               │
+│         │            │  └────────────┘  └─────┬──────┘  │               │
+│         │            └────────────────────────┼─────────┘               │
+│         │                                     │                          │
+│         ▼                                     ▼                          │
 │  ┌─────────────────────────────────────────────────────────┐            │
 │  │                    CONVEX BACKEND                        │            │
 │  │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐      │            │
@@ -148,6 +172,7 @@ tribe-ai/
 | Tailwind CSS | Utility-first styling | 3.x |
 | RetroUI | Neobrutalist component library | latest |
 | CopilotKit | Agentic chat UI | 1.x |
+| @ag-ui/adk | ADK agent connector for CopilotKit | latest |
 | next-intl | Internationalization (5 languages) | 3.x |
 | @dnd-kit/core | Drag-and-drop for Kanban board | 6.x |
 | @dnd-kit/sortable | Sortable items within columns | 8.x |
@@ -159,7 +184,9 @@ tribe-ai/
 | Technology | Purpose | Version |
 |------------|---------|---------|
 | Convex | Real-time database + serverless functions | latest |
-| Mastra | AI agent orchestration | 0.x |
+| Google ADK | Agent Development Kit (Python/FastAPI) | latest |
+| ag-ui-adk | AG-UI protocol for ADK agents | latest |
+| FastAPI | ASGI server for ADK agent | 0.x |
 | Clerk | Authentication | 5.x |
 | Voyage AI | Embeddings (voyage-3, 1024 dims) | API |
 
@@ -167,7 +194,7 @@ tribe-ai/
 
 | Service | Purpose |
 |---------|---------|
-| Google Gemini | LLM for agent reasoning (gemini-3-flash-preview) |
+| Google Gemini | LLM for agent reasoning (gemini-2.5-flash via ADK) |
 | Google Cloud Translation | Dynamic content translation (130+ languages) |
 | ElevenLabs | Text-to-speech, speech-to-text |
 | Firecrawl | Web scraping |
@@ -1810,6 +1837,313 @@ export const researchCorridor = action({
     };
   },
 });
+```
+
+### Google ADK Agent Architecture
+
+TRIBE uses Google Agent Development Kit (ADK) with the AG-UI protocol to provide a production-ready chat experience. This architecture separates LLM orchestration (Python/FastAPI) from the React frontend while maintaining seamless bidirectional communication.
+
+#### ADK Agent Backend (Python/FastAPI)
+
+```python
+# agents/tribe_agent/agent.py
+from google.adk import Agent, Tool
+from google.adk.tools import FunctionTool
+import google.generativeai as genai
+
+# Configure Gemini model
+genai.configure(api_key=os.environ["GEMINI_API_KEY"])
+
+# Define tools
+@FunctionTool
+async def search_housing_resources(
+    country: str = None,
+    continent: str = None,
+    resource_type: str = None
+) -> dict:
+    """Search for housing resources and assistance programs for migrants."""
+    # Implementation calls Convex backend
+    async with httpx.AsyncClient() as client:
+        response = await client.post(
+            f"{CONVEX_SITE_URL}/api/housing/search",
+            json={"country": country, "continent": continent, "resourceType": resource_type}
+        )
+        return response.json()
+
+@FunctionTool
+async def search_live_data(query: str, target_country: str = None) -> dict:
+    """Search live web data using Fireplexity (Firecrawl + Perplexity)."""
+    async with httpx.AsyncClient() as client:
+        response = await client.post(
+            f"{CONVEX_SITE_URL}/api/fireplexity/search",
+            json={"query": query, "targetCountry": target_country}
+        )
+        return response.json()
+
+@FunctionTool
+async def search_visa_options(
+    origin: str,
+    destination: str,
+    get_processing_times: bool = False
+) -> dict:
+    """Discover visa requirements and pathways for migration."""
+    async with httpx.AsyncClient() as client:
+        response = await client.post(
+            f"{CONVEX_SITE_URL}/api/visa/requirements",
+            json={
+                "origin": origin,
+                "destination": destination,
+                "getProcessingTimes": get_processing_times
+            }
+        )
+        return response.json()
+
+# Create the agent
+tribe_agent = Agent(
+    name="TribeAgent",
+    model="gemini-2.5-flash",
+    description="TRIBE migration intelligence assistant",
+    instruction="""You are TRIBE, a culturally-aware migration intelligence assistant.
+
+Your role is to help migrants and refugees navigate relocation pathways by:
+1. Providing accurate visa and immigration information
+2. Finding housing and settlement resources
+3. Connecting users with community support
+4. Offering cultural bridge insights
+
+IMPORTANT GUIDELINES:
+- Always verify information with official sources
+- Be culturally sensitive and empathetic
+- Use the user's preferred language when possible
+- Cite sources for all factual claims
+- Flag outdated or conflicting information""",
+    tools=[search_housing_resources, search_live_data, search_visa_options]
+)
+```
+
+#### FastAPI AG-UI Server
+
+```python
+# agents/tribe_agent/server.py
+from fastapi import FastAPI
+from google.adk.runners import FastAPIRunner
+
+app = FastAPI()
+
+# Mount AG-UI endpoint
+runner = FastAPIRunner(agent=tribe_agent)
+app.include_router(runner.router, prefix="/agui")
+
+# Health check
+@app.get("/health")
+async def health():
+    return {"status": "ok", "agent": "tribe_agent"}
+```
+
+#### CopilotKit Integration with ADK
+
+```typescript
+// apps/web/app/api/copilotkit/route.ts
+import {
+  CopilotRuntime,
+  ExperimentalEmptyAdapter,
+  copilotRuntimeNextJSAppRouterEndpoint,
+} from "@copilotkit/runtime";
+import { ADKAgent } from "@ag-ui/adk";
+
+// Empty adapter - LLM handled by ADK agent
+const serviceAdapter = new ExperimentalEmptyAdapter();
+
+// Connect to ADK agent via AG-UI protocol
+const runtime = new CopilotRuntime({
+  agents: {
+    tribe_agent: new ADKAgent({
+      url: process.env.ADK_AGENT_URL || "http://localhost:8000/agui",
+    }),
+  },
+});
+
+export const POST = async (req: Request) => {
+  const { handleRequest } = copilotRuntimeNextJSAppRouterEndpoint({
+    runtime,
+    serviceAdapter,
+    endpoint: "/api/copilotkit",
+  });
+  return handleRequest(req);
+};
+```
+
+#### Frontend Generative UI Components
+
+```typescript
+// apps/web/app/(dashboard)/chat/ChatProvider.tsx
+"use client";
+
+import { CopilotKit, useRenderToolCall } from "@copilotkit/react-core";
+import { CopilotSidebar } from "@copilotkit/react-ui";
+
+function ChatProviderInner({ children }: { children: React.ReactNode }) {
+  // Generative UI for visa search
+  useRenderToolCall({
+    name: "search_visa_options",
+    render: ({ status, args, result }) => {
+      if (status === "inProgress") {
+        return <VisaSearchSpinner destination={args.destination} />;
+      }
+      if (status === "complete" && result?.success) {
+        return (
+          <VisaOptionsCard
+            origin={result.origin}
+            destination={result.destination}
+            visaType={result.visaType}
+            requirements={result.requirements}
+          />
+        );
+      }
+      if (result?.error) {
+        return <ErrorCard message={result.message} />;
+      }
+      return null;
+    },
+  });
+
+  // Generative UI for housing search
+  useRenderToolCall({
+    name: "search_housing_resources",
+    render: ({ status, args, result }) => {
+      if (status === "inProgress") {
+        return <HousingSearchSpinner country={args.country} />;
+      }
+      if (status === "complete" && result?.results?.length > 0) {
+        return <HousingResourceGrid resources={result.results} />;
+      }
+      if (result?.suggestion) {
+        return (
+          <LiveSearchPrompt
+            message={result.suggestion.message}
+            onConfirm={() => /* trigger live search */}
+          />
+        );
+      }
+      return null;
+    },
+  });
+
+  // Generative UI for live data search
+  useRenderToolCall({
+    name: "search_live_data",
+    render: ({ status, args, result }) => {
+      if (status === "inProgress") {
+        return <LiveSearchProgress query={args.query} />;
+      }
+      if (status === "complete" && result?.success) {
+        return (
+          <LiveSearchResults
+            answer={result.answer}
+            sources={result.sources}
+            quotaRemaining={result.quotaRemaining}
+          />
+        );
+      }
+      return null;
+    },
+  });
+
+  return <>{children}</>;
+}
+
+export function ChatProvider({ children }: { children: React.ReactNode }) {
+  return (
+    <CopilotKit runtimeUrl="/api/copilotkit" agent="tribe_agent">
+      <ChatProviderInner>{children}</ChatProviderInner>
+    </CopilotKit>
+  );
+}
+```
+
+#### AG-UI Protocol Flow
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                        AG-UI COMMUNICATION FLOW                          │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐               │
+│  │   React UI   │    │  CopilotKit  │    │   ADK Agent  │               │
+│  │  (Next.js)   │◄──►│   Runtime    │◄──►│  (FastAPI)   │               │
+│  └──────┬───────┘    └──────┬───────┘    └──────┬───────┘               │
+│         │                   │                   │                        │
+│         │ User Message      │                   │                        │
+│         ├──────────────────►│ AG-UI SSE        │                        │
+│         │                   ├──────────────────►│                        │
+│         │                   │                   │ Gemini 2.5 Flash       │
+│         │                   │                   ├───────────────────►    │
+│         │                   │                   │                        │
+│         │                   │ Tool Call Event   │◄──────────────────     │
+│         │◄──────────────────┤ (streaming)       │                        │
+│         │                   │                   │                        │
+│         │ Render Tool UI    │                   │                        │
+│         │ (Generative UI)   │                   │                        │
+│         │                   │                   │                        │
+│         │                   │ Tool Result       │                        │
+│         │                   ├──────────────────►│                        │
+│         │                   │                   │                        │
+│         │                   │ Final Response    │                        │
+│         │◄──────────────────┤ (streaming)       │◄──────────────────     │
+│         │                   │                   │                        │
+│  └──────────────────────────────────────────────────────────────────┘   │
+│                                                                          │
+│  KEY EVENTS (AG-UI Protocol):                                            │
+│  • RunStarted: Agent begins processing                                   │
+│  • ToolCallStart: Tool execution begins                                  │
+│  • ToolCallArgs: Streamed tool arguments                                 │
+│  • ToolCallEnd: Tool execution complete                                  │
+│  • TextMessageStart/Content/End: Streamed response text                  │
+│  • RunFinished: Agent processing complete                                │
+│                                                                          │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+#### ADK Deployment Architecture
+
+| Component | Technology | Hosting |
+|-----------|------------|---------|
+| ADK Agent | Python 3.11 + FastAPI | Cloud Run (us-central1) |
+| CopilotKit Runtime | Next.js API Route | Vercel Edge |
+| Agent-to-Convex | HTTP Actions | Convex Cloud |
+
+```yaml
+# agents/tribe_agent/Dockerfile
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+EXPOSE 8000
+CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8000"]
+```
+
+```yaml
+# agents/tribe_agent/cloudbuild.yaml
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/tribe-agent', '.']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/tribe-agent']
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'tribe-agent'
+      - '--image=gcr.io/$PROJECT_ID/tribe-agent'
+      - '--region=us-central1'
+      - '--allow-unauthenticated'
+      - '--set-env-vars=GEMINI_API_KEY=$_GEMINI_API_KEY,CONVEX_SITE_URL=$_CONVEX_SITE_URL'
 ```
 
 ### Webhook Handlers

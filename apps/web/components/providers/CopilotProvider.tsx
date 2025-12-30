@@ -16,6 +16,7 @@ export function CopilotProvider({ children }: CopilotProviderProps) {
   return (
     <CopilotKit
       runtimeUrl="/api/copilotkit"
+      agent="tribe_agent"
       showDevConsole={true}
       onError={(error) => {
         console.error("CopilotKit Error:", error);

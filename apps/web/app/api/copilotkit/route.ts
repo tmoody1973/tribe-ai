@@ -1,281 +1,43 @@
+/**
+ * CopilotKit API Route - ADK Agent Integration
+ *
+ * This route connects the Next.js frontend to the TRIBE ADK agent backend
+ * via AG-UI protocol. The LLM processing happens in the ADK agent server,
+ * so we use ExperimentalEmptyAdapter here.
+ *
+ * Architecture:
+ * Next.js Frontend <-> CopilotRuntime <-> HttpAgent <-> ADK Agent Server <-> Gemini
+ */
+
 import {
   CopilotRuntime,
   copilotRuntimeNextJSAppRouterEndpoint,
-  GoogleGenerativeAIAdapter,
+  ExperimentalEmptyAdapter,
 } from "@copilotkit/runtime";
-import fs from "fs";
-import path from "path";
-import { ConvexHttpClient } from "convex/browser";
-import { api, internal } from "@/convex/_generated/api";
+import { HttpAgent } from "@ag-ui/client";
 
-// Initialize Convex client for Fireplexity actions
-const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
+// ADK Agent URL - defaults to local development server
+const ADK_AGENT_URL = process.env.ADK_AGENT_URL || "http://localhost:8000/agui";
 
-// Load housing resources data with error handling
-let housingData: any = { housing_resources: [], metadata: {} };
-try {
-  // Path relative to Next.js root (apps/web)
-  const housingDataPath = path.join(process.cwd(), "data/migrant_housing_resources.json");
-  housingData = JSON.parse(fs.readFileSync(housingDataPath, "utf-8"));
-  console.log("Housing data loaded successfully");
-} catch (error) {
-  console.error("Failed to load housing data:", error);
-  // Fallback to empty data - housing search will return no results
-}
+// Create HttpAgent to connect to ADK backend via AG-UI protocol
+const tribeAgent = new HttpAgent({
+  url: ADK_AGENT_URL,
+});
 
-// CopilotKit runtime with housing resources action
+// CopilotRuntime with ADK agent
+// Actions are handled by ADK agent tools, not inline here
 const runtime = new CopilotRuntime({
-  actions: [
-    {
-      name: "searchHousingResources",
-      description:
-        "Search for housing resources and assistance programs for migrants and refugees by country. Use this when users ask about finding housing, shelter, accommodation, or housing assistance in a specific country.",
-      parameters: [
-        {
-          name: "country",
-          type: "string",
-          description:
-            "The destination country to search for housing resources (e.g., 'United States', 'Canada', 'Germany'). Can be full name or common abbreviation.",
-          required: false,
-        },
-        {
-          name: "continent",
-          type: "string",
-          description:
-            "Filter by continent (e.g., 'North America', 'Europe', 'Asia', 'Africa', 'South America', 'Oceania')",
-          required: false,
-        },
-        {
-          name: "resourceType",
-          type: "string",
-          description:
-            "Type of resource (e.g., 'Government Agency', 'NGO', 'International Organization', 'Online Platform', 'University Housing')",
-          required: false,
-        },
-      ],
-      handler: async ({ country, continent, resourceType }: any) => {
-        let results = housingData.housing_resources;
-
-        // Filter by country
-        if (country && typeof country === "string") {
-          const countryLower = country.toLowerCase();
-          results = results.filter(
-            (r: any) =>
-              r.country.toLowerCase().includes(countryLower) ||
-              r.country_code?.toLowerCase() === countryLower
-          );
-        }
-
-        // Filter by continent
-        if (continent && typeof continent === "string") {
-          const continentLower = continent.toLowerCase();
-          results = results.filter((r: any) => r.continent.toLowerCase().includes(continentLower));
-        }
-
-        // Extract resources and filter by type if specified
-        let allResources: any[] = [];
-        results.forEach((countryData: any) => {
-          countryData.resources.forEach((resource: any) => {
-            allResources.push({
-              country: countryData.country,
-              continent: countryData.continent,
-              ...resource,
-            });
-          });
-        });
-
-        if (resourceType && typeof resourceType === "string") {
-          const typeLower = resourceType.toLowerCase();
-          allResources = allResources.filter((r) =>
-            r.resource_type.toLowerCase().includes(typeLower)
-          );
-        }
-
-        // Limit to 10 most relevant results
-        const limitedResults = allResources.slice(0, 10);
-
-        // If no results found, suggest live search
-        if (allResources.length === 0 && country) {
-          return {
-            total_found: 0,
-            results: [],
-            metadata: housingData.metadata,
-            suggestion: {
-              message: `💡 No housing resources found in our database for ${country}. Would you like me to search for the latest programs?`,
-              action: "searchLiveData",
-              actionLabel: "🔍 Search Live Data",
-              note: "Uses 1 of 50 monthly live searches",
-            },
-          };
-        }
-
-        return {
-          total_found: allResources.length,
-          results: limitedResults.map((r) => ({
-            country: r.country,
-            continent: r.continent,
-            organization: r.organization_name,
-            url: r.url,
-            description: r.description,
-            type: r.resource_type,
-            services: r.services,
-          })),
-          metadata: housingData.metadata,
-        };
-      },
-    },
-    {
-      name: "searchLiveData",
-      description:
-        "Search live web data for up-to-date migration resources, visa updates, housing programs, job opportunities, and policy changes. ONLY use when: (1) User explicitly requests 'current', 'latest', or 'live' data, (2) Static data search returned no results, or (3) Information needs to be verified as current. This action uses limited monthly quota (50 searches/month).",
-      parameters: [
-        {
-          name: "query",
-          type: "string",
-          description: "The search query for live data (e.g., 'housing programs in Berlin 2025')",
-          required: true,
-        },
-        {
-          name: "targetCountry",
-          type: "string",
-          description: "The destination country to focus the search (optional)",
-          required: false,
-        },
-      ],
-      handler: async ({ query, targetCountry }: any) => {
-        try {
-          // Check quota first
-          const quotaStatus = await convex.query(api.fireplexityQueries.checkFireplexityQuota);
-
-          if (!quotaStatus.available) {
-            return {
-              error: true,
-              message: `⚠️ Live search quota exceeded this month (${quotaStatus.used}/${quotaStatus.limit} used). Quota resets in ${quotaStatus.daysUntilReset} days. Showing cached data instead.`,
-              quotaStatus,
-            };
-          }
-
-          // Execute Fireplexity search
-          const results = await convex.action(api.fireplexity.fireplexitySearch, {
-            query,
-            targetCountry,
-          });
-
-          if (results.error) {
-            return results;
-          }
-
-          return {
-            success: true,
-            answer: results.answer,
-            sources: results.sources,
-            scrapedData: results.scrapedData?.map((s: any) => ({
-              url: s.url,
-              title: s.title,
-              preview: s.markdown?.slice(0, 500) + "...",
-            })),
-            dataFreshness: results.dataFreshness,
-            quotaRemaining: results.quotaStatus?.remaining ?? 0,
-            quotaUsed: results.quotaStatus?.used ?? 0,
-            quotaLimit: results.quotaStatus?.limit ?? 50,
-          };
-        } catch (error) {
-          return {
-            error: true,
-            message: `❌ Live search failed: ${String(error)}. Please try again or use cached data.`,
-          };
-        }
-      },
-    },
-    {
-      name: "searchVisaOptions",
-      description:
-        "Discover visa requirements and pathways for migration between countries. Use this when users ask about visas, visa requirements, visa types, or what visa they need. Provides detailed visa information including requirements, processing times, and difficulty scores.",
-      parameters: [
-        {
-          name: "origin",
-          type: "string",
-          description:
-            "Origin country (passport country) - use ISO 3166-1 alpha-3 code (e.g., 'NGA' for Nigeria, 'IND' for India, 'PHL' for Philippines)",
-          required: true,
-        },
-        {
-          name: "destination",
-          type: "string",
-          description:
-            "Destination country - use ISO 3166-1 alpha-3 code (e.g., 'CAN' for Canada, 'USA' for United States, 'GBR' for UK)",
-          required: true,
-        },
-        {
-          name: "getProcessingTimes",
-          type: "boolean",
-          description: "Whether to fetch real-time processing times (uses Perplexity API)",
-          required: false,
-        },
-      ],
-      handler: async ({ origin, destination, getProcessingTimes = false }: any) => {
-        try {
-          // Get visa requirements
-          const visaReqs = await convex.action(internal.visaDiscovery.getVisaRequirementsForCorridor, {
-            origin,
-            destination,
-          });
-
-          if (visaReqs.error) {
-            return visaReqs;
-          }
-
-          const result: any = {
-            success: true,
-            origin,
-            destination,
-            visaRequired: visaReqs.visaRequired,
-            visaType: visaReqs.visaType,
-            stayDuration: visaReqs.stayDuration,
-            requirements: visaReqs.requirements || [],
-            estimatedCost: visaReqs.cost,
-            cached: visaReqs.cached,
-            quotaRemaining: visaReqs.quotaRemaining,
-          };
-
-          // Get processing times if requested
-          if (getProcessingTimes && visaReqs.visaType) {
-            const processingTimes = await convex.action(internal.visaDiscovery.getProcessingTimes, {
-              origin,
-              destination,
-              visaType: visaReqs.visaType,
-            });
-
-            if (processingTimes.success) {
-              result.processingTime = {
-                averageDays: processingTimes.averageProcessingDays,
-                source: processingTimes.source,
-                cached: processingTimes.cached,
-              };
-            }
-          }
-
-          return result;
-        } catch (error) {
-          return {
-            error: true,
-            message: `❌ Failed to fetch visa information: ${String(error)}`,
-          };
-        }
-      },
-    },
-  ],
+  agents: {
+    tribe_agent: tribeAgent,
+  },
 });
 
-// Use Google Gemini 1.5 Flash (stable, well-tested with CopilotKit)
-const serviceAdapter = new GoogleGenerativeAIAdapter({
-  model: "gemini-1.5-flash",
-});
+// Empty adapter since LLM is handled by ADK agent
+const serviceAdapter = new ExperimentalEmptyAdapter();
 
-// Log API key presence for debugging (not the key itself)
-console.log("CopilotKit route initialized");
-console.log("GOOGLE_GENERATIVE_AI_API_KEY present:", !!process.env.GOOGLE_GENERATIVE_AI_API_KEY);
-console.log("GOOGLE_API_KEY present:", !!process.env.GOOGLE_API_KEY);
+// Log configuration for debugging
+console.log("CopilotKit route initialized with ADK integration");
+console.log("ADK_AGENT_URL:", ADK_AGENT_URL);
 
 export const POST = async (req: Request) => {
   try {
@@ -292,9 +54,21 @@ export const POST = async (req: Request) => {
     return response;
   } catch (error) {
     console.error("CopilotKit POST error:", error);
-    return new Response(JSON.stringify({ error: String(error) }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+
+    // Provide detailed error for debugging
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    const errorStack = error instanceof Error ? error.stack : undefined;
+
+    return new Response(
+      JSON.stringify({
+        error: errorMessage,
+        stack: process.env.NODE_ENV === "development" ? errorStack : undefined,
+        hint: "Check that the ADK agent server is running at " + ADK_AGENT_URL,
+      }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   }
 };

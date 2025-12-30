@@ -16,6 +16,7 @@ import { VoiceChat } from "./VoiceChat";
 import { SuggestedQuestions } from "./SuggestedQuestions";
 import { useVoiceResponse } from "@/hooks/useVoiceResponse";
 import { useMigrationTools } from "@/hooks/useMigrationTools";
+import { useADKToolRenderers } from "@/hooks/useADKToolRenderers";
 import "@copilotkit/react-ui/styles.css";
 
 interface ChatWindowProps {
@@ -50,6 +51,9 @@ export function ChatWindow({ corridorId }: ChatWindowProps) {
 
   // Register migration tools with CopilotKit
   useMigrationTools();
+
+  // Register ADK tool renderers for remote tool call UI
+  useADKToolRenderers();
 
   // Get user's language for STT/TTS
   const userLanguage = profile?.language ?? "en";

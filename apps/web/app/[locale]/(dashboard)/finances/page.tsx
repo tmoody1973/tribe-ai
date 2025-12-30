@@ -154,7 +154,7 @@ export default function FinancesPage() {
         <div className="border-4 border-black bg-white p-6 shadow-[4px_4px_0_0_#000]">
           <h2 className="text-xl font-black mb-4">📅 Upcoming Expenses</h2>
           <div className="space-y-3">
-            {upcomingExpenses.slice(0, 5).map((expense: Doc<"expenses">) => {
+            {upcomingExpenses.slice(0, 5).map((expense: Doc<"financialExpenses">) => {
               const daysUntil = Math.ceil(
                 ((expense.dateDue || 0) - Date.now()) / (1000 * 60 * 60 * 24)
               );
@@ -187,7 +187,7 @@ export default function FinancesPage() {
         <div className="border-4 border-black bg-white p-6 shadow-[4px_4px_0_0_#000]">
           <h2 className="text-xl font-black mb-4">💳 Recent Expenses</h2>
           <div className="space-y-2">
-            {summary.expenses.slice(0, 10).map((expense: Doc<"expenses">) => (
+            {summary.expenses.slice(0, 10).map((expense: Doc<"financialExpenses">) => (
               <div
                 key={expense._id}
                 className="flex items-center justify-between p-3 hover:bg-gray-50 border-b-2 border-gray-100 last:border-b-0"

@@ -9,7 +9,7 @@ import {
   checkVisaRequirements,
   getPassportRank,
   hasQuotaAvailable,
-} from "../lib/api/travel-buddy";
+} from "./lib/travel-buddy";
 
 /**
  * Story 9.13: Travel Buddy API - Visa Pathway Discovery

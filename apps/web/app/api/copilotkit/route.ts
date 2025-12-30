@@ -167,9 +167,9 @@ const runtime = new CopilotRuntime({
               preview: s.markdown?.slice(0, 500) + "...",
             })),
             dataFreshness: results.dataFreshness,
-            quotaRemaining: results.quotaStatus.remaining,
-            quotaUsed: results.quotaStatus.used,
-            quotaLimit: results.quotaStatus.limit,
+            quotaRemaining: results.quotaStatus?.remaining ?? 0,
+            quotaUsed: results.quotaStatus?.used ?? 0,
+            quotaLimit: results.quotaStatus?.limit ?? 50,
           };
         } catch (error) {
           return {

@@ -1,8 +1,8 @@
 import {
   CopilotRuntime,
   copilotRuntimeNextJSAppRouterEndpoint,
-  GoogleGenerativeAIAdapter,
 } from "@copilotkit/runtime";
+import { Gemini3Adapter } from "@/lib/adapters/gemini3-adapter";
 import fs from "fs";
 import path from "path";
 import { ConvexHttpClient } from "convex/browser";
@@ -11,9 +11,17 @@ import { api, internal } from "@/convex/_generated/api";
 // Initialize Convex client for Fireplexity actions
 const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 
-// Load housing resources data
-const housingDataPath = path.join(process.cwd(), "../../docs/migrant_housing_resources.json");
-const housingData = JSON.parse(fs.readFileSync(housingDataPath, "utf-8"));
+// Load housing resources data with error handling
+let housingData: any = { housing_resources: [], metadata: {} };
+try {
+  // Path relative to Next.js root (apps/web)
+  const housingDataPath = path.join(process.cwd(), "data/migrant_housing_resources.json");
+  housingData = JSON.parse(fs.readFileSync(housingDataPath, "utf-8"));
+  console.log("Housing data loaded successfully");
+} catch (error) {
+  console.error("Failed to load housing data:", error);
+  // Fallback to empty data - housing search will return no results
+}
 
 // CopilotKit runtime with housing resources action
 const runtime = new CopilotRuntime({
@@ -259,17 +267,36 @@ const runtime = new CopilotRuntime({
   ],
 });
 
-// Use Google Gemini 2.5 Flash as the LLM provider
-const serviceAdapter = new GoogleGenerativeAIAdapter({
-  model: "gemini-2.5-flash",
+// Use Google Gemini 3 Flash Preview with custom adapter
+// Supports thinkingConfig required by Gemini 3
+const serviceAdapter = new Gemini3Adapter({
+  model: "gemini-3-flash-preview",
+  thinkingLevel: "minimal", // Reduce latency
 });
 
-export const POST = async (req: Request) => {
-  const { handleRequest } = copilotRuntimeNextJSAppRouterEndpoint({
-    runtime,
-    serviceAdapter,
-    endpoint: "/api/copilotkit",
-  });
+// Log API key presence for debugging (not the key itself)
+console.log("CopilotKit route initialized");
+console.log("GOOGLE_GENERATIVE_AI_API_KEY present:", !!process.env.GOOGLE_GENERATIVE_AI_API_KEY);
+console.log("GOOGLE_API_KEY present:", !!process.env.GOOGLE_API_KEY);
 
-  return handleRequest(req);
+export const POST = async (req: Request) => {
+  try {
+    console.log("CopilotKit POST request received");
+
+    const { handleRequest } = copilotRuntimeNextJSAppRouterEndpoint({
+      runtime,
+      serviceAdapter,
+      endpoint: "/api/copilotkit",
+    });
+
+    const response = await handleRequest(req);
+    console.log("CopilotKit response status:", response.status);
+    return response;
+  } catch (error) {
+    console.error("CopilotKit POST error:", error);
+    return new Response(JSON.stringify({ error: String(error) }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
 };

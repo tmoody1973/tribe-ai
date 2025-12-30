@@ -16,6 +16,10 @@ export function CopilotProvider({ children }: CopilotProviderProps) {
   return (
     <CopilotKit
       runtimeUrl="/api/copilotkit"
+      showDevConsole={true}
+      onError={(error) => {
+        console.error("CopilotKit Error:", error);
+      }}
       properties={{
         userId: profile?._id,
         corridor: activeCorridor

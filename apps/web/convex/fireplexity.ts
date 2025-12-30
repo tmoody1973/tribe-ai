@@ -1,8 +1,8 @@
 "use node";
 
 import { v } from "convex/values";
-import { query, mutation, action, internalAction } from "./_generated/server";
-import { internal } from "./_generated/api";
+import { query, mutation, action, internalAction, internalMutation } from "./_generated/server";
+import { internal, api } from "./_generated/api";
 
 /**
  * Tier 2 Smart Fireplexity Integration
@@ -71,9 +71,9 @@ export const checkFireplexityQuota = query({
 });
 
 /**
- * Increment Fireplexity usage counter
+ * Increment Fireplexity usage counter (internal only)
  */
-export const logFireplexityUsage = mutation({
+export const logFireplexityUsage = internalMutation({
   args: {
     endpoint: v.string(),
     query: v.string(),
@@ -138,7 +138,7 @@ export const fireplexitySearch = action({
   },
   handler: async (ctx, { query, targetCountry }) => {
     // Check quota first
-    const quotaStatus = await ctx.runQuery(internal.fireplexity.checkFireplexityQuota);
+    const quotaStatus = await ctx.runQuery(api.fireplexity.checkFireplexityQuota);
 
     if (!quotaStatus.available) {
       return {
@@ -218,7 +218,7 @@ export const fireplexitySearch = action({
         query: fullQuery,
       });
 
-      const newQuotaStatus = await ctx.runQuery(internal.fireplexity.checkFireplexityQuota);
+      const newQuotaStatus = await ctx.runQuery(api.fireplexity.checkFireplexityQuota);
 
       return {
         success: true,

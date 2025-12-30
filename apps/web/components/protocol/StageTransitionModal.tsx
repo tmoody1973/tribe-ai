@@ -168,7 +168,7 @@ export function StageTransitionModal({
                 <p className="font-bold text-yellow-800">{t("stageTransition.saveReminder")}</p>
               </div>
               <div className="space-y-2 max-h-48 overflow-y-auto">
-                {protocols.slice(0, 5).map((protocol) => (
+                {protocols.slice(0, 5).map((protocol: any) => (
                   <label
                     key={protocol._id}
                     className={`

@@ -64,7 +64,7 @@ export function TaskBoard({ corridorId }: TaskBoardProps) {
     if (!tasksByColumn) return null;
 
     for (const [column, tasks] of Object.entries(tasksByColumn)) {
-      if (tasks.some((t) => t._id === taskId)) {
+      if ((tasks as any[]).some((t: any) => t._id === taskId)) {
         return column as ColumnId;
       }
     }
@@ -76,7 +76,7 @@ export function TaskBoard({ corridorId }: TaskBoardProps) {
     if (!tasksByColumn) return null;
 
     for (const tasks of Object.values(tasksByColumn)) {
-      const task = tasks.find((t) => t._id === taskId);
+      const task = (tasks as any[]).find((t: any) => t._id === taskId);
       if (task) return task;
     }
     return null;
@@ -119,13 +119,13 @@ export function TaskBoard({ corridorId }: TaskBoardProps) {
 
     if (activeColumn === overColumn) {
       // Reordering within same column
-      const oldIndex = targetTasks.findIndex((t) => t._id === activeId);
-      const newIndex = targetTasks.findIndex((t) => t._id === overId);
+      const oldIndex = (targetTasks as any[]).findIndex((t: any) => t._id === activeId);
+      const newIndex = (targetTasks as any[]).findIndex((t: any) => t._id === overId);
 
       if (oldIndex !== newIndex && newIndex !== -1) {
-        const reorderedTasks = arrayMove(targetTasks, oldIndex, newIndex);
-        const taskIds = reorderedTasks.map((t) => t._id);
-        const orders = reorderedTasks.map((_, i) => i);
+        const reorderedTasks = arrayMove(targetTasks as any[], oldIndex, newIndex);
+        const taskIds = reorderedTasks.map((t: any) => t._id);
+        const orders = reorderedTasks.map((_: any, i: number) => i);
         await reorderTasks({ taskIds, orders });
       }
       return;
@@ -137,7 +137,7 @@ export function TaskBoard({ corridorId }: TaskBoardProps) {
       newOrder = targetTasks.length;
     } else {
       // Dropped on a task - insert at that position
-      const overIndex = targetTasks.findIndex((t) => t._id === overId);
+      const overIndex = (targetTasks as any[]).findIndex((t: any) => t._id === overId);
       newOrder = overIndex >= 0 ? overIndex : targetTasks.length;
     }
 
@@ -169,7 +169,7 @@ export function TaskBoard({ corridorId }: TaskBoardProps) {
   }
 
   const totalTasks = Object.values(tasksByColumn).reduce(
-    (sum, tasks) => sum + tasks.length,
+    (sum: number, tasks) => sum + (tasks as any[]).length,
     0
   );
 

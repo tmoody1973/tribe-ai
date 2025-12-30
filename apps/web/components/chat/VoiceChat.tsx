@@ -42,6 +42,50 @@ export function VoiceChat({ language = "en", onClose }: VoiceChatProps) {
     }
   }, [state, speakingMessageId, isSpeaking]);
 
+  const processAudio = useCallback(async (audioBlob: Blob) => {
+    try {
+      setState("processing");
+
+      const formData = new FormData();
+      formData.append("audio", audioBlob);
+      formData.append("language", language);
+
+      const res = await fetch("/api/voice", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to process audio");
+      }
+
+      const data = await res.json();
+
+      if (data.transcription) {
+        setTranscript(data.transcription);
+      }
+
+      if (data.detectedLanguage) {
+        setDetectedLanguage(data.detectedLanguage);
+      }
+
+      setResponse(data.text);
+
+      // Speak the response in the detected language
+      const responseLanguage = data.detectedLanguage || language;
+      setState("speaking");
+      messageIdRef.current += 1;
+      const messageId = `voice-response-${messageIdRef.current}`;
+      await speak(messageId, data.text, responseLanguage);
+      setState("idle");
+
+    } catch (err) {
+      console.error("Processing error:", err);
+      setError("Failed to process your voice. Please try again.");
+      setState("idle");
+    }
+  }, [language, speak]);
+
   const startListening = useCallback(async () => {
     try {
       setError(null);
@@ -92,50 +136,6 @@ export function VoiceChat({ language = "en", onClose }: VoiceChatProps) {
       setState("processing");
     }
   }, []);
-
-  const processAudio = useCallback(async (audioBlob: Blob) => {
-    try {
-      setState("processing");
-
-      const formData = new FormData();
-      formData.append("audio", audioBlob);
-      formData.append("language", language);
-
-      const res = await fetch("/api/voice", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to process audio");
-      }
-
-      const data = await res.json();
-
-      if (data.transcription) {
-        setTranscript(data.transcription);
-      }
-
-      if (data.detectedLanguage) {
-        setDetectedLanguage(data.detectedLanguage);
-      }
-
-      setResponse(data.text);
-
-      // Speak the response in the detected language
-      const responseLanguage = data.detectedLanguage || language;
-      setState("speaking");
-      messageIdRef.current += 1;
-      const messageId = `voice-response-${messageIdRef.current}`;
-      await speak(messageId, data.text, responseLanguage);
-      setState("idle");
-
-    } catch (err) {
-      console.error("Processing error:", err);
-      setError("Failed to process your voice. Please try again.");
-      setState("idle");
-    }
-  }, [language, speak]);
 
   const _speakResponse = useCallback(async (text: string, lang: string) => {
     try {

@@ -189,7 +189,7 @@ export function ChatWindow({ corridorId }: ChatWindowProps) {
 
   // Get current protocol (first in-progress or not-started)
   const currentProtocol = protocols?.find(
-    (p) => p.status === "in_progress" || p.status === "not_started"
+    (p: any) => p.status === "in_progress" || p.status === "not_started"
   );
 
   // Get dynamic welcome message

@@ -252,7 +252,7 @@ function AddExpenseModal({
   onClose,
 }: {
   corridorId: Doc<"corridors">["_id"];
-  budgetId: Doc<"budgets">["_id"];
+  budgetId: Doc<"financialBudgets">["_id"];
   destinationCurrency: string;
   onClose: () => void;
 }) {

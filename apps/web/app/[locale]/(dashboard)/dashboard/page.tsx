@@ -2,6 +2,7 @@
 
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { Doc } from "@/convex/_generated/dataModel";
 import { CorridorHeader } from "@/components/corridor/CorridorHeader";
 import { QuickStats } from "@/components/corridor/QuickStats";
 import { ProtocolTabs } from "@/components/protocol/ProtocolTabs";
@@ -22,7 +23,7 @@ import { TaskBoardSummary } from "@/components/taskboard/TaskBoardSummary";
 
 export default function DashboardPage() {
   // Get active corridor
-  const corridor = useQuery(api.corridors.getActiveCorridor);
+  const corridor: Doc<"corridors"> | undefined | null = useQuery(api.corridors.getActiveCorridor);
 
   // Get user profile for userId
   const profile = useQuery(api.users.getProfile);

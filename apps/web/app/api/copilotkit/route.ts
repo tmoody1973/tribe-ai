@@ -267,9 +267,9 @@ const runtime = new CopilotRuntime({
   ],
 });
 
-// Use Google Gemini 2.5 Flash (compatible with CopilotKit)
+// Use Google Gemini 1.5 Flash (stable, well-tested with CopilotKit)
 const serviceAdapter = new GoogleGenerativeAIAdapter({
-  model: "gemini-2.5-flash",
+  model: "gemini-1.5-flash",
 });
 
 // Log API key presence for debugging (not the key itself)

@@ -84,7 +84,7 @@ export function VoiceChat({ language = "en", onClose }: VoiceChatProps) {
       setError("Could not access microphone. Please check permissions.");
       setState("idle");
     }
-  }, []);
+  }, [processAudio]);
 
   const stopListening = useCallback(() => {
     if (mediaRecorderRef.current?.state === "recording") {
@@ -93,7 +93,7 @@ export function VoiceChat({ language = "en", onClose }: VoiceChatProps) {
     }
   }, []);
 
-  const processAudio = async (audioBlob: Blob) => {
+  const processAudio = useCallback(async (audioBlob: Blob) => {
     try {
       setState("processing");
 
@@ -124,16 +124,20 @@ export function VoiceChat({ language = "en", onClose }: VoiceChatProps) {
 
       // Speak the response in the detected language
       const responseLanguage = data.detectedLanguage || language;
-      await speakResponse(data.text, responseLanguage);
+      setState("speaking");
+      messageIdRef.current += 1;
+      const messageId = `voice-response-${messageIdRef.current}`;
+      await speak(messageId, data.text, responseLanguage);
+      setState("idle");
 
     } catch (err) {
       console.error("Processing error:", err);
       setError("Failed to process your voice. Please try again.");
       setState("idle");
     }
-  };
+  }, [language, speak]);
 
-  const speakResponse = async (text: string, lang: string) => {
+  const speakResponse = useCallback(async (text: string, lang: string) => {
     try {
       setState("speaking");
       messageIdRef.current += 1;
@@ -147,7 +151,7 @@ export function VoiceChat({ language = "en", onClose }: VoiceChatProps) {
       // If TTS fails, just show the text
       setState("idle");
     }
-  };
+  }, [speak]);
 
   const stopSpeaking = useCallback(() => {
     stopTTS();

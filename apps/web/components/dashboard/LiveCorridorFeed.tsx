@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import Image from "next/image";
 import {
   Radio,
   Users,
@@ -151,11 +152,12 @@ function VideoCard({ item }: { item: FeedItem }) {
     >
       {/* Video Thumbnail */}
       {item.thumbnail && (
-        <div className="relative">
-          <img
+        <div className="relative w-full h-32 sm:h-40 md:h-48">
+          <Image
             src={item.thumbnail}
             alt={item.title}
-            className="w-full h-32 sm:h-40 md:h-48 object-cover"
+            fill
+            className="object-cover"
           />
           <div className="absolute inset-0 bg-black/20 flex items-center justify-center group-hover:bg-black/30 transition-colors">
             <div className="bg-red-600 rounded-full p-3 border-2 border-white shadow-lg">

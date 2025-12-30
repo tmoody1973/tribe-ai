@@ -638,7 +638,7 @@ export const cleanupExpiredAnalyses = internalMutation({
 // ============================================
 
 // Refresh all active corridor feeds (called by daily cron job)
-export const refreshAllCorridorFeeds = internalAction({
+export const refreshAllCorridorFeeds: typeof internalAction = internalAction({
   args: {},
   handler: async (ctx) => {
     // Get all active corridors

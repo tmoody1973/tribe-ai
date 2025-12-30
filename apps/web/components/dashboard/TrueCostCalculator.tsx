@@ -112,7 +112,7 @@ export function TrueCostCalculator({ destination, origin }: TrueCostCalculatorPr
       ...cat,
       subtotal: cat.items.reduce((sum, item) => sum + item.amount, 0),
     }));
-  }, [destination, origin, months, includeFamily, visaType, costs]);
+  }, [origin, months, includeFamily, visaType, costs]);
 
   const totalCost = breakdown.reduce((sum, cat) => sum + cat.subtotal, 0);
 

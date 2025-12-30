@@ -64,14 +64,7 @@ export function EmergencyInfoCard({ destination, origin }: EmergencyInfoCardProp
     destination,
   });
 
-  // Fetch fresh data when opened and no cache
-  useEffect(() => {
-    if (isOpen && !cachedData && !localData && !isLoading) {
-      fetchEmergencyInfo();
-    }
-  }, [isOpen, cachedData, localData, isLoading, origin, destination]);
-
-  const fetchEmergencyInfo = async (forceRefresh = false) => {
+  const fetchEmergencyInfo = useCallback(async (forceRefresh = false) => {
     setIsLoading(true);
     setError(null);
     try {
@@ -87,7 +80,14 @@ export function EmergencyInfoCard({ destination, origin }: EmergencyInfoCardProp
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [origin, destination]);
+
+  // Fetch fresh data when opened and no cache
+  useEffect(() => {
+    if (isOpen && !cachedData && !localData && !isLoading) {
+      fetchEmergencyInfo();
+    }
+  }, [isOpen, cachedData, localData, isLoading, fetchEmergencyInfo]);
 
   // Use cached data, local data, or show loading state
   const info: EmergencyInfo | null = cachedData || localData;

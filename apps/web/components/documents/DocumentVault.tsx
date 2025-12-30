@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
+import Image from "next/image";
 import {
   FileText,
   Upload,
@@ -399,11 +400,14 @@ export function DocumentVault() {
                     title={previewDoc.displayName}
                   />
                 ) : previewDoc.fileType.startsWith("image/") ? (
-                  <img
-                    src={previewUrl}
-                    alt={previewDoc.displayName}
-                    className="max-w-full max-h-[70vh] mx-auto border-2 border-black"
-                  />
+                  <div className="relative w-full h-[70vh] flex items-center justify-center">
+                    <Image
+                      src={previewUrl}
+                      alt={previewDoc.displayName}
+                      fill
+                      className="object-contain border-2 border-black"
+                    />
+                  </div>
                 ) : (
                   <div className="text-center py-12">
                     <FileText size={64} className="mx-auto mb-4 text-gray-400" />

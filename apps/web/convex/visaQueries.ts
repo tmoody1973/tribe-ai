@@ -1,12 +1,12 @@
 import { v } from "convex/values";
-import { query, mutation } from "./_generated/server";
+import { query, mutation, internalQuery, internalMutation } from "./_generated/server";
 
 const FREE_TIER_LIMIT = 120;
 
 /**
  * INTERNAL: Get cached visa requirements
  */
-export const getCachedVisaRequirements = query({
+export const getCachedVisaRequirements = internalQuery({
   args: {
     origin: v.string(),
     destination: v.string(),
@@ -24,7 +24,7 @@ export const getCachedVisaRequirements = query({
 /**
  * INTERNAL: Cache visa requirements
  */
-export const cacheVisaRequirements = mutation({
+export const cacheVisaRequirements = internalMutation({
   args: {
     origin: v.string(),
     destination: v.string(),
@@ -67,7 +67,7 @@ export const cacheVisaRequirements = mutation({
 /**
  * INTERNAL: Check Travel Buddy API quota
  */
-export const checkTravelBuddyQuota = mutation({
+export const checkTravelBuddyQuota = internalMutation({
   args: {},
   handler: async (ctx) => {
     const now = Date.now();
@@ -121,7 +121,7 @@ export const checkTravelBuddyQuota = mutation({
 /**
  * INTERNAL: Log Travel Buddy API usage
  */
-export const logTravelBuddyUsage = mutation({
+export const logTravelBuddyUsage = internalMutation({
   args: {
     endpoint: v.string(),
   },
@@ -174,7 +174,7 @@ export const logTravelBuddyUsage = mutation({
 /**
  * INTERNAL: Get cached processing times
  */
-export const getCachedProcessingTimes = query({
+export const getCachedProcessingTimes = internalQuery({
   args: {
     origin: v.string(),
     destination: v.string(),
@@ -195,7 +195,7 @@ export const getCachedProcessingTimes = query({
 /**
  * INTERNAL: Cache processing times
  */
-export const cacheProcessingTimes = mutation({
+export const cacheProcessingTimes = internalMutation({
   args: {
     origin: v.string(),
     destination: v.string(),

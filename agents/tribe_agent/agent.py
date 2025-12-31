@@ -11,7 +11,7 @@ from google.adk.tools import FunctionTool
 
 # Import tools from tools directory
 from tools.housing import search_housing_resources_tool
-from tools.live_search import search_live_data_tool
+# NOTE: search_live_data is now handled by frontend tool (searchLiveData) which calls /api/live-search
 from tools.visa import search_visa_options_tool
 from tools.context import get_user_context_tool
 
@@ -158,7 +158,7 @@ tribe_agent = LlmAgent(
     tools=[
         get_agent_info_tool,
         search_housing_resources_tool,
-        search_live_data_tool,
+        # search_live_data_tool removed - now handled by frontend tool (searchLiveData)
         search_visa_options_tool,
         get_user_context_tool,
     ],

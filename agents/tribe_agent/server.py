@@ -128,7 +128,7 @@ async def health():
         "agent": "tribe_agent",
         "model": "gemini-2.5-flash",
         "environment": os.environ.get("ENVIRONMENT", "development"),
-        "version": "2024-12-31-v7",  # Track deployment version - simplified live_search env reading
+        "version": "2024-12-31-v8",  # Track deployment version - removed ADK live_search tool, use frontend tool
     }
 
 

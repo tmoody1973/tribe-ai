@@ -137,6 +137,16 @@ async def health():
     }
 
 
+@app.get("/debug/env")
+async def debug_env():
+    """Debug endpoint to check which env vars are set (not values)."""
+    env_vars = ["GEMINI_API_KEY", "PERPLEXITY_API_KEY", "CONVEX_SITE_URL", "ENVIRONMENT", "LOG_LEVEL"]
+    return {
+        var: "SET" if os.environ.get(var) else "NOT SET"
+        for var in env_vars
+    }
+
+
 if __name__ == "__main__":
     import uvicorn
 

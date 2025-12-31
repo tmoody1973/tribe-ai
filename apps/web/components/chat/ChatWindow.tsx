@@ -17,6 +17,7 @@ import { SuggestedQuestions } from "./SuggestedQuestions";
 import { useVoiceResponse } from "@/hooks/useVoiceResponse";
 import { useMigrationTools } from "@/hooks/useMigrationTools";
 import { useADKToolRenderers } from "@/hooks/useADKToolRenderers";
+import { useAgentProgress } from "@/hooks/useAgentProgress";
 import "@copilotkit/react-ui/styles.css";
 
 interface ChatWindowProps {
@@ -54,6 +55,9 @@ export function ChatWindow({ corridorId }: ChatWindowProps) {
 
   // Register ADK tool renderers for remote tool call UI
   useADKToolRenderers();
+
+  // Register agent progress rendering for step-by-step updates
+  useAgentProgress();
 
   // Get user's language for STT/TTS
   const userLanguage = profile?.language ?? "en";

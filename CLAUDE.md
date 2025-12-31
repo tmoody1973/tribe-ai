@@ -68,15 +68,82 @@ For existing codebases, use the architect's `*document-project` task to generate
 
 ## AI Models
 
-This project uses Google Gemini models. Use these specific model IDs:
+This project uses Google Gemini models via Google ADK (Agent Development Kit).
 
-| Use Case | Model ID |
-|----------|----------|
-| Text Chat (CopilotKit) | `gemini-2.5-flash` |
-| Mastra Agents | `google/gemini-2.5-flash` |
-| Voice/Live API | `gemini-2.0-flash-live-preview-04-09` |
+| Use Case | Model ID | Location |
+|----------|----------|----------|
+| Chat (ADK Agent) | `gemini-2.5-flash` | `agents/tribe_agent/` |
+| Mastra Agents | `google/gemini-2.5-flash` | N/A |
+| Voice/Live API | `gemini-2.0-flash-live-preview-04-09` | N/A |
 
 **Important:**
-- Do NOT use `gemini-3-flash-preview` - it has "thinking mode" enabled which causes ZodError in CopilotKit
-- For real-time voice, use the Gemini Live API with WebSocket connections
-- See: https://docs.cloud.google.com/vertex-ai/generative-ai/docs/model-reference/multimodal-live
+- Chat is handled by Google ADK agent (Python/FastAPI), NOT in-process JavaScript
+- Do NOT use `gemini-3-flash-preview` - it has "thinking mode" that causes parsing issues
+- CopilotKit uses `ExperimentalEmptyAdapter` since LLM is external
+- ADK agent communicates via AG-UI protocol over SSE
+
+## Chat Architecture
+
+```
+┌─────────────────────┐     AG-UI/SSE      ┌─────────────────────┐
+│   Next.js Frontend  │ ◄─────────────────► │   ADK Agent Server  │
+│   (CopilotKit)      │                     │   (FastAPI/Python)  │
+└─────────────────────┘                     └─────────────────────┘
+         │                                           │
+         │ /api/copilotkit                          │
+         └──────────────────────────────────────────┘
+                          │
+                          ▼
+                ┌─────────────────────┐
+                │   Google Gemini     │
+                │   (gemini-2.5-flash)│
+                └─────────────────────┘
+```
+
+### Key Files
+
+- `apps/web/app/api/copilotkit/route.ts` - CopilotKit endpoint, connects to ADK agent
+- `apps/web/components/providers/CopilotProvider.tsx` - CopilotKit configuration
+- `apps/web/hooks/useADKToolRenderers.tsx` - Renders ADK agent tool results
+- `apps/web/hooks/useFrontendTools.tsx` - Frontend tools (navigation, modals)
+- `apps/web/hooks/useHITLHandler.tsx` - Human-in-the-loop approval handlers
+- `agents/tribe_agent/` - Python ADK agent backend
+
+### Running the ADK Agent
+
+```bash
+# Development
+cd agents/tribe_agent
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+python server.py
+
+# Production (Google Cloud Run)
+cd agents/tribe_agent
+gcloud builds submit --config=cloudbuild.yaml
+```
+
+### Environment Variables
+
+Frontend (`.env.local`):
+```
+ADK_AGENT_URL=http://localhost:8000/agui  # Local dev
+# ADK_AGENT_URL=https://your-cloud-run-url/agui  # Production
+```
+
+ADK Agent (`.env`):
+```
+GEMINI_API_KEY=your_key
+CONVEX_SITE_URL=https://your-deployment.convex.site
+```
+
+## Testing
+
+E2E tests use Playwright:
+
+```bash
+cd apps/web
+npm run test:e2e          # Run all E2E tests
+npm run test:e2e:ui       # Run with Playwright UI
+npm run test:performance  # Run performance tests only
+```

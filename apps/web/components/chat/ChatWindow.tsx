@@ -220,10 +220,13 @@ export function ChatWindow({ corridorId }: ChatWindowProps) {
   };
 
   return (
-    <div className="h-full flex flex-col border-4 border-black shadow-[4px_4px_0_0_#000] bg-white">
+    <div
+      className="h-full flex flex-col border-4 border-black shadow-[4px_4px_0_0_#000] bg-white"
+      data-testid="chat-window"
+    >
       {/* Chat Header */}
       <div className="flex items-center justify-between p-4 border-b-4 border-black bg-yellow-100">
-        <h2 className="text-xl font-bold">{t("title")}</h2>
+        <h2 className="text-xl font-bold" data-testid="chat-title">{t("title")}</h2>
         <div className="flex items-center gap-2">
           {/* Voice Chat Button */}
           <button
@@ -247,7 +250,7 @@ export function ChatWindow({ corridorId }: ChatWindowProps) {
       </div>
 
       {/* Chat Body */}
-      <div className="flex-1 overflow-hidden copilot-chat-container">
+      <div className="flex-1 overflow-hidden copilot-chat-container" data-testid="chat-body">
         <CopilotChat
           instructions={`You are TRIBE, the ultimate Migration Intelligence Advisor. You're like a wise friend who has helped thousands of people relocate internationally. You combine AI precision with deep cultural empathy.
 

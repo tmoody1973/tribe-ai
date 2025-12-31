@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:performance": "playwright test e2e/performance.spec.ts"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^2.0.56",
@@ -54,6 +58,7 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@playwright/test": "^1.57.0",
     "@types/canvas-confetti": "^1.9.0",
     "@types/node": "^20.19.27",
     "@types/react": "^18",

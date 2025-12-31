@@ -18,6 +18,7 @@ import { useVoiceResponse } from "@/hooks/useVoiceResponse";
 import { useMigrationTools } from "@/hooks/useMigrationTools";
 import { useADKToolRenderers } from "@/hooks/useADKToolRenderers";
 import { useAgentProgress } from "@/hooks/useAgentProgress";
+import { useHITLHandler } from "@/hooks/useHITLHandler";
 import "@copilotkit/react-ui/styles.css";
 
 interface ChatWindowProps {
@@ -58,6 +59,9 @@ export function ChatWindow({ corridorId }: ChatWindowProps) {
 
   // Register agent progress rendering for step-by-step updates
   useAgentProgress();
+
+  // Register Human-in-the-Loop handlers for approval-required actions
+  useHITLHandler();
 
   // Get user's language for STT/TTS
   const userLanguage = profile?.language ?? "en";

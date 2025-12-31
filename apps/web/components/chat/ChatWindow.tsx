@@ -256,6 +256,12 @@ export function ChatWindow({ corridorId }: ChatWindowProps) {
 
 🛠️ YOUR POWERFUL TOOLKIT - USE THESE TOOLS PROACTIVELY:
 
+🔍 REAL-TIME WEB SEARCH:
+• Latest info/current policies/recent changes → searchLiveData
+• "What's the current..." or "latest..." questions → searchLiveData
+• Student housing, dorms, university accommodation → searchLiveData
+• Any question needing up-to-date information → searchLiveData
+
 PRACTICAL RELOCATION:
 • Housing/apartments/accommodation → searchTemporaryHousing
 • Cost of living/expenses/budgeting → compareCostOfLiving

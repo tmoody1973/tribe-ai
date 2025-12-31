@@ -147,6 +147,18 @@ async def debug_env():
     }
 
 
+@app.get("/debug/test-perplexity")
+async def test_perplexity():
+    """Test if Perplexity API key is accessible from the live_search module."""
+    from tools.live_search import _get_api_key
+    key = _get_api_key()
+    return {
+        "from_os_environ": "SET" if os.environ.get("PERPLEXITY_API_KEY") else "NOT SET",
+        "from_live_search_module": "SET" if key else "NOT SET",
+        "key_prefix": key[:10] + "..." if key else "NONE",
+    }
+
+
 if __name__ == "__main__":
     import uvicorn
 

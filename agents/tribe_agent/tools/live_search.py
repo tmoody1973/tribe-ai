@@ -8,12 +8,8 @@ Perplexity API directly.
 import os
 from typing import Optional
 
-print("[LIVE_SEARCH MODULE] Starting module import...")
-
 import httpx
 from google.adk.tools import FunctionTool
-
-print(f"[LIVE_SEARCH MODULE] FunctionTool imported, PERPLEXITY_API_KEY exists at import: {bool(os.environ.get('PERPLEXITY_API_KEY'))}")
 
 # Perplexity API configuration
 PERPLEXITY_API_URL = "https://api.perplexity.ai/chat/completions"
@@ -21,14 +17,6 @@ PERPLEXITY_API_URL = "https://api.perplexity.ai/chat/completions"
 # Simple monthly quota tracking (resets on agent restart - basic implementation)
 # For production, you'd want to persist this in a database
 _monthly_quota = {"used": 0, "limit": 50}
-
-
-def _get_api_key() -> str:
-    """Get API key at runtime (not import time) for Docker/Render compatibility."""
-    key = os.environ.get("PERPLEXITY_API_KEY", "")
-    # Debug logging
-    print(f"[LIVE_SEARCH DEBUG] _get_api_key called, key exists: {bool(key)}, prefix: {key[:10] if key else 'NONE'}...")
-    return key
 
 
 async def search_live_data(
@@ -60,15 +48,14 @@ async def search_live_data(
         - quotaRemaining: Number of searches left this month
         - OR error: True with message if search failed
     """
-    api_key = _get_api_key()
-    print(f"[LIVE_SEARCH DEBUG] After _get_api_key, api_key truthy: {bool(api_key)}")
+    # Read API key directly from environment at runtime
+    api_key = os.environ.get("PERPLEXITY_API_KEY", "")
+
     if not api_key:
-        print("[LIVE_SEARCH DEBUG] ERROR PATH: api_key is falsy, returning error")
         return {
             "error": True,
             "message": "Live search is not configured. PERPLEXITY_API_KEY environment variable is missing.",
         }
-    print("[LIVE_SEARCH DEBUG] SUCCESS PATH: api_key found, proceeding with search")
 
     # Check quota (basic in-memory tracking)
     if _monthly_quota["used"] >= _monthly_quota["limit"]:
@@ -165,6 +152,4 @@ Be concise but thorough. Always cite specific sources when possible. Focus on pr
 
 
 # Wrap function as FunctionTool for ADK
-print("[LIVE_SEARCH MODULE] Creating FunctionTool wrapper...")
 search_live_data_tool = FunctionTool(search_live_data)
-print(f"[LIVE_SEARCH MODULE] FunctionTool created: {search_live_data_tool}")

@@ -128,7 +128,7 @@ async def health():
         "agent": "tribe_agent",
         "model": "gemini-2.5-flash",
         "environment": os.environ.get("ENVIRONMENT", "development"),
-        "version": "2024-12-31-v6",  # Track deployment version - allow all CORS origins
+        "version": "2024-12-31-v7",  # Track deployment version - simplified live_search env reading
     }
 
 
@@ -144,12 +144,10 @@ async def debug_env():
 
 @app.get("/debug/test-perplexity")
 async def test_perplexity():
-    """Test if Perplexity API key is accessible from the live_search module."""
-    from tools.live_search import _get_api_key
-    key = _get_api_key()
+    """Test if Perplexity API key is accessible."""
+    key = os.environ.get("PERPLEXITY_API_KEY", "")
     return {
-        "from_os_environ": "SET" if os.environ.get("PERPLEXITY_API_KEY") else "NOT SET",
-        "from_live_search_module": "SET" if key else "NOT SET",
+        "perplexity_key": "SET" if key else "NOT SET",
         "key_prefix": key[:10] + "..." if key else "NONE",
     }
 

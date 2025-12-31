@@ -2,6 +2,7 @@ services:
   - type: web
     name: tribe-agent
     runtime: docker
+    rootDir: agents/tribe_agent
     dockerfilePath: ./Dockerfile
     dockerContext: .
     region: oregon

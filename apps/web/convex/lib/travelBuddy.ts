@@ -36,6 +36,7 @@ export interface VisaRequirement {
   destination: string;
   visaRequired: boolean;
   visaType: string;
+  visaTypeDisplay?: string; // Human-readable visa type
   stayDuration?: number;
   requirements: string[];
   processingTime?: string;

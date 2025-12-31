@@ -51,6 +51,8 @@ ALLOWED_ORIGINS = [
     "http://localhost:3000",  # Next.js dev
     "http://localhost:3001",  # Alternative dev port
     "https://tribe-ai.vercel.app",  # Production
+    "https://tribe-ai-alpha.vercel.app",  # Production alpha
+    "https://tribe-ai-tmoody1973s-projects.vercel.app",  # Vercel project URL
 ]
 
 # Add additional origins from environment
@@ -136,7 +138,7 @@ async def health():
         "agent": "tribe_agent",
         "model": "gemini-2.5-flash",
         "environment": os.environ.get("ENVIRONMENT", "development"),
-        "version": "2024-12-31-v4",  # Track deployment version - added /api/live-search endpoint
+        "version": "2024-12-31-v5",  # Track deployment version - fixed CORS for Vercel domains
     }
 
 

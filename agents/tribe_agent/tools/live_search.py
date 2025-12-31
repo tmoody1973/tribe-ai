@@ -13,12 +13,16 @@ from google.adk.tools import FunctionTool
 
 
 # Perplexity API configuration
-PERPLEXITY_API_KEY = os.environ.get("PERPLEXITY_API_KEY", "")
 PERPLEXITY_API_URL = "https://api.perplexity.ai/chat/completions"
 
 # Simple monthly quota tracking (resets on agent restart - basic implementation)
 # For production, you'd want to persist this in a database
 _monthly_quota = {"used": 0, "limit": 50}
+
+
+def _get_api_key() -> str:
+    """Get API key at runtime (not import time) for Docker/Render compatibility."""
+    return os.environ.get("PERPLEXITY_API_KEY", "")
 
 
 async def search_live_data(
@@ -50,7 +54,8 @@ async def search_live_data(
         - quotaRemaining: Number of searches left this month
         - OR error: True with message if search failed
     """
-    if not PERPLEXITY_API_KEY:
+    api_key = _get_api_key()
+    if not api_key:
         return {
             "error": True,
             "message": "Live search is not configured. PERPLEXITY_API_KEY environment variable is missing.",
@@ -89,7 +94,7 @@ Be concise but thorough. Always cite specific sources when possible. Focus on pr
             response = await client.post(
                 PERPLEXITY_API_URL,
                 headers={
-                    "Authorization": f"Bearer {PERPLEXITY_API_KEY}",
+                    "Authorization": f"Bearer {api_key}",
                     "Content-Type": "application/json",
                 },
                 json={

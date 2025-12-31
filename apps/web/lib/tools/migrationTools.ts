@@ -344,7 +344,7 @@ export function checkVisaResources(
     },
     {
       name: "iVisa",
-      url: `https://www.ivisa.com/visa/${destinationCountry.toLowerCase().replace(/\s+/g, "-")}`,
+      url: `https://www.ivisa.com/${destinationCountry.toLowerCase().replace(/\s+/g, "-")}`,
       description: "Visa eligibility checker and application service",
     },
     {

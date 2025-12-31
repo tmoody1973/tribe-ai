@@ -288,6 +288,49 @@ export interface VisaResourcesResult {
   disclaimer: string;
 }
 
+// Country to region mapping for VisaGuide.World URLs
+const VISAGUIDE_REGIONS: Record<string, string> = {
+  // Europe
+  "belgium": "europe", "france": "europe", "germany": "europe", "italy": "europe",
+  "spain": "europe", "netherlands": "europe", "portugal": "europe", "austria": "europe",
+  "switzerland": "europe", "sweden": "europe", "norway": "europe", "denmark": "europe",
+  "finland": "europe", "ireland": "europe", "poland": "europe", "greece": "europe",
+  "czech republic": "europe", "hungary": "europe", "romania": "europe", "croatia": "europe",
+  "uk": "europe", "united kingdom": "europe", "scotland": "europe", "iceland": "europe",
+  // Asia
+  "japan": "asia", "china": "asia", "south korea": "asia", "korea": "asia",
+  "india": "asia", "thailand": "asia", "vietnam": "asia", "singapore": "asia",
+  "malaysia": "asia", "indonesia": "asia", "philippines": "asia", "taiwan": "asia",
+  "hong kong": "asia", "uae": "asia", "united arab emirates": "asia", "dubai": "asia",
+  "saudi arabia": "asia", "israel": "asia", "turkey": "asia",
+  // North America
+  "usa": "north-america", "united states": "north-america", "canada": "north-america",
+  "mexico": "north-america",
+  // South America
+  "brazil": "south-america", "argentina": "south-america", "chile": "south-america",
+  "colombia": "south-america", "peru": "south-america",
+  // Oceania
+  "australia": "oceania", "new zealand": "oceania",
+  // Africa
+  "south africa": "africa", "egypt": "africa", "morocco": "africa", "kenya": "africa",
+  "nigeria": "africa", "ghana": "africa", "ethiopia": "africa",
+};
+
+/**
+ * Get VisaGuide.World URL with correct region path
+ */
+function getVisaGuideUrl(country: string): string {
+  const lowerCountry = country.toLowerCase().trim();
+  const region = VISAGUIDE_REGIONS[lowerCountry];
+  const countrySlug = lowerCountry.replace(/\s+/g, "-");
+
+  if (region) {
+    return `https://visaguide.world/${region}/${countrySlug}-visa/`;
+  }
+  // Fallback: search on visaguide
+  return `https://visaguide.world/?s=${encodeURIComponent(country)}+visa`;
+}
+
 export function checkVisaResources(
   passportCountry: string,
   destinationCountry: string,
@@ -296,7 +339,7 @@ export function checkVisaResources(
   const resources = [
     {
       name: "VisaGuide.World",
-      url: `https://visaguide.world/${destinationCountry.toLowerCase().replace(/\s+/g, "-")}-visa/`,
+      url: getVisaGuideUrl(destinationCountry),
       description: "Comprehensive visa requirements by nationality",
     },
     {

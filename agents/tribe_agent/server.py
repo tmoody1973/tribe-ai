@@ -159,6 +159,25 @@ async def test_perplexity():
     }
 
 
+@app.get("/debug/test-search")
+async def test_search():
+    """Actually call the live search function to test it end-to-end."""
+    from tools.live_search import search_live_data
+    result = await search_live_data("test query Belgium visa", "Belgium")
+    # Return truncated result to avoid huge response
+    if result.get("success"):
+        return {
+            "status": "SUCCESS",
+            "answer_preview": result.get("answer", "")[:200] + "...",
+            "sources_count": len(result.get("sources", [])),
+        }
+    else:
+        return {
+            "status": "ERROR",
+            "error": result,
+        }
+
+
 if __name__ == "__main__":
     import uvicorn
 

@@ -134,6 +134,7 @@ async def health():
         "agent": "tribe_agent",
         "model": "gemini-2.5-flash",
         "environment": os.environ.get("ENVIRONMENT", "development"),
+        "version": "2024-12-31-v3",  # Track deployment version
     }
 
 

@@ -58,11 +58,14 @@ async def search_live_data(
         - OR error: True with message if search failed
     """
     api_key = _get_api_key()
+    print(f"[LIVE_SEARCH DEBUG] After _get_api_key, api_key truthy: {bool(api_key)}")
     if not api_key:
+        print("[LIVE_SEARCH DEBUG] ERROR PATH: api_key is falsy, returning error")
         return {
             "error": True,
             "message": "Live search is not configured. PERPLEXITY_API_KEY environment variable is missing.",
         }
+    print("[LIVE_SEARCH DEBUG] SUCCESS PATH: api_key found, proceeding with search")
 
     # Check quota (basic in-memory tracking)
     if _monthly_quota["used"] >= _monthly_quota["limit"]:

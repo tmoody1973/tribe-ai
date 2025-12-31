@@ -40,6 +40,7 @@ import type * as financial from "../financial.js";
 import type * as fireplexity from "../fireplexity.js";
 import type * as fireplexityQueries from "../fireplexityQueries.js";
 import type * as health from "../health.js";
+import type * as http from "../http.js";
 import type * as ingestedContent from "../ingestedContent.js";
 import type * as integrations_costOfLiving from "../integrations/costOfLiving.js";
 import type * as integrations_countries from "../integrations/countries.js";
@@ -102,6 +103,7 @@ declare const fullApi: ApiFromModules<{
   fireplexity: typeof fireplexity;
   fireplexityQueries: typeof fireplexityQueries;
   health: typeof health;
+  http: typeof http;
   ingestedContent: typeof ingestedContent;
   "integrations/costOfLiving": typeof integrations_costOfLiving;
   "integrations/countries": typeof integrations_countries;

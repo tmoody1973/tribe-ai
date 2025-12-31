@@ -3,8 +3,13 @@
 /**
  * Hook to register renderers for ADK agent tool calls.
  *
- * These tools run on the ADK backend, but we provide custom UI rendering
- * on the frontend using useCopilotAction with available: "remote".
+ * These tools run on the ADK backend. We provide custom UI rendering
+ * using useCopilotAction with available: "disabled" - this prevents
+ * the frontend from declaring these tools (avoiding duplicates with ADK),
+ * while still allowing render functions to display tool results.
+ *
+ * IMPORTANT: Tools are defined ONLY in the ADK agent (Python).
+ * This hook only provides rendering for their results.
  */
 
 import { useCopilotAction } from "@copilotkit/react-core";
@@ -87,30 +92,10 @@ interface VisaSearchResult {
 
 export function useADKToolRenderers() {
   // Housing Resources Search - renders results from ADK agent tool
+  // Tool is defined in ADK agent, we only provide the render function
   useCopilotAction({
     name: "search_housing_resources",
-    description: "Search for housing resources and assistance programs for migrants and refugees.",
-    parameters: [
-      {
-        name: "country",
-        type: "string",
-        description: "Destination country to search",
-        required: false,
-      },
-      {
-        name: "continent",
-        type: "string",
-        description: "Filter by continent",
-        required: false,
-      },
-      {
-        name: "resource_type",
-        type: "string",
-        description: "Type of resource",
-        required: false,
-      },
-    ],
-    available: "remote", // Tool is handled by ADK agent, we just render
+    available: "disabled", // Tool defined in ADK agent, NOT here - avoids duplicate declaration
     render: ({ status, args, result }) => {
       if (status === "inProgress") {
         return (
@@ -145,24 +130,10 @@ export function useADKToolRenderers() {
   });
 
   // Live Data Search - renders Fireplexity search results from ADK agent tool
+  // Tool is defined in ADK agent, we only provide the render function
   useCopilotAction({
     name: "search_live_data",
-    description: "Search live web data for up-to-date migration resources using Fireplexity.",
-    parameters: [
-      {
-        name: "query",
-        type: "string",
-        description: "Search query describing what to look for",
-        required: true,
-      },
-      {
-        name: "target_country",
-        type: "string",
-        description: "Country to focus the search on",
-        required: false,
-      },
-    ],
-    available: "remote", // Tool is handled by ADK agent, we just render
+    available: "disabled", // Tool defined in ADK agent, NOT here - avoids duplicate declaration
     render: ({ status, args, result }) => {
       if (status === "inProgress") {
         return <LiveSearchLoading query={args?.query as string} />;
@@ -211,30 +182,10 @@ export function useADKToolRenderers() {
   });
 
   // Visa Options Search - renders visa pathway information from ADK agent tool
+  // Tool is defined in ADK agent, we only provide the render function
   useCopilotAction({
     name: "search_visa_options",
-    description: "Discover visa requirements and pathways for migration between countries.",
-    parameters: [
-      {
-        name: "origin",
-        type: "string",
-        description: "Origin country (passport country) - name or ISO3 code",
-        required: true,
-      },
-      {
-        name: "destination",
-        type: "string",
-        description: "Destination country - name or ISO3 code",
-        required: true,
-      },
-      {
-        name: "get_processing_times",
-        type: "boolean",
-        description: "Whether to fetch processing time estimates",
-        required: false,
-      },
-    ],
-    available: "remote", // Tool is handled by ADK agent, we just render
+    available: "disabled", // Tool defined in ADK agent, NOT here - avoids duplicate declaration
     render: ({ status, args, result }) => {
       if (status === "inProgress") {
         return (

@@ -11,15 +11,16 @@ import uuid
 from contextlib import asynccontextmanager
 
 from dotenv import load_dotenv
+
+# Load environment variables BEFORE importing agent (tools read env at import time)
+load_dotenv()
+
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from ag_ui_adk import ADKAgent, add_adk_fastapi_endpoint
 
 from agent import tribe_agent
 from logging_config import setup_logging, get_logger
-
-# Load environment variables
-load_dotenv()
 
 # Setup structured logging
 log_level = os.environ.get("LOG_LEVEL", "INFO")

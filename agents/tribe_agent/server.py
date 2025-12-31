@@ -46,25 +46,15 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# CORS configuration for development and production
-ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # Next.js dev
-    "http://localhost:3001",  # Alternative dev port
-    "https://tribe-ai.vercel.app",  # Production
-    "https://tribe-ai-alpha.vercel.app",  # Production alpha
-    "https://tribe-ai-tmoody1973s-projects.vercel.app",  # Vercel project URL
-]
-
-# Add additional origins from environment
-if os.environ.get("ADDITIONAL_CORS_ORIGINS"):
-    ALLOWED_ORIGINS.extend(os.environ["ADDITIONAL_CORS_ORIGINS"].split(","))
-
+# CORS configuration - allow all origins for API endpoints
+# The AG-UI protocol already handles authentication
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=ALLOWED_ORIGINS,
-    allow_credentials=True,
+    allow_origins=["*"],  # Allow all origins for now
+    allow_credentials=False,  # Must be False when using "*"
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"],
 )
 
 
@@ -138,7 +128,7 @@ async def health():
         "agent": "tribe_agent",
         "model": "gemini-2.5-flash",
         "environment": os.environ.get("ENVIRONMENT", "development"),
-        "version": "2024-12-31-v5",  # Track deployment version - fixed CORS for Vercel domains
+        "version": "2024-12-31-v6",  # Track deployment version - allow all CORS origins
     }
 
 

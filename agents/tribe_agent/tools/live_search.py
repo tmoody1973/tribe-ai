@@ -8,9 +8,12 @@ Perplexity API directly.
 import os
 from typing import Optional
 
+print("[LIVE_SEARCH MODULE] Starting module import...")
+
 import httpx
 from google.adk.tools import FunctionTool
 
+print(f"[LIVE_SEARCH MODULE] FunctionTool imported, PERPLEXITY_API_KEY exists at import: {bool(os.environ.get('PERPLEXITY_API_KEY'))}")
 
 # Perplexity API configuration
 PERPLEXITY_API_URL = "https://api.perplexity.ai/chat/completions"
@@ -162,4 +165,6 @@ Be concise but thorough. Always cite specific sources when possible. Focus on pr
 
 
 # Wrap function as FunctionTool for ADK
+print("[LIVE_SEARCH MODULE] Creating FunctionTool wrapper...")
 search_live_data_tool = FunctionTool(search_live_data)
+print(f"[LIVE_SEARCH MODULE] FunctionTool created: {search_live_data_tool}")

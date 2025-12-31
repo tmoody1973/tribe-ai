@@ -26,10 +26,11 @@ import {
   type LanguageResourcesResult,
   type JobSearchResult,
 } from "@/lib/tools/migrationTools";
-import { ExternalLink, Home, DollarSign, Users, FileText, Heart, Loader2, Globe2, Lightbulb, MessageCircle, ArrowRight, CheckCircle2, Building2, BookOpen, Briefcase, AlertCircle, Search, Sparkles } from "lucide-react";
+import { ExternalLink, Home, DollarSign, Users, FileText, Heart, Loader2, Globe2, Lightbulb, MessageCircle, ArrowRight, CheckCircle2, Building2, BookOpen, Briefcase, AlertCircle, Sparkles } from "lucide-react";
+import { LiveSearchResult as LiveSearchResultCard } from "@/components/chat/LiveSearchResult";
 
-// Live search result type
-interface LiveSearchResult {
+// Live search result type from API
+interface LiveSearchResultData {
   success?: boolean;
   error?: boolean;
   message?: string;
@@ -1143,105 +1144,34 @@ export function useMigrationTools() {
     render: ({ status, args, result }) => {
       if (status === "inProgress") {
         return (
-          <div className="flex items-center gap-2 p-4 bg-gradient-to-r from-purple-50 to-blue-50 border-2 border-black">
-            <Sparkles className="animate-pulse text-purple-500" size={20} />
-            <span className="font-bold">Searching the web for latest info...</span>
+          <div className="border-4 border-black bg-white shadow-[4px_4px_0_0_#000] my-2 animate-pulse">
+            <div className="bg-gradient-to-r from-purple-500 to-blue-500 text-white p-3 border-b-4 border-black flex items-center gap-2">
+              <Sparkles className="animate-spin" size={20} />
+              <span className="font-bold">Searching the web...</span>
+            </div>
+            <div className="p-4 space-y-3">
+              <div className="h-4 bg-gray-200 rounded w-3/4 animate-pulse"></div>
+              <div className="h-4 bg-gray-200 rounded w-full animate-pulse"></div>
+              <div className="h-4 bg-gray-200 rounded w-5/6 animate-pulse"></div>
+              <div className="h-4 bg-gray-200 rounded w-2/3 animate-pulse"></div>
+            </div>
           </div>
         );
       }
 
-      const data = result as LiveSearchResult;
+      const data = result as LiveSearchResultData;
       if (!data) return <></>;
 
-      // Handle error state
-      if (data.error) {
-        return (
-          <div className="border-4 border-black bg-white shadow-[4px_4px_0_0_#000] my-2">
-            <div className="bg-red-500 text-white p-3 border-b-4 border-black flex items-center gap-2">
-              <AlertCircle size={20} />
-              <span className="font-bold">Search Error</span>
-            </div>
-            <div className="p-4">
-              <p className="text-red-700">{data.message || "An error occurred while searching."}</p>
-            </div>
-          </div>
-        );
-      }
-
-      const sources = data.sources || [];
-
-      // Extract domain from URL for display
-      const getDomain = (url: string) => {
-        try {
-          const domain = new URL(url).hostname.replace('www.', '');
-          return domain;
-        } catch {
-          return url;
-        }
-      };
-
+      // Use the streaming result component
       return (
-        <div className="border-4 border-black bg-white shadow-[4px_4px_0_0_#000] my-2">
-          {/* Header */}
-          <div className="bg-gradient-to-r from-purple-500 to-blue-500 text-white p-3 border-b-4 border-black flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Search size={20} />
-              <span className="font-bold">Live Search Results</span>
-            </div>
-            {data.quotaRemaining !== undefined && (
-              <span className="text-xs bg-white/20 px-2 py-1 rounded">
-                {data.quotaRemaining}/{data.quotaLimit} searches remaining
-              </span>
-            )}
-          </div>
-
-          {/* Parsed Content with Clickable Citations */}
-          <div className="p-4 border-b-2 border-gray-200">
-            <div className="space-y-1">
-              {parseMarkdownWithCitations(data.answer || "", sources)}
-            </div>
-          </div>
-
-          {/* Sources Section */}
-          {sources.length > 0 && (
-            <div className="p-4 bg-gradient-to-b from-gray-50 to-gray-100">
-              <div className="flex items-center gap-2 mb-3">
-                <span className="font-bold text-sm text-gray-700">Sources</span>
-                <span className="text-xs bg-gray-200 text-gray-600 px-2 py-0.5 rounded-full">
-                  {sources.length} references
-                </span>
-              </div>
-              <div className="grid gap-2">
-                {sources.slice(0, 8).map((source, i) => (
-                  <a
-                    key={i}
-                    href={source}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-3 p-2 bg-white border border-gray-200 rounded hover:border-blue-300 hover:bg-blue-50 transition-all group"
-                  >
-                    <span className="flex-shrink-0 w-6 h-6 flex items-center justify-center bg-blue-100 text-blue-700 text-xs font-bold rounded-full group-hover:bg-blue-200">
-                      {i + 1}
-                    </span>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 truncate group-hover:text-blue-700">
-                        {getDomain(source)}
-                      </p>
-                      <p className="text-xs text-gray-500 truncate">{source}</p>
-                    </div>
-                    <ExternalLink size={14} className="flex-shrink-0 text-gray-400 group-hover:text-blue-500" />
-                  </a>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Footer */}
-          <div className="p-2 bg-purple-50 border-t-2 border-purple-200 text-xs text-purple-600 flex items-center gap-1">
-            <Sparkles size={12} />
-            Powered by Perplexity AI • Real-time web search
-          </div>
-        </div>
+        <LiveSearchResultCard
+          answer={data.answer || ""}
+          sources={data.sources || []}
+          quotaRemaining={data.quotaRemaining}
+          quotaLimit={data.quotaLimit}
+          error={data.error}
+          message={data.message}
+        />
       );
     },
     handler: async ({ query, targetCountry }) => {
@@ -1268,16 +1198,16 @@ export function useMigrationTools() {
           return {
             error: true,
             message: `Search failed (${response.status}): ${errorText.slice(0, 200)}`,
-          } as LiveSearchResult;
+          } as LiveSearchResultData;
         }
 
         const result = await response.json();
-        return result as LiveSearchResult;
+        return result as LiveSearchResultData;
       } catch (error) {
         return {
           error: true,
           message: `Search failed: ${error instanceof Error ? error.message : "Unknown error"}`,
-        } as LiveSearchResult;
+        } as LiveSearchResultData;
       }
     },
   });

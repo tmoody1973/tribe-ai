@@ -22,7 +22,10 @@ _monthly_quota = {"used": 0, "limit": 50}
 
 def _get_api_key() -> str:
     """Get API key at runtime (not import time) for Docker/Render compatibility."""
-    return os.environ.get("PERPLEXITY_API_KEY", "")
+    key = os.environ.get("PERPLEXITY_API_KEY", "")
+    # Debug logging
+    print(f"[LIVE_SEARCH DEBUG] _get_api_key called, key exists: {bool(key)}, prefix: {key[:10] if key else 'NONE'}...")
+    return key
 
 
 async def search_live_data(

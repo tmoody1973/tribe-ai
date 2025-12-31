@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { useCopilotAction } from "@copilotkit/react-core";
 import {
   searchTemporaryHousing,
@@ -37,6 +38,127 @@ interface LiveSearchResult {
   quotaRemaining?: number;
   quotaUsed?: number;
   quotaLimit?: number;
+}
+
+// Helper function to parse markdown and citations into JSX
+function parseMarkdownWithCitations(text: string, sources: string[]): React.ReactNode[] {
+  // Split by lines to handle headers and paragraphs
+  const lines = text.split('\n');
+  const elements: React.ReactNode[] = [];
+  let currentParagraph: string[] = [];
+  let keyIndex = 0;
+
+  const processParagraph = (paragraph: string): React.ReactNode => {
+    if (!paragraph.trim()) return null;
+
+    // Process inline formatting and citations
+    const processInline = (str: string): React.ReactNode[] => {
+      const parts: React.ReactNode[] = [];
+      let remaining = str;
+      let partKey = 0;
+
+      while (remaining) {
+        // Check for bold text **text**
+        const boldMatch = remaining.match(/\*\*([^*]+)\*\*/);
+        // Check for citations [1], [2], [1][2], etc.
+        const citationMatch = remaining.match(/\[(\d+)\]/);
+
+        if (boldMatch && (!citationMatch || boldMatch.index! <= citationMatch.index!)) {
+          // Add text before bold
+          if (boldMatch.index! > 0) {
+            parts.push(<span key={partKey++}>{remaining.slice(0, boldMatch.index)}</span>);
+          }
+          // Add bold text
+          parts.push(<strong key={partKey++} className="font-bold text-gray-900">{boldMatch[1]}</strong>);
+          remaining = remaining.slice(boldMatch.index! + boldMatch[0].length);
+        } else if (citationMatch) {
+          // Add text before citation
+          if (citationMatch.index! > 0) {
+            parts.push(<span key={partKey++}>{remaining.slice(0, citationMatch.index)}</span>);
+          }
+          // Add citation as clickable link
+          const citationNum = parseInt(citationMatch[1]);
+          const sourceUrl = sources[citationNum - 1];
+          if (sourceUrl) {
+            parts.push(
+              <a
+                key={partKey++}
+                href={sourceUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center w-5 h-5 text-[10px] font-bold bg-blue-100 text-blue-700 rounded-full hover:bg-blue-200 transition-colors mx-0.5 align-super"
+                title={sourceUrl}
+              >
+                {citationNum}
+              </a>
+            );
+          } else {
+            parts.push(<sup key={partKey++} className="text-blue-600">[{citationNum}]</sup>);
+          }
+          remaining = remaining.slice(citationMatch.index! + citationMatch[0].length);
+        } else {
+          // No more matches, add remaining text
+          parts.push(<span key={partKey++}>{remaining}</span>);
+          break;
+        }
+      }
+
+      return parts;
+    };
+
+    return <span>{processInline(paragraph)}</span>;
+  };
+
+  const flushParagraph = () => {
+    if (currentParagraph.length > 0) {
+      const text = currentParagraph.join(' ').trim();
+      if (text) {
+        elements.push(
+          <p key={keyIndex++} className="text-gray-700 leading-relaxed mb-3">
+            {processParagraph(text)}
+          </p>
+        );
+      }
+      currentParagraph = [];
+    }
+  };
+
+  for (const line of lines) {
+    const trimmedLine = line.trim();
+
+    // Check for headers
+    if (trimmedLine.startsWith('### ')) {
+      flushParagraph();
+      elements.push(
+        <h4 key={keyIndex++} className="font-bold text-gray-900 mt-4 mb-2 flex items-center gap-2">
+          <span className="w-1.5 h-1.5 bg-purple-500 rounded-full"></span>
+          {processParagraph(trimmedLine.slice(4))}
+        </h4>
+      );
+    } else if (trimmedLine.startsWith('## ')) {
+      flushParagraph();
+      elements.push(
+        <h3 key={keyIndex++} className="font-bold text-lg text-gray-900 mt-4 mb-2 border-b border-gray-200 pb-1">
+          {processParagraph(trimmedLine.slice(3))}
+        </h3>
+      );
+    } else if (trimmedLine.startsWith('- ') || trimmedLine.startsWith('• ')) {
+      flushParagraph();
+      elements.push(
+        <div key={keyIndex++} className="flex items-start gap-2 ml-2 mb-1">
+          <span className="text-purple-500 mt-1.5">•</span>
+          <span className="text-gray-700">{processParagraph(trimmedLine.slice(2))}</span>
+        </div>
+      );
+    } else if (trimmedLine === '') {
+      flushParagraph();
+    } else {
+      currentParagraph.push(trimmedLine);
+    }
+  }
+
+  flushParagraph();
+  return elements;
 }
 
 export function useMigrationTools() {
@@ -1046,8 +1168,21 @@ export function useMigrationTools() {
         );
       }
 
+      const sources = data.sources || [];
+
+      // Extract domain from URL for display
+      const getDomain = (url: string) => {
+        try {
+          const domain = new URL(url).hostname.replace('www.', '');
+          return domain;
+        } catch {
+          return url;
+        }
+      };
+
       return (
         <div className="border-4 border-black bg-white shadow-[4px_4px_0_0_#000] my-2">
+          {/* Header */}
           <div className="bg-gradient-to-r from-purple-500 to-blue-500 text-white p-3 border-b-4 border-black flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Search size={20} />
@@ -1060,34 +1195,48 @@ export function useMigrationTools() {
             )}
           </div>
 
-          {/* Answer */}
+          {/* Parsed Content with Clickable Citations */}
           <div className="p-4 border-b-2 border-gray-200">
-            <div className="prose prose-sm max-w-none">
-              <p className="text-gray-800 whitespace-pre-wrap">{data.answer}</p>
+            <div className="space-y-1">
+              {parseMarkdownWithCitations(data.answer || "", sources)}
             </div>
           </div>
 
-          {/* Sources */}
-          {data.sources && data.sources.length > 0 && (
-            <div className="p-4 bg-gray-50">
-              <p className="font-bold text-sm mb-2 text-gray-600">Sources:</p>
-              <div className="space-y-2">
-                {data.sources.slice(0, 5).map((source, i) => (
+          {/* Sources Section */}
+          {sources.length > 0 && (
+            <div className="p-4 bg-gradient-to-b from-gray-50 to-gray-100">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="font-bold text-sm text-gray-700">Sources</span>
+                <span className="text-xs bg-gray-200 text-gray-600 px-2 py-0.5 rounded-full">
+                  {sources.length} references
+                </span>
+              </div>
+              <div className="grid gap-2">
+                {sources.slice(0, 8).map((source, i) => (
                   <a
                     key={i}
                     href={source}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800 hover:underline truncate"
+                    className="flex items-center gap-3 p-2 bg-white border border-gray-200 rounded hover:border-blue-300 hover:bg-blue-50 transition-all group"
                   >
-                    <ExternalLink size={12} className="flex-shrink-0" />
-                    <span className="truncate">{source}</span>
+                    <span className="flex-shrink-0 w-6 h-6 flex items-center justify-center bg-blue-100 text-blue-700 text-xs font-bold rounded-full group-hover:bg-blue-200">
+                      {i + 1}
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-gray-900 truncate group-hover:text-blue-700">
+                        {getDomain(source)}
+                      </p>
+                      <p className="text-xs text-gray-500 truncate">{source}</p>
+                    </div>
+                    <ExternalLink size={14} className="flex-shrink-0 text-gray-400 group-hover:text-blue-500" />
                   </a>
                 ))}
               </div>
             </div>
           )}
 
+          {/* Footer */}
           <div className="p-2 bg-purple-50 border-t-2 border-purple-200 text-xs text-purple-600 flex items-center gap-1">
             <Sparkles size={12} />
             Powered by Perplexity AI • Real-time web search

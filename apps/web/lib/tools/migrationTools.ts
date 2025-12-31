@@ -137,15 +137,98 @@ export interface CostComparisonResult {
   note: string;
 }
 
+// Country code to full name mapping for Numbeo URLs
+const COUNTRY_FULL_NAMES: Record<string, string> = {
+  "usa": "United States",
+  "us": "United States",
+  "united states": "United States",
+  "uk": "United Kingdom",
+  "gb": "United Kingdom",
+  "gbr": "United Kingdom",
+  "uae": "United Arab Emirates",
+};
+
+// US city to state mapping for common cities
+const US_CITY_STATES: Record<string, string> = {
+  "milwaukee": "Milwaukee, WI",
+  "chicago": "Chicago, IL",
+  "new york": "New York, NY",
+  "los angeles": "Los Angeles, CA",
+  "san francisco": "San Francisco, CA",
+  "seattle": "Seattle, WA",
+  "denver": "Denver, CO",
+  "austin": "Austin, TX",
+  "houston": "Houston, TX",
+  "dallas": "Dallas, TX",
+  "miami": "Miami, FL",
+  "atlanta": "Atlanta, GA",
+  "boston": "Boston, MA",
+  "phoenix": "Phoenix, AZ",
+  "philadelphia": "Philadelphia, PA",
+  "portland": "Portland, OR",
+  "san diego": "San Diego, CA",
+  "detroit": "Detroit, MI",
+  "minneapolis": "Minneapolis, MN",
+  "nashville": "Nashville, TN",
+  "charlotte": "Charlotte, NC",
+  "raleigh": "Raleigh, NC",
+  "tampa": "Tampa, FL",
+  "orlando": "Orlando, FL",
+  "cleveland": "Cleveland, OH",
+  "columbus": "Columbus, OH",
+  "indianapolis": "Indianapolis, IN",
+  "kansas city": "Kansas City, MO",
+  "las vegas": "Las Vegas, NV",
+  "salt lake city": "Salt Lake City, UT",
+  "pittsburgh": "Pittsburgh, PA",
+  "baltimore": "Baltimore, MD",
+  "washington": "Washington, DC",
+  "washington dc": "Washington, DC",
+};
+
+/**
+ * Normalize country name for Numbeo URLs
+ */
+function normalizeCountryForNumbeo(country: string): string {
+  const lower = country.toLowerCase().trim();
+  return COUNTRY_FULL_NAMES[lower] || country;
+}
+
+/**
+ * Format city name for Numbeo URLs (adds state for US cities)
+ */
+function formatCityForNumbeo(city: string, country: string): string {
+  const normalizedCountry = normalizeCountryForNumbeo(country).toLowerCase();
+
+  // Only add state for US cities
+  if (normalizedCountry === "united states") {
+    const lowerCity = city.toLowerCase().trim();
+    // If already has state (contains comma), return as-is
+    if (city.includes(",")) {
+      return city;
+    }
+    // Look up the state
+    return US_CITY_STATES[lowerCity] || city;
+  }
+
+  return city;
+}
+
 export function compareCostOfLiving(
   originCity: string,
   originCountry: string,
   destinationCity: string,
   destinationCountry: string
 ): CostComparisonResult {
+  // Normalize countries and format cities for Numbeo
+  const country1 = normalizeCountryForNumbeo(originCountry);
+  const city1 = formatCityForNumbeo(originCity, originCountry);
+  const country2 = normalizeCountryForNumbeo(destinationCountry);
+  const city2 = formatCityForNumbeo(destinationCity, destinationCountry);
+
   return {
     comparison: {
-      numbeoUrl: `https://www.numbeo.com/cost-of-living/compare_cities.jsp?country1=${encodeURIComponent(originCountry)}&city1=${encodeURIComponent(originCity)}&country2=${encodeURIComponent(destinationCountry)}&city2=${encodeURIComponent(destinationCity)}`,
+      numbeoUrl: `https://www.numbeo.com/cost-of-living/compare_cities.jsp?country1=${encodeURIComponent(country1)}&city1=${encodeURIComponent(city1)}&country2=${encodeURIComponent(country2)}&city2=${encodeURIComponent(city2)}`,
       expatistanUrl: `https://www.expatistan.com/cost-of-living/comparison/${originCity.toLowerCase().replace(/\s+/g, "-")}/${destinationCity.toLowerCase().replace(/\s+/g, "-")}`,
     },
     note: "These comparisons show relative costs. Actual expenses vary based on lifestyle.",

@@ -17,5 +17,7 @@ services:
         sync: false
       - key: CONVEX_SITE_URL
         sync: false
+      - key: PERPLEXITY_API_KEY
+        sync: false
       - key: ADDITIONAL_CORS_ORIGINS
         value: https://tribe-ai.vercel.app,https://*.vercel.app

@@ -2,7 +2,7 @@
 Live Data Search Tool
 
 Provides real-time web search for up-to-date migration resources using
-Fireplexity (Perplexity + Firecrawl) via Convex HTTP endpoints.
+Perplexity API directly.
 """
 
 import os
@@ -12,8 +12,13 @@ import httpx
 from google.adk.tools import FunctionTool
 
 
-# Convex site URL for HTTP endpoints
-CONVEX_SITE_URL = os.environ.get("CONVEX_SITE_URL", "")
+# Perplexity API configuration
+PERPLEXITY_API_KEY = os.environ.get("PERPLEXITY_API_KEY", "")
+PERPLEXITY_API_URL = "https://api.perplexity.ai/chat/completions"
+
+# Simple monthly quota tracking (resets on agent restart - basic implementation)
+# For production, you'd want to persist this in a database
+_monthly_quota = {"used": 0, "limit": 50}
 
 
 async def search_live_data(
@@ -42,97 +47,95 @@ async def search_live_data(
         - success: Whether search completed successfully
         - answer: AI-generated answer from Perplexity
         - sources: List of source URLs
-        - scrapedData: Preview of scraped content from sources
         - quotaRemaining: Number of searches left this month
         - OR error: True with message if search failed
     """
-    if not CONVEX_SITE_URL:
+    if not PERPLEXITY_API_KEY:
         return {
             "error": True,
-            "message": "Live search is not configured. CONVEX_SITE_URL environment variable is missing.",
+            "message": "Live search is not configured. PERPLEXITY_API_KEY environment variable is missing.",
         }
 
+    # Check quota (basic in-memory tracking)
+    if _monthly_quota["used"] >= _monthly_quota["limit"]:
+        return {
+            "error": True,
+            "quotaExceeded": True,
+            "message": f"Live search quota exceeded ({_monthly_quota['used']}/{_monthly_quota['limit']} used).",
+            "quotaStatus": {
+                "used": _monthly_quota["used"],
+                "limit": _monthly_quota["limit"],
+                "daysUntilReset": 1,  # Approximate
+            },
+            "suggestion": "Try searching the cached housing and visa databases instead, or check back later!",
+        }
+
+    # Build search query with country context
+    search_query = query
+    if target_country:
+        search_query = f"{query} in {target_country}"
+
+    # System prompt for migration-focused responses
+    system_prompt = """You are a migration research assistant. Provide accurate, up-to-date information about:
+- Visa requirements and application processes
+- Housing programs and resources for migrants
+- Immigration policy changes and updates
+- Cost of living and relocation information
+
+Be concise but thorough. Always cite specific sources when possible. Focus on practical, actionable information."""
+
     async with httpx.AsyncClient(timeout=60.0) as client:
-        # Step 1: Check quota first
         try:
-            quota_response = await client.get(f"{CONVEX_SITE_URL}/api/fireplexity/quota")
-            if quota_response.status_code != 200:
-                return {
-                    "error": True,
-                    "message": f"Could not check quota (status {quota_response.status_code}). Please try again.",
-                }
-
-            quota = quota_response.json()
-
-            if not quota.get("available", False):
-                return {
-                    "error": True,
-                    "quotaExceeded": True,
-                    "message": f"Live search quota exceeded ({quota['used']}/{quota['limit']} used). Quota resets in {quota['daysUntilReset']} days.",
-                    "quotaStatus": quota,
-                    "suggestion": "Try searching the cached housing and visa databases instead, or check back next month!",
-                }
-        except httpx.TimeoutException:
-            return {
-                "error": True,
-                "message": "Quota check timed out. Please try again.",
-            }
-        except Exception as e:
-            return {
-                "error": True,
-                "message": f"Could not check quota: {str(e)}. Please try again.",
-            }
-
-        # Step 2: Execute the search
-        try:
-            search_response = await client.post(
-                f"{CONVEX_SITE_URL}/api/fireplexity/search",
+            response = await client.post(
+                PERPLEXITY_API_URL,
+                headers={
+                    "Authorization": f"Bearer {PERPLEXITY_API_KEY}",
+                    "Content-Type": "application/json",
+                },
                 json={
-                    "query": query,
-                    "targetCountry": target_country,
+                    "model": "sonar",  # Perplexity's web-search model
+                    "messages": [
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": search_query},
+                    ],
+                    "temperature": 0.2,  # Lower for factual accuracy
+                    "return_citations": True,
+                    "return_related_questions": False,
                 },
             )
 
-            if search_response.status_code != 200:
-                error_data = search_response.json()
+            if response.status_code != 200:
+                error_text = response.text
                 return {
                     "error": True,
-                    "message": error_data.get("message", f"Search failed with status {search_response.status_code}"),
+                    "message": f"Search failed (status {response.status_code}): {error_text[:200]}",
                 }
 
-            result = search_response.json()
+            result = response.json()
 
-            # Check if the result itself is an error
-            if result.get("error"):
-                return result
+            # Update quota
+            _monthly_quota["used"] += 1
 
-            # Format successful response
-            scraped_data = []
-            for item in result.get("scrapedData", []):
-                if item.get("markdown"):
-                    scraped_data.append({
-                        "url": item.get("url", ""),
-                        "title": item.get("title", ""),
-                        "preview": item.get("markdown", "")[:500] + "..." if len(item.get("markdown", "")) > 500 else item.get("markdown", ""),
-                    })
-                elif not item.get("error"):
-                    scraped_data.append({
-                        "url": item.get("url", ""),
-                        "title": item.get("title", ""),
-                        "preview": "Content available at source",
-                    })
+            # Extract answer and citations
+            answer = ""
+            sources = []
 
-            quota_status = result.get("quotaStatus", {})
+            if "choices" in result and len(result["choices"]) > 0:
+                message = result["choices"][0].get("message", {})
+                answer = message.get("content", "")
+
+            # Perplexity returns citations in the response
+            if "citations" in result:
+                sources = result["citations"]
 
             return {
                 "success": True,
-                "answer": result.get("answer", ""),
-                "sources": result.get("sources", []),
-                "scrapedData": scraped_data,
-                "dataFreshness": result.get("dataFreshness", "Real-time"),
-                "quotaRemaining": quota_status.get("remaining", 0),
-                "quotaUsed": quota_status.get("used", 0),
-                "quotaLimit": quota_status.get("limit", 50),
+                "answer": answer,
+                "sources": sources,
+                "dataFreshness": "Real-time",
+                "quotaRemaining": _monthly_quota["limit"] - _monthly_quota["used"],
+                "quotaUsed": _monthly_quota["used"],
+                "quotaLimit": _monthly_quota["limit"],
             }
 
         except httpx.TimeoutException:

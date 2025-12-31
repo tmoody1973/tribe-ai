@@ -54,14 +54,15 @@ STAGE_DESCRIPTIONS = {
 }
 
 
-def build_system_prompt(context: Optional[dict] = None) -> str:
+def build_system_prompt(context=None) -> str:
     """
     Build dynamic system prompt with user context from CopilotKit properties.
 
     The context is passed via AG-UI protocol from CopilotKit's properties prop.
+    ADK passes a ReadonlyContext object, not a dict.
 
     Args:
-        context: Optional context dict containing user/corridor state
+        context: Optional ReadonlyContext or dict containing user/corridor state
 
     Returns:
         Complete system prompt with personalized context
@@ -69,40 +70,54 @@ def build_system_prompt(context: Optional[dict] = None) -> str:
     context_parts = []
 
     if context:
-        # Extract corridor information
-        corridor = context.get("corridor")
-        if corridor and isinstance(corridor, dict):
-            origin = corridor.get("origin")
-            destination = corridor.get("destination")
-            if origin and destination:
+        # Handle both ReadonlyContext objects and dicts
+        def safe_get(obj, key, default=None):
+            """Safely get a value from dict or object with attributes."""
+            if obj is None:
+                return default
+            if isinstance(obj, dict):
+                return obj.get(key, default)
+            # Try attribute access for ReadonlyContext
+            return getattr(obj, key, default)
+
+        try:
+            # Extract corridor information
+            corridor = safe_get(context, "corridor")
+            if corridor:
+                origin = safe_get(corridor, "origin")
+                destination = safe_get(corridor, "destination")
+                if origin and destination:
+                    context_parts.append(
+                        f"The user is planning to migrate from {origin} to {destination}. "
+                        f"Reference their specific corridor when relevant (e.g., 'For your {origin} → {destination} journey...')."
+                    )
+
+            # Extract migration stage
+            stage = safe_get(context, "stage")
+            if stage and stage in STAGE_DESCRIPTIONS:
+                context_parts.append(STAGE_DESCRIPTIONS[stage])
+
+            # Extract language preference
+            language = safe_get(context, "language", "en")
+            lang_name = LANGUAGE_NAMES.get(language, "English") if language else "English"
+            if language and language != "en":
                 context_parts.append(
-                    f"The user is planning to migrate from {origin} to {destination}. "
-                    f"Reference their specific corridor when relevant (e.g., 'For your {origin} → {destination} journey...')."
+                    f"IMPORTANT: The user prefers {lang_name}. Respond in {lang_name} unless they request otherwise."
+                )
+            else:
+                context_parts.append(
+                    f"Respond in {lang_name} unless the user requests otherwise."
                 )
 
-        # Extract migration stage
-        stage = context.get("stage")
-        if stage and stage in STAGE_DESCRIPTIONS:
-            context_parts.append(STAGE_DESCRIPTIONS[stage])
-
-        # Extract language preference
-        language = context.get("language", "en")
-        lang_name = LANGUAGE_NAMES.get(language, "English")
-        if language != "en":
-            context_parts.append(
-                f"IMPORTANT: The user prefers {lang_name}. Respond in {lang_name} unless they request otherwise."
-            )
-        else:
-            context_parts.append(
-                f"Respond in {lang_name} unless the user requests otherwise."
-            )
-
-        # Note about user context tool
-        if context.get("userId"):
-            context_parts.append(
-                "You can use the get_user_context tool to fetch the user's current todos, "
-                "saved documents, and migration progress for more personalized assistance."
-            )
+            # Note about user context tool
+            if safe_get(context, "userId"):
+                context_parts.append(
+                    "You can use the get_user_context tool to fetch the user's current todos, "
+                    "saved documents, and migration progress for more personalized assistance."
+                )
+        except Exception as e:
+            # Log but don't fail - return base instruction
+            print(f"Warning: Error processing context: {e}")
 
     if context_parts:
         return BASE_SYSTEM_INSTRUCTION + "\n\n## CURRENT USER CONTEXT:\n" + "\n".join(context_parts)

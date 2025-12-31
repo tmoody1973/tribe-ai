@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: tribe-agent
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    region: oregon
+    plan: starter
+    healthCheckPath: /health
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: LOG_LEVEL
+        value: INFO
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: CONVEX_SITE_URL
+        sync: false
+      - key: ADDITIONAL_CORS_ORIGINS
+        value: https://tribe-ai.vercel.app,https://*.vercel.app

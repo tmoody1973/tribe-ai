@@ -114,6 +114,7 @@ async def my_tool(param: str) -> dict:
 | `PORT` | No | Server port (default: 8000) |
 | `ENVIRONMENT` | No | development/production |
 | `LOG_LEVEL` | No | Logging level (default: INFO) |
+| `ADDITIONAL_CORS_ORIGINS` | No | Extra CORS origins (comma-separated) |
 
 ## Frontend Integration
 
@@ -135,4 +136,106 @@ const runtime = new CopilotRuntime({
 
 ## Deployment
 
-See Story 10.11 for production deployment to Google Cloud Run.
+### Prerequisites
+
+- Google Cloud account with billing enabled
+- `gcloud` CLI installed and configured
+- Cloud Run API enabled
+- Container Registry API enabled
+
+### Option 1: Automated Deployment with Cloud Build
+
+1. **Create secrets in Google Secret Manager:**
+
+```bash
+# Create API key secret
+echo -n "YOUR_GEMINI_API_KEY" | gcloud secrets create gemini-api-key --data-file=-
+
+# Create Convex URL secret
+echo -n "https://your-deployment.convex.site" | gcloud secrets create convex-site-url --data-file=-
+```
+
+2. **Deploy using Cloud Build:**
+
+```bash
+cd agents/tribe_agent
+gcloud builds submit --config=cloudbuild.yaml
+```
+
+3. **Get the deployed URL:**
+
+```bash
+gcloud run services describe tribe-agent --region=us-central1 --format='value(status.url)'
+```
+
+4. **Update Vercel environment:**
+
+Add `ADK_AGENT_URL` to your Vercel project settings with the Cloud Run URL.
+
+### Option 2: Manual Docker Deployment
+
+1. **Build the Docker image:**
+
+```bash
+cd agents/tribe_agent
+docker build -t tribe-agent .
+```
+
+2. **Test locally:**
+
+```bash
+docker run -p 8000:8000 --env-file .env tribe-agent
+```
+
+3. **Push to Container Registry:**
+
+```bash
+docker tag tribe-agent gcr.io/YOUR_PROJECT_ID/tribe-agent
+docker push gcr.io/YOUR_PROJECT_ID/tribe-agent
+```
+
+4. **Deploy to Cloud Run:**
+
+```bash
+gcloud run deploy tribe-agent \
+  --image gcr.io/YOUR_PROJECT_ID/tribe-agent \
+  --region us-central1 \
+  --platform managed \
+  --allow-unauthenticated \
+  --min-instances 0 \
+  --max-instances 10 \
+  --memory 512Mi \
+  --set-secrets "GEMINI_API_KEY=gemini-api-key:latest,CONVEX_SITE_URL=convex-site-url:latest"
+```
+
+### Performance Expectations
+
+| Metric | Target | Notes |
+|--------|--------|-------|
+| Cold start | <5s | First request after idle |
+| Warm response | <2s | Subsequent requests |
+| Memory | 512Mi | Sufficient for Gemini calls |
+| Concurrency | 80 | Requests per instance |
+
+### Troubleshooting
+
+**Agent not responding:**
+```bash
+# Check logs
+gcloud run services logs read tribe-agent --region=us-central1
+
+# Verify health
+curl https://YOUR_CLOUD_RUN_URL/health
+```
+
+**CORS errors:**
+- Add your frontend domain to `ADDITIONAL_CORS_ORIGINS` environment variable
+- Redeploy the service
+
+**Secret access errors:**
+- Grant the Cloud Run service account access to secrets:
+```bash
+gcloud secrets add-iam-policy-binding gemini-api-key \
+  --member="serviceAccount:YOUR_SA@YOUR_PROJECT.iam.gserviceaccount.com" \
+  --role="roles/secretmanager.secretAccessor"
+```

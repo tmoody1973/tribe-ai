@@ -6,25 +6,33 @@ Designed to be consumed by CopilotKit in the Next.js frontend.
 """
 
 import os
+import time
+import uuid
 from contextlib import asynccontextmanager
 
 from dotenv import load_dotenv
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from ag_ui_adk import ADKAgent, add_adk_fastapi_endpoint
 
 from agent import tribe_agent
+from logging_config import setup_logging, get_logger
 
 # Load environment variables
 load_dotenv()
+
+# Setup structured logging
+log_level = os.environ.get("LOG_LEVEL", "INFO")
+setup_logging(log_level)
+logger = get_logger(__name__)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan handler."""
-    print("Starting TRIBE ADK Agent...")
+    logger.info("Starting TRIBE ADK Agent", extra={"environment": os.environ.get("ENVIRONMENT", "development")})
     yield
-    print("Shutting down TRIBE ADK Agent...")
+    logger.info("Shutting down TRIBE ADK Agent")
 
 
 # Create FastAPI app
@@ -53,6 +61,44 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+# Request logging middleware
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    """Log all HTTP requests with timing information."""
+    request_id = str(uuid.uuid4())[:8]
+    start_time = time.time()
+
+    # Log request start
+    logger.info(
+        f"Request started: {request.method} {request.url.path}",
+        extra={
+            "request_id": request_id,
+            "path": str(request.url.path),
+            "method": request.method,
+        }
+    )
+
+    response = await call_next(request)
+
+    # Calculate duration
+    duration_ms = (time.time() - start_time) * 1000
+
+    # Log request completion
+    logger.info(
+        f"Request completed: {response.status_code}",
+        extra={
+            "request_id": request_id,
+            "status": response.status_code,
+            "duration_ms": round(duration_ms, 2),
+        }
+    )
+
+    # Add request ID to response headers for tracing
+    response.headers["X-Request-ID"] = request_id
+    return response
+
 
 # Wrap the ADK agent for AG-UI protocol
 adk_agent = ADKAgent(

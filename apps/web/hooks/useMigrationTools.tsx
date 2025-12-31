@@ -25,7 +25,19 @@ import {
   type LanguageResourcesResult,
   type JobSearchResult,
 } from "@/lib/tools/migrationTools";
-import { ExternalLink, Home, DollarSign, Users, FileText, Heart, Loader2, Globe2, Lightbulb, MessageCircle, ArrowRight, CheckCircle2, Building2, BookOpen, Briefcase, AlertCircle } from "lucide-react";
+import { ExternalLink, Home, DollarSign, Users, FileText, Heart, Loader2, Globe2, Lightbulb, MessageCircle, ArrowRight, CheckCircle2, Building2, BookOpen, Briefcase, AlertCircle, Search, Sparkles } from "lucide-react";
+
+// Live search result type
+interface LiveSearchResult {
+  success?: boolean;
+  error?: boolean;
+  message?: string;
+  answer?: string;
+  sources?: string[];
+  quotaRemaining?: number;
+  quotaUsed?: number;
+  quotaLimit?: number;
+}
 
 export function useMigrationTools() {
   // Housing Search Tool with Generative UI
@@ -977,6 +989,147 @@ export function useMigrationTools() {
     },
     handler: async ({ destinationCountry }) => {
       return getJobSearchResources(destinationCountry);
+    },
+  });
+
+  // Live Search Tool - Real-time web search via Perplexity API
+  useCopilotAction({
+    name: "searchLiveData",
+    description: `Search the web for real-time, up-to-date migration information using Perplexity AI.
+      Use this when users ask about:
+      - Current visa policies or recent changes
+      - Latest news about immigration in a country
+      - Up-to-date requirements or regulations
+      - Recent policy changes or announcements
+      - Any question requiring current/fresh information
+
+      This uses a quota-limited API, so only use when truly needed for current information.`,
+    parameters: [
+      {
+        name: "query",
+        type: "string",
+        description: "Search query describing what information the user needs",
+        required: true,
+      },
+      {
+        name: "targetCountry",
+        type: "string",
+        description: "Optional country to focus the search on",
+        required: false,
+      },
+    ],
+    render: ({ status, args, result }) => {
+      if (status === "inProgress") {
+        return (
+          <div className="flex items-center gap-2 p-4 bg-gradient-to-r from-purple-50 to-blue-50 border-2 border-black">
+            <Sparkles className="animate-pulse text-purple-500" size={20} />
+            <span className="font-bold">Searching the web for latest info...</span>
+          </div>
+        );
+      }
+
+      const data = result as LiveSearchResult;
+      if (!data) return <></>;
+
+      // Handle error state
+      if (data.error) {
+        return (
+          <div className="border-4 border-black bg-white shadow-[4px_4px_0_0_#000] my-2">
+            <div className="bg-red-500 text-white p-3 border-b-4 border-black flex items-center gap-2">
+              <AlertCircle size={20} />
+              <span className="font-bold">Search Error</span>
+            </div>
+            <div className="p-4">
+              <p className="text-red-700">{data.message || "An error occurred while searching."}</p>
+            </div>
+          </div>
+        );
+      }
+
+      return (
+        <div className="border-4 border-black bg-white shadow-[4px_4px_0_0_#000] my-2">
+          <div className="bg-gradient-to-r from-purple-500 to-blue-500 text-white p-3 border-b-4 border-black flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Search size={20} />
+              <span className="font-bold">Live Search Results</span>
+            </div>
+            {data.quotaRemaining !== undefined && (
+              <span className="text-xs bg-white/20 px-2 py-1 rounded">
+                {data.quotaRemaining}/{data.quotaLimit} searches remaining
+              </span>
+            )}
+          </div>
+
+          {/* Answer */}
+          <div className="p-4 border-b-2 border-gray-200">
+            <div className="prose prose-sm max-w-none">
+              <p className="text-gray-800 whitespace-pre-wrap">{data.answer}</p>
+            </div>
+          </div>
+
+          {/* Sources */}
+          {data.sources && data.sources.length > 0 && (
+            <div className="p-4 bg-gray-50">
+              <p className="font-bold text-sm mb-2 text-gray-600">Sources:</p>
+              <div className="space-y-2">
+                {data.sources.slice(0, 5).map((source, i) => (
+                  <a
+                    key={i}
+                    href={source}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800 hover:underline truncate"
+                  >
+                    <ExternalLink size={12} className="flex-shrink-0" />
+                    <span className="truncate">{source}</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="p-2 bg-purple-50 border-t-2 border-purple-200 text-xs text-purple-600 flex items-center gap-1">
+            <Sparkles size={12} />
+            Powered by Perplexity AI • Real-time web search
+          </div>
+        </div>
+      );
+    },
+    handler: async ({ query, targetCountry }) => {
+      // Call the ADK agent endpoint directly
+      const ADK_URL = process.env.NEXT_PUBLIC_ADK_AGENT_URL || "https://tribe-agent.onrender.com";
+
+      try {
+        // Build the query with country if provided
+        const searchQuery = targetCountry ? `${query} in ${targetCountry}` : query;
+
+        const response = await fetch(`${ADK_URL}/api/live-search`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            query: searchQuery,
+            target_country: targetCountry,
+          }),
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          return {
+            error: true,
+            message: `Search failed (${response.status}): ${errorText.slice(0, 200)}`,
+          } as LiveSearchResult;
+        }
+
+        const result = await response.json();
+        return result as LiveSearchResult;
+      } catch (error) {
+        return {
+          error: true,
+          message: `Search failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+        } as LiveSearchResult;
+      }
     },
   });
 }

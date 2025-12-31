@@ -9,8 +9,10 @@ import os
 import time
 import uuid
 from contextlib import asynccontextmanager
+from typing import Optional
 
 from dotenv import load_dotenv
+from pydantic import BaseModel
 
 # Load environment variables BEFORE importing agent (tools read env at import time)
 load_dotenv()
@@ -134,7 +136,7 @@ async def health():
         "agent": "tribe_agent",
         "model": "gemini-2.5-flash",
         "environment": os.environ.get("ENVIRONMENT", "development"),
-        "version": "2024-12-31-v3",  # Track deployment version
+        "version": "2024-12-31-v4",  # Track deployment version - added /api/live-search endpoint
     }
 
 
@@ -177,6 +179,37 @@ async def test_search():
             "status": "ERROR",
             "error": result,
         }
+
+
+# ============================================
+# API Endpoints for Frontend Tool Calls
+# ============================================
+
+
+class LiveSearchRequest(BaseModel):
+    """Request model for live search."""
+    query: str
+    target_country: Optional[str] = None
+
+
+@app.post("/api/live-search")
+async def api_live_search(request: LiveSearchRequest):
+    """
+    API endpoint for live search - called directly by frontend tools.
+    This bypasses the ADK agent and calls Perplexity directly.
+    """
+    from tools.live_search import search_live_data
+
+    logger.info(
+        f"Live search API called",
+        extra={
+            "query": request.query[:50] + "..." if len(request.query) > 50 else request.query,
+            "target_country": request.target_country,
+        }
+    )
+
+    result = await search_live_data(request.query, request.target_country)
+    return result
 
 
 if __name__ == "__main__":
